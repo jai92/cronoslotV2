@@ -64,7 +64,6 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
         
-        /* Selectores bloqueables */
         .selectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .sel-box {
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
@@ -74,7 +73,6 @@
         .sel-box select { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 11px; outline: none; }
         .sel-box.locked { opacity: 0.5; pointer-events: none; }
 
-        /* Cámara y Calibración (Punto 1) */
         .cam-box {
             position: relative; height: 160px; border-radius: 16px; overflow: hidden;
             background: #000; border: 1px solid rgba(255,255,255,0.15);
@@ -97,7 +95,6 @@
         .calib-row span { font-size: 10px; color: var(--cyan); font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 4px; }
         .calib-row input[type="range"] { width: 100%; accent-color: var(--cyan); }
 
-        /* Cronómetro y botones */
         .chrono-display {
             font-family: monospace; font-size: 44px; font-weight: 900;
             text-align: center; color: var(--primary); letter-spacing: 1px;
@@ -122,7 +119,29 @@
             border: 1px solid rgba(255,255,255,0.08); font-size: 12px; font-weight: bold; margin-bottom: 6px;
         }
 
-        /* Modales (Puntos 2, 4, 8, 9, 10) */
+        /* Estilos de Registros (Acordeón) */
+        .reg-card { background:rgba(0,0,0,0.3); padding:12px; border-radius:14px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.05); }
+        .reg-header { display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; }
+        .reg-title { color: white; font-weight: bold; font-size: 13px; margin-bottom: 4px; }
+        .reg-sub { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; line-height: 1.3; }
+        .reg-highlight { color: var(--cyan); font-family: monospace; font-size: 12px; margin-top: 6px; font-weight: bold; }
+        .reg-del-btn { background: rgba(255,42,85,0.15); color: var(--accent); border: 1px solid rgba(255,42,85,0.3); padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .reg-details { display: none; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+        .reg-details.open { display: block; }
+        .reg-lap-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .reg-lap-del { background: transparent; color: var(--accent); border: none; font-size: 14px; cursor: pointer; padding: 4px; }
+
+        /* Estilos Nuevos: Récords Top 3 por Circuito */
+        .rec-track-card { background: rgba(0,0,0,0.4); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); padding: 12px; margin-bottom: 12px; }
+        .rec-track-title { font-size: 14px; font-weight: 900; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
+        .rec-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
+        .rec-rank { font-weight: 900; font-size: 12px; width: 22px; }
+        .rec-rank-1 { color: #ffd700; }
+        .rec-rank-2 { color: #c0c0c0; }
+        .rec-rank-3 { color: #cd7f32; }
+        .rec-details-box { flex: 1; margin-left: 6px; }
+        .rec-time { font-family: monospace; font-size: 13px; font-weight: bold; color: var(--cyan); }
+
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .modal-overlay.active { display: flex; }
         .modal-card { background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; width: 100%; max-width: 400px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); max-height: 85vh; overflow-y: auto; }
@@ -135,7 +154,6 @@
         .btn-confirm { background: linear-gradient(135deg, var(--accent), #ff5e3a); color: white; }
         .btn-cyan { background: linear-gradient(135deg, var(--cyan), #00b3cc); color: black; }
 
-        /* Pestaña Datos Rediseñada (Puntos 5, 6, 7) */
         .data-main-card {
             background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6));
             border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px;
@@ -180,7 +198,7 @@
             <div class="logo-icon">CS</div>
             <div>
                 <div style="font-weight: 900; font-size: 16px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 9px; color: var(--text-muted);">PRO V2.6</div>
+                <div style="font-size: 9px; color: var(--text-muted);">PRO V3.0</div>
             </div>
         </div>
     </header>
@@ -223,7 +241,6 @@
                     </div>
                 </div>
                 
-                <!-- Punto 1: Panel de Calibración Restaurado -->
                 <div class="calib-panel" id="calibPanel" style="display: none;">
                     <div class="calib-row">
                         <span>Sensibilidad de Movimiento: <b id="valSens">50%</b></span>
@@ -246,7 +263,6 @@
                     <span>TIEMPO MÍN: <strong id="minLapTxt" style="color: var(--cyan);">0.0s</strong></span>
                 </div>
                 <div id="chronoDisplay" class="chrono-display">00.000s</div>
-                <!-- Punto 2: Botón de Carrera con cambio de estado -->
                 <button id="mainRaceBtn" onclick="handleRaceClick()" class="btn-action" style="margin-top: 12px;">▶ Comenzar Carrera</button>
             </div>
 
@@ -258,20 +274,28 @@
             </div>
         </div>
 
-        <!-- OTRAS PESTAÑAS OCULTAS -->
+        <!-- PANTALLA 2: REGISTROS -->
         <div id="screen-registers" class="screen">
-            <div class="card"><h3 style="margin:0 0 8px 0; color:var(--cyan);">Registros Guardados</h3><div id="registersList"></div></div>
+            <div class="card">
+                <h3 style="margin:0 0 10px 0; color:var(--cyan);">Historial de Sesiones</h3>
+                <div id="registersList"></div>
+            </div>
         </div>
+
+        <!-- PANTALLA 3: RÉCORDS ABSOLUTOS (TOP 3 POR CIRCUITO) -->
         <div id="screen-records" class="screen">
-            <div class="card"><h3 style="margin:0 0 8px 0; color:var(--accent);">Récords Absolutos</h3><div id="recordsList"></div></div>
+            <div class="card">
+                <h3 style="margin:0 0 10px 0; color:var(--accent);">🏆 Récords Absolutos (Top 3)</h3>
+                <div id="recordsList"></div>
+            </div>
         </div>
+
         <div id="screen-stats" class="screen">
             <div class="card"><h3 style="margin:0 0 8px 0; color:var(--primary);">Estadísticas</h3><div id="statsList"></div></div>
         </div>
 
-        <!-- PANTALLA 5: DATOS REDISEÑADA (Punto 5, 6, 7) -->
+        <!-- PANTALLA 5: DATOS -->
         <div id="screen-data" class="screen">
-            <!-- Vista Principal de Datos -->
             <div id="dataMainView">
                 <h2 style="margin:0 0 15px 0; font-size:18px;">Base de Datos</h2>
                 <div class="data-main-card" onclick="openSubDataView('pilots')">
@@ -297,7 +321,6 @@
                 </div>
             </div>
 
-            <!-- Sub Vista de Listados -->
             <div id="dataSubView" style="display:none;">
                 <div class="card" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
                     <button onclick="closeSubDataView()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:11px;">◀ Volver</button>
@@ -317,8 +340,7 @@
         <button onclick="switchTab('data', this)" class="nav-btn"><span>👥</span><span>Datos</span></button>
     </nav>
 
-    <!-- ZONA DE MODALES (Puntos 2, 4, 8, 9, 10) -->
-    <!-- Confirmar Parada -->
+    <!-- ZONA DE MODALES -->
     <div class="modal-overlay" id="modalConfirmStop">
         <div class="modal-card">
             <h3 class="modal-title" style="color:var(--accent);">⚠️ Detener Carrera</h3>
@@ -330,7 +352,6 @@
         </div>
     </div>
 
-    <!-- Guardar Sesión -->
     <div class="modal-overlay" id="modalSaveSession">
         <div class="modal-card">
             <h3 class="modal-title" style="color:var(--cyan);">💾 Guardar Sesión</h3>
@@ -343,7 +364,6 @@
         </div>
     </div>
 
-    <!-- Resumen Post-Carrera (Punto 4) -->
     <div class="modal-overlay" id="modalSummary">
         <div class="modal-card">
             <h3 class="modal-title" id="summaryTitle" style="color:var(--primary);">Resumen de Carrera</h3>
@@ -352,14 +372,13 @@
         </div>
     </div>
 
-    <!-- Formulario Dinámico (Pilotos, Coches, Circuitos) (Puntos 8, 9, 10) -->
     <div class="modal-overlay" id="modalForm">
         <div class="modal-card">
             <h3 class="modal-title" id="formTitle">Crear</h3>
             <div id="formDynamicFields"></div>
             
-            <label class="modal-label" style="margin-top:10px;">📸 Foto (Opcional)</label>
-            <input type="file" id="formPhoto" accept="image/*" class="modal-input" style="padding:6px; background:rgba(255,255,255,0.05);" onchange="previewImage(event)">
+            <label class="modal-label" style="margin-top:10px;">📸 Foto (URL de la imagen)</label>
+            <input type="text" id="formPhotoUrl" class="modal-input" placeholder="Pega el enlace web de la imagen..." oninput="updatePhotoPreview()">
             <img id="formPhotoPreview" style="width:100%; height:120px; object-fit:cover; border-radius:12px; display:none; margin-bottom:10px; border:1px solid rgba(255,255,255,0.1);">
 
             <div class="modal-btns">
@@ -370,33 +389,46 @@
     </div>
 
     <script>
-        // ESTRUCTURA DE DATOS PRINCIPAL
         let defaultData = {
             pilots: [{id: 'p1', nombre: 'Alex', apellido: 'Márquez', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80'}],
             cars: [{id: 'c1', modelo: '911 GT3 RS', marca: 'Porsche', alias: 'La Bestia', trencilla: 'Cobre', chasis: 'Blando', llantas: 'Aluminio', motor: 'Flat-6', photo: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&q=80'}],
             tracks: [{id: 't1', nombre: 'Gijón GP', alias: 'Asturias', longitud: '25.5', tiempoMinimo: '6.0', photo: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80'}],
             registers: []
         };
-        let appData = JSON.parse(localStorage.getItem('cronoslot_v3')) || defaultData;
-        if(typeof appData.pilots[0] === 'string') { appData = defaultData; localStorage.setItem('cronoslot_v3', JSON.stringify(appData)); }
-
-        function saveData() { localStorage.setItem('cronoslot_v3', JSON.stringify(appData)); updateSelects(); updateRegistersUI(); }
+        let appData = JSON.parse(localStorage.getItem('cronoslot_v4')) || defaultData;
+        
+        function saveData() { 
+            localStorage.setItem('cronoslot_v4', JSON.stringify(appData)); 
+            updateSelects(); 
+            updateRegistersUI(); 
+            updateRecordsUI(); 
+        }
         const genId = () => Math.random().toString(36).substr(2, 9);
 
-        // ACTUALIZAR SELECTORES Y PESTAÑA CARRERA
         function updateSelects() {
+            const pVal = document.getElementById('pilotSelect').value;
+            const cVal = document.getElementById('carSelect').value;
+            const tVal = document.getElementById('trackSelect').value;
+
             document.getElementById('pilotSelect').innerHTML = appData.pilots.map(p => `<option value="${p.id}">${p.nombre} ${p.apellido}</option>`).join('');
             document.getElementById('carSelect').innerHTML = appData.cars.map(c => `<option value="${c.id}">${c.marca} ${c.modelo}</option>`).join('');
             document.getElementById('trackSelect').innerHTML = appData.tracks.map(t => `<option value="${t.id}">${t.nombre} (${t.tiempoMinimo}s)</option>`).join('');
             
-            // Actualizar display de tiempo minimo
+            if (pVal && appData.pilots.find(p => p.id === pVal)) document.getElementById('pilotSelect').value = pVal;
+            if (cVal && appData.cars.find(c => c.id === cVal)) document.getElementById('carSelect').value = cVal;
+            if (tVal && appData.tracks.find(t => t.id === tVal)) document.getElementById('trackSelect').value = tVal;
+            
+            updateMinLapText();
+        }
+
+        function updateMinLapText() {
             const trackId = document.getElementById('trackSelect').value;
             const track = appData.tracks.find(t => t.id === trackId);
             if(track) document.getElementById('minLapTxt').innerText = track.tiempoMinimo + 's';
         }
-        document.getElementById('trackSelect').addEventListener('change', updateSelects);
+        
+        document.getElementById('trackSelect').addEventListener('change', updateMinLapText);
 
-        // NAVEGACIÓN PRINCIPAL
         function switchTab(tabId, btn) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -405,74 +437,42 @@
             if(tabId === 'data') { document.getElementById('dataMainView').style.display = 'block'; document.getElementById('dataSubView').style.display = 'none'; }
         }
 
-        // LÓGICA DE CARRERA (Puntos 2, 3, 4)
-        let isRunning = false;
-        let raceTimer = null;
-        let startTime = 0;
-        let lastPassTime = 0;
-        let currentLaps = [];
-        let currentRunName = "";
-
+        // Carrera
+        let isRunning = false; let raceTimer = null; let startTime = 0; let lastPassTime = 0; let currentLaps = [];
         function handleRaceClick() {
             if(!isRunning) {
-                // Iniciar Carrera (Punto 3: Bloquear selectores)
                 isRunning = true;
                 document.getElementById('boxPilot').classList.add('locked');
                 document.getElementById('boxCar').classList.add('locked');
                 document.getElementById('boxTrack').classList.add('locked');
                 
                 const btn = document.getElementById('mainRaceBtn');
-                btn.innerText = "⏹ Detener Carrera";
-                btn.className = "btn-action stop";
+                btn.innerText = "⏹ Detener Carrera"; btn.className = "btn-action stop";
                 
-                currentLaps = [];
-                document.getElementById('lapsContainer').innerHTML = '';
-                document.getElementById('currentLapNum').innerText = '#1';
-                
-                startTime = performance.now();
-                lastPassTime = startTime;
+                currentLaps = []; document.getElementById('lapsContainer').innerHTML = ''; document.getElementById('currentLapNum').innerText = '#1';
+                startTime = performance.now(); lastPassTime = startTime;
                 
                 raceTimer = setInterval(() => {
-                    const elapsed = performance.now() - lastPassTime; // Tiempo de vuelta actual
-                    const s = Math.floor(elapsed / 1000);
-                    const ms = Math.floor(elapsed % 1000);
+                    const elapsed = performance.now() - lastPassTime;
+                    const s = Math.floor(elapsed / 1000); const ms = Math.floor(elapsed % 1000);
                     document.getElementById('chronoDisplay').innerText = `${String(s).padStart(2,'0')}.${String(ms).padStart(3,'0')}s`;
                 }, 33);
-            } else {
-                // Punto 2: Confirmar Detener
-                document.getElementById('modalConfirmStop').classList.add('active');
-            }
+            } else { document.getElementById('modalConfirmStop').classList.add('active'); }
         }
-
         function confirmStopRace() {
-            closeModal('modalConfirmStop');
-            clearInterval(raceTimer);
-            isRunning = false;
+            closeModal('modalConfirmStop'); clearInterval(raceTimer); isRunning = false;
             if(currentLaps.length > 0) {
                 document.getElementById('modalSaveSession').classList.add('active');
                 const t = appData.tracks.find(x => x.id === document.getElementById('trackSelect').value);
                 document.getElementById('sessionNameInput').value = `Sesión en ${t ? t.nombre : 'Pista'} #${appData.registers.length + 1}`;
-            } else {
-                closeSummaryAndReset(); // Si no hay vueltas, reset directo
-            }
+            } else { closeSummaryAndReset(); }
         }
-
         function discardSession() { closeModal('modalSaveSession'); closeSummaryAndReset(); }
-
         function saveSession() {
             const name = document.getElementById('sessionNameInput').value || 'Sesión sin nombre';
-            const pilot = document.getElementById('pilotSelect').value;
-            const car = document.getElementById('carSelect').value;
-            const track = document.getElementById('trackSelect').value;
-            
-            const reg = { id: genId(), name, pilot, car, track, date: new Date().toLocaleString(), laps: [...currentLaps] };
-            appData.registers.unshift(reg);
-            saveData();
-            
-            closeModal('modalSaveSession');
-            showSummaryModal(reg);
+            const reg = { id: genId(), name, pilot: document.getElementById('pilotSelect').value, car: document.getElementById('carSelect').value, track: document.getElementById('trackSelect').value, date: new Date().toLocaleString(), laps: [...currentLaps] };
+            appData.registers.unshift(reg); saveData(); closeModal('modalSaveSession'); showSummaryModal(reg);
         }
-
         function showSummaryModal(reg) {
             document.getElementById('summaryTitle').innerText = reg.name;
             const list = document.getElementById('summaryList');
@@ -481,280 +481,251 @@
                 let best = Math.min(...reg.laps);
                 list.innerHTML = reg.laps.map((l, i) => `
                     <div class="lap-row" style="${l===best ? 'border-color:var(--cyan);' : ''}">
-                        <span>Vuelta ${i+1} ${l===best?'🏆':''}</span>
+                        <span>Vuelta ${reg.laps.length - i} ${l===best?'🏆':''}</span>
                         <span style="color:var(--primary); font-family:monospace;">${(l/1000).toFixed(3)}s</span>
-                    </div>
-                `).join('');
+                    </div>`).join('');
             }
             document.getElementById('modalSummary').classList.add('active');
         }
-
-        // Punto 4: Resetear la pantalla al cerrar
         function closeSummaryAndReset() {
             closeModal('modalSummary');
-            document.getElementById('boxPilot').classList.remove('locked');
-            document.getElementById('boxCar').classList.remove('locked');
-            document.getElementById('boxTrack').classList.remove('locked');
-            
-            const btn = document.getElementById('mainRaceBtn');
-            btn.innerText = "▶ Comenzar Carrera";
-            btn.className = "btn-action";
-            
-            document.getElementById('chronoDisplay').innerText = "00.000s";
-            document.getElementById('currentLapNum').innerText = "#0";
+            document.getElementById('boxPilot').classList.remove('locked'); document.getElementById('boxCar').classList.remove('locked'); document.getElementById('boxTrack').classList.remove('locked');
+            const btn = document.getElementById('mainRaceBtn'); btn.innerText = "▶ Comenzar Carrera"; btn.className = "btn-action";
+            document.getElementById('chronoDisplay').innerText = "00.000s"; document.getElementById('currentLapNum').innerText = "#0";
             document.getElementById('lapsContainer').innerHTML = "<div style='text-align:center; color:var(--text-muted); font-size:11px; padding:10px;'>Aún no hay vueltas.</div>";
             currentLaps = [];
         }
 
-        function formatMs(ms) { return (ms/1000).toFixed(3) + 's'; }
-
-        // VISTA DE DATOS (Puntos 5, 6, 7)
+        // Datos
         let currentDataType = '';
         function openSubDataView(type) {
-            currentDataType = type;
-            document.getElementById('dataMainView').style.display = 'none';
-            document.getElementById('dataSubView').style.display = 'block';
-            
-            const titleMap = { pilots: 'Pilotos', cars: 'Coches', tracks: 'Circuitos' };
-            document.getElementById('subViewTitle').innerText = titleMap[type];
-            renderSubDataList();
+            currentDataType = type; document.getElementById('dataMainView').style.display = 'none'; document.getElementById('dataSubView').style.display = 'block';
+            document.getElementById('subViewTitle').innerText = { pilots: 'Pilotos', cars: 'Coches', tracks: 'Circuitos' }[type]; renderSubDataList();
         }
-        function closeSubDataView() {
-            document.getElementById('dataMainView').style.display = 'block';
-            document.getElementById('dataSubView').style.display = 'none';
-        }
-
+        function closeSubDataView() { document.getElementById('dataMainView').style.display = 'block'; document.getElementById('dataSubView').style.display = 'none'; }
+        
         function renderSubDataList() {
             const list = document.getElementById('subViewList');
-            const dataArr = appData[currentDataType];
-            if(dataArr.length === 0) { list.innerHTML = "<p style='color:#fff;text-align:center;'>No hay registros.</p>"; return; }
-            
-            list.innerHTML = dataArr.map(item => {
+            if(appData[currentDataType].length === 0) { list.innerHTML = "<p style='color:#fff;text-align:center;'>No hay registros.</p>"; return; }
+            list.innerHTML = appData[currentDataType].map(item => {
                 let title = '', sub = '';
                 if(currentDataType === 'pilots') { title = `${item.nombre} ${item.apellido}`; sub = 'Piloto'; }
                 if(currentDataType === 'cars') { title = `${item.marca} ${item.modelo}`; sub = `Motor: ${item.motor}`; }
                 if(currentDataType === 'tracks') { title = item.nombre; sub = `${item.longitud}m • Mín: ${item.tiempoMinimo}s`; }
-                
                 let img = item.photo || 'https://via.placeholder.com/150/222222/555555?text=Sin+Foto';
                 
                 return `
                 <div class="list-item">
                     <img src="${img}" class="list-photo">
-                    <div class="list-details">
-                        <div class="list-title">${title}</div>
-                        <div class="list-sub">${sub}</div>
-                    </div>
+                    <div class="list-details"><div class="list-title">${title}</div><div class="list-sub">${sub}</div></div>
                     <div class="list-actions">
-                        <button class="action-btn" onclick="deleteData('${item.id}')">🗑️</button>
+                        <button class="action-btn" onclick="openFormModal('${item.id}')">✏️</button>
+                        <button class="action-btn del" onclick="deleteData('${item.id}')">🗑️</button>
                     </div>
                 </div>`;
             }).join('');
         }
+        function deleteData(id) { if(confirm('¿Eliminar este perfil?')) { appData[currentDataType] = appData[currentDataType].filter(x => x.id !== id); saveData(); renderSubDataList(); } }
 
-        function deleteData(id) {
-            if(confirm('¿Eliminar este perfil?')) {
-                appData[currentDataType] = appData[currentDataType].filter(x => x.id !== id);
-                saveData(); renderSubDataList();
-            }
-        }
-
-        // FORMULARIOS DINÁMICOS (Puntos 8, 9, 10)
-        let formBase64 = "";
-        function openFormModal() {
+        let editingId = null;
+        function openFormModal(id = null) {
+            editingId = typeof id === 'string' ? id : null;
             const container = document.getElementById('formDynamicFields');
-            document.getElementById('formPhotoPreview').style.display = 'none';
-            document.getElementById('formPhoto').value = '';
-            formBase64 = "";
-            let html = '';
-
+            document.getElementById('formPhotoPreview').style.display = 'none'; document.getElementById('formPhotoUrl').value = ''; let html = '';
             if(currentDataType === 'pilots') {
-                document.getElementById('formTitle').innerText = 'Nuevo Piloto';
-                html = `
-                    <label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input">
-                    <label class="modal-label">Apellido</label><input type="text" id="f_apellido" class="modal-input">
-                `;
+                html = `<label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input"><label class="modal-label">Apellido</label><input type="text" id="f_apellido" class="modal-input">`;
             } else if(currentDataType === 'tracks') {
-                document.getElementById('formTitle').innerText = 'Nuevo Circuito';
-                html = `
-                    <label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input">
-                    <label class="modal-label">Alias</label><input type="text" id="f_alias" class="modal-input">
-                    <label class="modal-label">Longitud (metros)</label><input type="number" step="0.1" id="f_longitud" class="modal-input">
-                    <label class="modal-label">Tiempo Mín. Vuelta (s) [Sensor]</label><input type="number" step="0.5" id="f_tiempomin" class="modal-input">
-                `;
+                html = `<label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input"><label class="modal-label">Alias</label><input type="text" id="f_alias" class="modal-input">
+                        <label class="modal-label">Longitud (metros)</label><input type="number" step="0.1" id="f_longitud" class="modal-input"><label class="modal-label">Tiempo Mín. Vuelta (s)</label><input type="number" step="0.5" id="f_tiempomin" class="modal-input">`;
             } else if(currentDataType === 'cars') {
-                document.getElementById('formTitle').innerText = 'Nuevo Coche';
-                html = `
-                    <div style="display:flex; gap:10px;">
-                        <div style="flex:1"><label class="modal-label">Marca</label><input type="text" id="f_marca" class="modal-input"></div>
-                        <div style="flex:1"><label class="modal-label">Modelo</label><input type="text" id="f_modelo" class="modal-input"></div>
-                    </div>
-                    <label class="modal-label">Alias</label><input type="text" id="f_alias" class="modal-input">
-                    <div style="display:flex; gap:10px;">
-                        <div style="flex:1"><label class="modal-label">Trencilla</label><input type="text" id="f_trencilla" class="modal-input"></div>
-                        <div style="flex:1"><label class="modal-label">Chasis</label><input type="text" id="f_chasis" class="modal-input"></div>
-                    </div>
-                    <div style="display:flex; gap:10px;">
-                        <div style="flex:1"><label class="modal-label">Llantas</label><input type="text" id="f_llantas" class="modal-input"></div>
-                        <div style="flex:1"><label class="modal-label">Motor</label><input type="text" id="f_motor" class="modal-input"></div>
-                    </div>
-                `;
+                html = `<div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Marca</label><input type="text" id="f_marca" class="modal-input"></div><div style="flex:1"><label class="modal-label">Modelo</label><input type="text" id="f_modelo" class="modal-input"></div></div>
+                        <label class="modal-label">Alias</label><input type="text" id="f_alias" class="modal-input">
+                        <div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Trencilla</label><input type="text" id="f_trencilla" class="modal-input"></div><div style="flex:1"><label class="modal-label">Chasis</label><input type="text" id="f_chasis" class="modal-input"></div></div>
+                        <div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Llantas</label><input type="text" id="f_llantas" class="modal-input"></div><div style="flex:1"><label class="modal-label">Motor</label><input type="text" id="f_motor" class="modal-input"></div></div>`;
             }
             container.innerHTML = html;
+            if(editingId) {
+                document.getElementById('formTitle').innerText = 'Editar Registro';
+                const item = appData[currentDataType].find(x => x.id === editingId);
+                document.getElementById('formPhotoUrl').value = item.photo || ''; updatePhotoPreview();
+                if(currentDataType === 'pilots') { document.getElementById('f_nombre').value = item.nombre || ''; document.getElementById('f_apellido').value = item.apellido || ''; }
+                if(currentDataType === 'tracks') { document.getElementById('f_nombre').value = item.nombre || ''; document.getElementById('f_alias').value = item.alias || ''; document.getElementById('f_longitud').value = item.longitud || ''; document.getElementById('f_tiempomin').value = item.tiempoMinimo || ''; }
+                if(currentDataType === 'cars') { document.getElementById('f_marca').value = item.marca || ''; document.getElementById('f_modelo').value = item.modelo || ''; document.getElementById('f_alias').value = item.alias || ''; document.getElementById('f_trencilla').value = item.trencilla || ''; document.getElementById('f_chasis').value = item.chasis || ''; document.getElementById('f_llantas').value = item.llantas || ''; document.getElementById('f_motor').value = item.motor || ''; }
+            } else { document.getElementById('formTitle').innerText = 'Crear Nuevo'; }
             document.getElementById('modalForm').classList.add('active');
         }
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    formBase64 = e.target.result;
-                    const prev = document.getElementById('formPhotoPreview');
-                    prev.src = formBase64;
-                    prev.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
+        function updatePhotoPreview() { const url = document.getElementById('formPhotoUrl').value; const prev = document.getElementById('formPhotoPreview'); if (url) { prev.src = url; prev.style.display = 'block'; } else { prev.style.display = 'none'; } }
         function saveFormData() {
-            let newItem = { id: genId(), photo: formBase64 };
-            if(currentDataType === 'pilots') {
-                newItem.nombre = document.getElementById('f_nombre').value;
-                newItem.apellido = document.getElementById('f_apellido').value;
-                if(!newItem.nombre) return alert('Pon un nombre.');
-            } else if(currentDataType === 'tracks') {
-                newItem.nombre = document.getElementById('f_nombre').value;
-                newItem.alias = document.getElementById('f_alias').value;
-                newItem.longitud = document.getElementById('f_longitud').value;
-                newItem.tiempoMinimo = document.getElementById('f_tiempomin').value || "5.0";
-                if(!newItem.nombre) return alert('Pon un nombre.');
-            } else if(currentDataType === 'cars') {
-                newItem.marca = document.getElementById('f_marca').value;
-                newItem.modelo = document.getElementById('f_modelo').value;
-                newItem.alias = document.getElementById('f_alias').value;
-                newItem.trencilla = document.getElementById('f_trencilla').value;
-                newItem.chasis = document.getElementById('f_chasis').value;
-                newItem.llantas = document.getElementById('f_llantas').value;
-                newItem.motor = document.getElementById('f_motor').value;
-                if(!newItem.modelo) return alert('Pon un modelo.');
-            }
-            appData[currentDataType].push(newItem);
-            saveData();
-            closeModal('modalForm');
-            renderSubDataList();
+            let item = editingId ? appData[currentDataType].find(x => x.id === editingId) : { id: genId() }; item.photo = document.getElementById('formPhotoUrl').value;
+            if(currentDataType === 'pilots') { item.nombre = document.getElementById('f_nombre').value; item.apellido = document.getElementById('f_apellido').value; if(!item.nombre) return alert('Pon un nombre.'); }
+            if(currentDataType === 'tracks') { item.nombre = document.getElementById('f_nombre').value; item.alias = document.getElementById('f_alias').value; item.longitud = document.getElementById('f_longitud').value; item.tiempoMinimo = document.getElementById('f_tiempomin').value || "5.0"; if(!item.nombre) return alert('Pon un nombre.'); }
+            if(currentDataType === 'cars') { item.marca = document.getElementById('f_marca').value; item.modelo = document.getElementById('f_modelo').value; item.alias = document.getElementById('f_alias').value; item.trencilla = document.getElementById('f_trencilla').value; item.chasis = document.getElementById('f_chasis').value; item.llantas = document.getElementById('f_llantas').value; item.motor = document.getElementById('f_motor').value; if(!item.modelo) return alert('Pon un modelo.'); }
+            if (!editingId) { appData[currentDataType].push(item); } saveData(); closeModal('modalForm'); renderSubDataList();
         }
-
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // ACTUALIZAR INTERFAZ DE REGISTROS
+        // Registros (Acordeón)
+        let openRegisters = new Set();
         function updateRegistersUI() {
             const list = document.getElementById('registersList');
-            if(appData.registers.length === 0) { list.innerHTML = "<p style='color:#fff;font-size:11px;'>No hay registros.</p>"; return; }
+            if(appData.registers.length === 0) { list.innerHTML = "<p style='color:#fff;font-size:11px;text-align:center;'>No hay sesiones registradas.</p>"; return; }
+            
             list.innerHTML = appData.registers.map(r => {
-                const b = Math.min(...r.laps);
+                const pObj = appData.pilots.find(p => p.id === r.pilot);
+                const pName = pObj ? (pObj.nombre + " " + (pObj.apellido || "")) : 'Desconocido';
+                const cObj = appData.cars.find(c => c.id === r.car);
+                const cName = cObj ? (cObj.marca + " " + cObj.modelo) : 'Desconocido';
+                const tObj = appData.tracks.find(t => t.id === r.track);
+                const tName = tObj ? tObj.nombre : 'Desconocido';
+
+                const bestMs = r.laps.length > 0 ? Math.min(...r.laps) : 0;
+                const bestStr = bestMs > 0 ? (bestMs/1000).toFixed(3) + 's' : '--';
+                const isOpen = openRegisters.has(r.id) ? 'open' : '';
+
+                const lapsHtml = r.laps.map((l, idx) => `
+                    <div class="reg-lap-row">
+                        <span style="color:var(--text-muted); font-size:11px;">Vuelta ${r.laps.length - idx} ${l === bestMs ? '🏆' : ''}</span>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="color:var(--primary); font-family:monospace; font-size:13px; font-weight:bold;">${(l/1000).toFixed(3)}s</span>
+                            <button class="reg-lap-del" onclick="deleteLapBtn('${r.id}', ${idx}, event)">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+
                 return `
-                <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:12px; font-size:11px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.05);">
-                    <strong style="display:block; color:white;">${r.name}</strong>
-                    <span style="color:var(--text-muted);">${r.date} • ${r.laps.length} vueltas</span>
-                    <div style="color:var(--cyan); font-family:monospace; margin-top:4px;">Mejor: ${(b/1000).toFixed(3)}s</div>
+                <div class="reg-card">
+                    <div class="reg-header" onclick="toggleRegAccordion('${r.id}')">
+                        <div style="flex:1;">
+                            <div class="reg-title">${r.name}</div>
+                            <div class="reg-sub">🗺️ ${tName}</div>
+                            <div class="reg-sub">👤 ${pName} | 🏎️ ${cName}</div>
+                            <div class="reg-sub" style="margin-top:4px;">📅 ${r.date} • ${r.laps.length} vueltas</div>
+                            <div class="reg-highlight">Mejor: ${bestStr}</div>
+                        </div>
+                        <button class="reg-del-btn" onclick="deleteSessionBtn('${r.id}', event)">Eliminar</button>
+                    </div>
+                    <div class="reg-details ${isOpen}" id="details-${r.id}">
+                        ${lapsHtml || '<div style="color:var(--text-muted); font-size:11px; text-align:center; margin-top:5px;">Sin vueltas.</div>'}
+                    </div>
                 </div>`;
             }).join('');
         }
 
-        // CÁMARA Y CALIBRACIÓN (Punto 1)
-        let cameraActive = false;
-        let prevFrameData = null;
-
-        function toggleCalibPanel() {
-            const p = document.getElementById('calibPanel');
-            p.style.display = p.style.display === 'none' ? 'block' : 'none';
+        function toggleRegAccordion(id) {
+            const el = document.getElementById('details-' + id);
+            if(el.classList.contains('open')) { el.classList.remove('open'); openRegisters.delete(id); }
+            else { el.classList.add('open'); openRegisters.add(id); }
         }
 
+        function deleteSessionBtn(id, event) {
+            event.stopPropagation();
+            if(confirm('¿Seguro que quieres eliminar esta sesión por completo?')) {
+                appData.registers = appData.registers.filter(r => r.id !== id);
+                openRegisters.delete(id);
+                saveData();
+            }
+        }
+
+        function deleteLapBtn(regId, lapIndex, event) {
+            event.stopPropagation();
+            if(confirm('¿Eliminar esta vuelta específica?')) {
+                const reg = appData.registers.find(r => r.id === regId);
+                if(reg) { reg.laps.splice(lapIndex, 1); saveData(); }
+            }
+        }
+
+        // RÉCORDS ABSOLUTOS TOP 3 POR CIRCUITO
+        function updateRecordsUI() {
+            const list = document.getElementById('recordsList');
+            if(appData.tracks.length === 0 || appData.registers.length === 0) {
+                list.innerHTML = "<p style='color:var(--text-muted); font-size:11px; text-align:center;'>Aún no hay registros suficientes para calcular récords.</p>";
+                return;
+            }
+
+            let html = '';
+            appData.tracks.forEach(track => {
+                // Recopilar todas las vueltas realizadas en este circuito a través de todas las sesiones
+                let trackLaps = [];
+                appData.registers.forEach(reg => {
+                    if(reg.track === track.id) {
+                        const pObj = appData.pilots.find(p => p.id === reg.pilot);
+                        const cObj = appData.cars.find(c => c.id === reg.car);
+                        reg.laps.forEach(lapTime => {
+                            trackLaps.push({
+                                time: lapTime,
+                                pilot: pObj ? `${pObj.nombre} ${pObj.apellido || ''}` : 'Piloto Desconocido',
+                                car: cObj ? `${cObj.marca} ${cObj.modelo}` : 'Coche Desconocido'
+                            });
+                        });
+                    }
+                });
+
+                // Ordenar de menor a mayor tiempo (la más rápida primero)
+                trackLaps.sort((a, b) => a.time - b.time);
+                // Quedarnos con el Top 3
+                const top3 = trackLaps.slice(0, 3);
+
+                if(top3.length > 0) {
+                    html += `
+                    <div class="rec-track-card">
+                        <div class="rec-track-title">🗺️ ${track.nombre}</div>
+                        ${top3.map((rec, index) => `
+                            <div class="rec-item">
+                                <div class="rec-rank rec-rank-${index+1}">#${index+1}</div>
+                                <div class="rec-details-box">
+                                    <div style="font-weight:bold; color:white;">👤 ${rec.pilot}</div>
+                                    <div style="font-size:10px; color:var(--text-muted);">🏎️ ${rec.car}</div>
+                                </div>
+                                <div class="rec-time">${(rec.time/1000).toFixed(3)}s</div>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                }
+            });
+
+            list.innerHTML = html || "<p style='color:var(--text-muted); font-size:11px; text-align:center;'>No hay tiempos registrados por circuito todavía.</p>";
+        }
+
+
+        // Cámara
+        let cameraActive = false; let prevFrameData = null;
+        function toggleCalibPanel() { const p = document.getElementById('calibPanel'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
         function updateCalib() {
-            const sens = document.getElementById('camSens').value;
-            const size = document.getElementById('camSize').value;
-            const pos = document.getElementById('camPos').value;
-            
-            document.getElementById('valSens').innerText = sens + '%';
-            document.getElementById('valSize').innerText = size + '%';
-            document.getElementById('valPos').innerText = pos + '%';
-            
-            const zone = document.getElementById('calibZone');
-            zone.style.width = size + '%';
-            zone.style.height = size + '%';
-            zone.style.left = pos + '%';
+            const sens = document.getElementById('camSens').value; const size = document.getElementById('camSize').value; const pos = document.getElementById('camPos').value;
+            document.getElementById('valSens').innerText = sens + '%'; document.getElementById('valSize').innerText = size + '%'; document.getElementById('valPos').innerText = pos + '%';
+            const zone = document.getElementById('calibZone'); zone.style.width = size + '%'; zone.style.height = size + '%'; zone.style.left = pos + '%';
         }
-
         async function toggleCamera() {
             const video = document.getElementById('cameraFeed');
             if (!cameraActive) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 320 }, height: { ideal: 240 } } });
-                    video.srcObject = stream;
-                    video.style.display = 'block';
-                    document.getElementById('camOverlay').style.display = 'none';
-                    document.getElementById('camToggleBtn').innerText = "Cámara OFF";
-                    cameraActive = true;
-                    updateCalib();
-                    startMotionDetection();
+                    video.srcObject = stream; video.style.display = 'block'; document.getElementById('camOverlay').style.display = 'none'; document.getElementById('camToggleBtn').innerText = "Cámara OFF"; cameraActive = true; updateCalib(); startMotionDetection();
                 } catch (e) { alert('No se pudo acceder a la cámara.'); }
             } else {
-                const stream = video.srcObject;
-                if (stream) stream.getTracks().forEach(t => t.stop());
-                video.style.display = 'none';
-                document.getElementById('camOverlay').style.display = 'flex';
-                document.getElementById('camToggleBtn').innerText = "Activar Cámara";
-                cameraActive = false;
+                const stream = video.srcObject; if (stream) stream.getTracks().forEach(t => t.stop());
+                video.style.display = 'none'; document.getElementById('camOverlay').style.display = 'flex'; document.getElementById('camToggleBtn').innerText = "Activar Cámara"; cameraActive = false;
             }
         }
-
         function startMotionDetection() {
-            const video = document.getElementById('cameraFeed');
-            const canvas = document.getElementById('analysisCanvas');
-            const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            canvas.width = 64; canvas.height = 64;
-
+            const video = document.getElementById('cameraFeed'); const canvas = document.getElementById('analysisCanvas'); const ctx = canvas.getContext('2d', { willReadFrequently: true }); canvas.width = 64; canvas.height = 64;
             function processFrame() {
                 if (!cameraActive) return;
                 if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                    ctx.drawImage(video, 0, 0, 64, 64);
-                    const frame = ctx.getImageData(0, 0, 64, 64).data;
-
+                    ctx.drawImage(video, 0, 0, 64, 64); const frame = ctx.getImageData(0, 0, 64, 64).data;
                     if (prevFrameData) {
-                        let diff = 0;
-                        for (let i = 0; i < frame.length; i += 16) { diff += Math.abs(frame[i] - prevFrameData[i]); }
-                        
-                        const sensitivity = parseInt(document.getElementById('camSens').value);
-                        const threshold = 120 - sensitivity; // a mas % en la barra, menor threshold
-                        const motion = diff / 150;
-                        
+                        let diff = 0; for (let i = 0; i < frame.length; i += 16) { diff += Math.abs(frame[i] - prevFrameData[i]); }
+                        const threshold = 120 - parseInt(document.getElementById('camSens').value); const motion = diff / 150;
                         const zone = document.getElementById('calibZone');
                         if (motion > threshold) {
-                            zone.classList.add('detected');
-                            setTimeout(() => zone.classList.remove('detected'), 200);
-                            
-                            // Si la carrera esta activa, registrar vuelta respetando tiempo minimo del circuito seleccionado
+                            zone.classList.add('detected'); setTimeout(() => zone.classList.remove('detected'), 200);
                             if (isRunning) {
-                                const trackId = document.getElementById('trackSelect').value;
-                                const track = appData.tracks.find(t => t.id === trackId);
+                                const track = appData.tracks.find(t => t.id === document.getElementById('trackSelect').value);
                                 const minTimeMs = (track ? parseFloat(track.tiempoMinimo) : 5) * 1000;
-                                
-                                const now = performance.now();
-                                const lapTime = now - lastPassTime;
-                                
+                                const now = performance.now(); const lapTime = now - lastPassTime;
                                 if (lapTime >= minTimeMs) {
-                                    lastPassTime = now;
-                                    currentLaps.unshift(lapTime);
-                                    document.getElementById('currentLapNum').innerText = '#' + (currentLaps.length + 1);
-                                    
-                                    const container = document.getElementById('lapsContainer');
-                                    container.innerHTML = currentLaps.map((l, idx) => `
-                                        <div class="lap-row">
-                                            <span>Vuelta ${currentLaps.length - idx}</span>
-                                            <span style="color: var(--primary); font-family: monospace;">${(l/1000).toFixed(3)}s</span>
-                                        </div>
-                                    `).join('');
+                                    lastPassTime = now; currentLaps.unshift(lapTime); document.getElementById('currentLapNum'].innerText = '#' + (currentLaps.length + 1);
+                                    document.getElementById('lapsContainer').innerHTML = currentLaps.map((l, idx) => `<div class="lap-row"><span>Vuelta ${currentLaps.length - idx}</span><span style="color: var(--primary); font-family: monospace;">${(l/1000).toFixed(3)}s</span></div>`).join('');
                                 }
                             }
                         }
@@ -766,14 +737,9 @@
             requestAnimationFrame(processFrame);
         }
 
-        // Inicialización
-        updateSelects();
+        updateSelects(); 
         updateRegistersUI();
-    </script>
-</body>
-</html>
-            requestAnimationFrame(processFrame);
-        }
+        updateRecordsUI();
     </script>
 </body>
 </html>
