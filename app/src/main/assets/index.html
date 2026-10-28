@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CronoSlot Pro</title>
+    <!-- Iconos vectoriales y de aplicación integrados -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%2300E5FF' stroke-width='6' stroke-dasharray='10 5'/%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
     <style>
@@ -216,7 +217,7 @@
             </div>
             <div>
                 <div style="font-weight: 900; font-size: 16px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 9px; color: var(--text-muted);">PRO V4.1</div>
+                <div style="font-size: 9px; color: var(--text-muted);">PRO V4.2</div>
             </div>
         </div>
     </header>
@@ -1116,7 +1117,7 @@
                                 const minTimeMs = (track ? parseFloat(track.tiempoMinimo) : 5) * 1000;
                                 const now = performance.now(); const lapTime = now - lastPassTime;
                                 if (lapTime >= minTimeMs) {
-                                    lastPassTime = now; currentLaps.unshift(lapTime); document.getElementById('currentLapNum'].innerText = '#' + (currentLaps.length + 1);
+                                    lastPassTime = now; currentLaps.unshift(lapTime); document.getElementById('currentLapNum').innerText = '#' + (currentLaps.length + 1);
                                     document.getElementById('lapsContainer').innerHTML = currentLaps.map((l, idx) => `<div class="lap-row"><span>Vuelta ${currentLaps.length - idx}</span><span style="color: var(--primary); font-family: monospace;">${(l/1000).toFixed(3)}s</span></div>`).join('');
                                 }
                             }
@@ -1128,10 +1129,6 @@
             }
             requestAnimationFrame(processFrame);
         }
-    </script>
-</body>
-</html>
-        updateRecordsUI();
     </script>
 </body>
 </html>
