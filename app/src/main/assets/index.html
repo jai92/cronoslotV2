@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,151 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CronoSlot</title>
     <style>
-        :root {
-            --bg-dark: #121212;
-            --card-dark: #1e1e1e;
-            --primary: #00ff88;
-            --danger: #ff3366;
-            --text-main: #ffffff;
-            --text-muted: #888888;
+        :root { --bg-dark: #121212; --card-dark: rgba(30, 30, 30, 0.85); --primary: #00ff88; --danger: #ff3366; --text-main: #ffffff; --text-muted: #aaaaaa; }
+        body { 
+            margin: 0; padding: 0; 
+            background: url('https://images.unsplash.com/photo-1541443131876-44b03de101c5?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat fixed;
+            color: var(--text-main); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
         }
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-        header {
-            background-color: var(--card-dark);
-            padding: 15px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            border-bottom: 2px solid var(--primary);
-        }
-        .camera-container {
-            width: 100%;
-            height: 30vh;
-            background-color: #000;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7;
-        }
-        .calib-zone {
-            position: absolute;
-            border: 2px dashed var(--primary);
-            width: 100px;
-            height: 100px;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-        }
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto;
-        }
-        .time-display {
-            font-size: 48px;
-            font-weight: bold;
-            text-align: center;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-            font-family: monospace;
-        }
-        .card {
-            background-color: var(--card-dark);
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .btn-start {
-            background-color: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 30px;
-            padding: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            width: 100%;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
-            margin-top: 10px;
-        }
-        .btn-start:active {
-            transform: scale(0.98);
-        }
-        .bottom-nav {
-            background-color: var(--card-dark);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid #333;
-        }
-        .nav-item {
-            color: var(--text-muted);
-            font-size: 14px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-        .nav-item.active {
-            color: var(--primary);
-        }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: -1; }
+        header { background-color: rgba(18, 18, 18, 0.95); padding: 15px; text-align: center; font-size: 24px; font-weight: bold; border-bottom: 2px solid var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        .camera-container { width: 100%; height: 25vh; background-color: #000; position: relative; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #333; }
+        video { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .calib-zone { position: absolute; border: 2px dashed var(--primary); width: 100px; height: 100px; box-shadow: 0 0 10px rgba(0,255,136,0.3); }
+        .main-content { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; z-index: 1; }
+        .time-display { font-size: 54px; font-weight: bold; text-align: center; color: var(--primary); font-family: monospace; text-shadow: 0 2px 10px rgba(0,255,136,0.4); }
+        .card { background-color: var(--card-dark); border-radius: 12px; padding: 15px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-start { background-color: var(--primary); color: #000; border: none; border-radius: 30px; padding: 15px; font-size: 20px; font-weight: bold; width: 100%; text-transform: uppercase; margin-top: 10px; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4); }
+        .bottom-nav { background-color: rgba(18, 18, 18, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 1; }
+        .nav-item { color: var(--text-muted); font-size: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; text-align: center; flex: 1; }
+        .nav-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
-
+    <div class="overlay"></div>
     <header>CRONOSLOT</header>
-
     <div class="camera-container">
         <video id="camera" autoplay playsinline></video>
-        <div class="calib-zone" id="calibZone"></div>
+        <div class="calib-zone"></div>
     </div>
-
     <div class="main-content">
         <div class="card">
-            <div style="text-align: center; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Última Vuelta</div>
-            <div class="time-display" id="lastLap">00.000</div>
+            <div style="text-align: center; color: var(--text-muted); font-size: 14px; text-transform: uppercase; margin-bottom: 5px;">Tiempo Actual</div>
+            <div class="time-display" id="timeDisplay">00:00.000</div>
         </div>
-        
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span>Piloto: <b>Invitado</b></span>
-                <span>Vueltas: <b id="lapCount">0</b></span>
-            </div>
+        <div class="card" style="display: flex; justify-content: space-between; font-size: 16px;">
+            <span>Piloto: <b style="color: var(--primary);">Invitado</b></span>
+            <span>Vueltas: <b id="lapCount">0</b></span>
         </div>
-
         <button class="btn-start" onclick="toggleRace()" id="startBtn">▶ Comenzar</button>
     </div>
-
     <div class="bottom-nav">
         <div class="nav-item active">Carrera</div>
+        <div class="nav-item">Tiempos</div>
+        <div class="nav-item">Coches</div>
         <div class="nav-item">Pilotos</div>
         <div class="nav-item">Ajustes</div>
     </div>
 
     <script>
-        const video = document.getElementById('camera');
         let isRunning = false;
+        let startTime, timerInterval;
 
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => { video.srcObject = stream; })
-            .catch(err => console.error("Cámara denegada o no disponible", err));
+            .then(stream => { document.getElementById('camera').srcObject = stream; })
+            .catch(err => console.log("Cámara no disponible"));
+
+        function updateTime() {
+            const diff = new Date(Date.now() - startTime);
+            const m = String(diff.getMinutes()).padStart(2, '0');
+            const s = String(diff.getSeconds()).padStart(2, '0');
+            const ms = String(diff.getMilliseconds()).padStart(3, '0');
+            document.getElementById('timeDisplay').innerText = `${m}:${s}.${ms}`;
+        }
 
         function toggleRace() {
             const btn = document.getElementById('startBtn');
@@ -159,11 +76,14 @@
                 btn.style.backgroundColor = "var(--danger)";
                 btn.style.color = "white";
                 btn.style.boxShadow = "0 4px 15px rgba(255, 51, 102, 0.4)";
+                startTime = Date.now();
+                timerInterval = setInterval(updateTime, 10);
             } else {
                 btn.innerHTML = "▶ Comenzar";
                 btn.style.backgroundColor = "var(--primary)";
                 btn.style.color = "black";
                 btn.style.boxShadow = "0 4px 15px rgba(0, 255, 136, 0.4)";
+                clearInterval(timerInterval);
             }
         }
     </script>
