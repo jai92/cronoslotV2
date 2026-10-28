@@ -37,6 +37,8 @@ jobs:
         }
         include(":app")
         EOF
+        echo "android.useAndroidX=true" > gradle.properties
+        echo "android.enableJetifier=true" >> gradle.properties
         sed -i 's/id("com.android.application")/id("com.android.application") version "8.2.0"/g' app/build.gradle.kts
 
     - name: Build Debug APK
