@@ -18,23 +18,11 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        packages: 'platforms;android-34 build-tools;34.0.0'
-
-    - name: Initialize Gradle Wrapper 8.9
-      run: |
-        gradle wrapper --gradle-version 8.9 || true
-        chmod +x gradlew || true
+    - name: Create settings.gradle
+      run: echo 'include ":app"' > settings.gradle
 
     - name: Build Debug APK
-      run: |
-        if [ -f "./gradlew" ]; then
-          ./gradlew assembleDebug
-        else
-          cd app && ../gradlew assembleDebug || echo "Compilación completada"
-        fi
+      run: gradle :app:assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
