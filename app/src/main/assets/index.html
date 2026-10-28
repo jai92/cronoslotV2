@@ -43,9 +43,7 @@
             justify-content: space-between;
             z-index: 10;
         }
-        .logo-box {
-            display: flex; align-items: center; gap: 10px;
-        }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
         .logo-icon {
             width: 38px; height: 38px; border-radius: 12px;
             background: linear-gradient(135deg, var(--accent), var(--cyan));
@@ -67,7 +65,6 @@
             padding: 14px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
-        /* Selector de piloto/coche/pista */
         .selectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .sel-box {
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
@@ -76,19 +73,23 @@
         .sel-box span { display: block; font-weight: bold; font-size: 9px; text-transform: uppercase; margin-bottom: 2px; }
         .sel-box select { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 11px; outline: none; }
         
-        /* Visor de cámara */
         .cam-box {
-            position: relative; height: 140px; border-radius: 16px; overflow: hidden;
+            position: relative; height: 150px; border-radius: 16px; overflow: hidden;
             background: #000; border: 1px solid rgba(255,255,255,0.15);
             display: flex; align-items: center; justify-content: center;
         }
         video { width: 100%; height: 100%; object-fit: cover; }
+        .calibration-zone {
+            position: absolute; border: 2px dashed var(--cyan);
+            width: 70px; height: 70px; border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,225,255,0.4);
+            pointer-events: none;
+        }
         .cam-overlay-text {
             position: absolute; inset: 0; background: rgba(0,0,0,0.5);
             display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px;
         }
         
-        /* Cronómetro */
         .chrono-display {
             font-family: monospace; font-size: 44px; font-weight: 900;
             text-align: center; color: var(--primary); letter-spacing: 1px;
@@ -107,16 +108,17 @@
             background: linear-gradient(135deg, #10b981, #059669);
             box-shadow: 0 4px 20px rgba(16,185,129,0.4);
         }
-        
-        /* Listado de Vueltas */
         .lap-row {
             display: flex; justify-content: space-between; align-items: center;
             padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.08); font-size: 12px; font-weight: bold;
             margin-bottom: 6px;
         }
-
-        /* Navegación Inferior */
+        .data-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; background: rgba(0,0,0,0.3); border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08); font-size: 12px; margin-bottom: 6px;
+        }
         nav {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(11, 14, 24, 0.95);
@@ -146,7 +148,7 @@
             <div class="logo-icon">CS</div>
             <div>
                 <div style="font-weight: 900; font-size: 16px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 9px; color: var(--text-muted);">PRO V2.3</div>
+                <div style="font-size: 9px; color: var(--text-muted);">PRO V2.5</div>
             </div>
         </div>
         <button onclick="toggleSound()" id="soundBtn" style="background: rgba(0,225,255,0.15); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 8px 12px; border-radius: 12px; font-weight: bold; font-size: 11px;">🔊 Sonido</button>
@@ -159,30 +161,36 @@
                 <div class="selectors-grid">
                     <div class="sel-box" style="border-color: rgba(255,42,85,0.4);">
                         <span style="color: var(--accent);">Piloto</span>
-                        <select id="pilotSelect"><option>Alex Márquez</option><option>Carlos Sainz</option></select>
+                        <select id="pilotSelect"></select>
                     </div>
                     <div class="sel-box" style="border-color: rgba(0,225,255,0.4);">
                         <span style="color: var(--cyan);">Coche</span>
-                        <select id="carSelect"><option>Porsche 911</option><option>Audi R8</option></select>
+                        <select id="carSelect"></select>
                     </div>
                     <div class="sel-box" style="border-color: rgba(16,185,129,0.4);">
                         <span style="color: #10b981;">Pista</span>
-                        <select id="trackSelect"><option>Gijón GP (6s)</option><option>Jarama (8s)</option></select>
+                        <select id="trackSelect"></select>
                     </div>
                 </div>
             </div>
 
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: bold;">
-                    <span style="color: var(--text-muted);">Sensor Óptico / Cámara</span>
-                    <button onclick="startCamera()" id="camToggleBtn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 4px 10px; border-radius: 8px; font-size: 10px; cursor: pointer;">Activar Cámara</button>
+                    <span style="color: var(--text-muted);">Sensor Óptico de Meta</span>
+                    <button onclick="toggleCamera()" id="camToggleBtn" style="background: rgba(0,225,255,0.2); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 4px 10px; border-radius: 8px; font-size: 10px; cursor: pointer;">Activar Cámara</button>
                 </div>
                 <div class="cam-box">
                     <video id="cameraFeed" autoplay playsinline muted style="display: none;"></video>
+                    <canvas id="analysisCanvas" style="display: none;"></canvas>
+                    <div class="calibration-zone"></div>
                     <div id="camOverlay" class="cam-overlay-text">
-                        <span style="color: var(--cyan); font-weight: bold; font-size: 12px;">Línea de Meta Activa</span>
-                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Pulsa "Activar Cámara" para usar visión real</span>
+                        <span style="color: var(--cyan); font-weight: bold; font-size: 12px;">Cámara en Espera</span>
+                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Pulsa "Activar Cámara" para iniciar el sensor óptico</span>
                     </div>
+                </div>
+                <div style="margin-top: 8px; display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted);">
+                    <span>Nivel de Movimiento: <strong id="motionMeter" style="color: var(--cyan);">0%</strong></span>
+                    <span>Detección Automática Activa</span>
                 </div>
             </div>
 
@@ -193,13 +201,13 @@
                 </div>
                 <div id="chronoDisplay" class="chrono-display">00.000s</div>
                 <button id="mainRaceBtn" onclick="toggleRace()" class="btn-action" style="margin-top: 12px;">▶ Comenzar Carrera</button>
-                <button onclick="simulatePass()" style="margin-top: 8px; background: rgba(0,225,255,0.2); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 8px; border-radius: 12px; font-weight: bold; font-size: 11px; width: 100%; cursor: pointer;">⚡ Simular Paso por Meta (Test)</button>
+                <button onclick="registerLap()" style="margin-top: 8px; background: rgba(0,225,255,0.2); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 8px; border-radius: 12px; font-weight: bold; font-size: 11px; width: 100%; cursor: pointer;">⚡ Simular / Forzar Paso Manual</button>
             </div>
 
             <div class="card">
                 <div style="font-size: 11px; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Tiempos en Vivo</div>
                 <div id="lapsContainer" style="max-height: 120px; overflow-y: auto;">
-                    <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 10px;">Sin vueltas registradas todavía.</div>
+                    <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 10px;">Aún no hay vueltas registradas.</div>
                 </div>
             </div>
         </div>
@@ -208,11 +216,8 @@
         <div id="screen-registers" class="screen">
             <div class="card">
                 <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--cyan);">Historial de Sesiones</h3>
-                <p style="margin: 0; font-size: 11px; color: var(--text-muted);">Sesiones guardadas automáticamente al finalizar.</p>
-                <div style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; font-size: 11px;">
-                    <strong style="display: block; color: white;">Entreno Oficial Viernes</strong>
-                    <span style="color: var(--text-muted);">Alex Márquez • 12 vueltas • Mejor: 7.250s</span>
-                </div>
+                <p style="margin: 0 0 10px 0; font-size: 11px; color: var(--text-muted);">Sesiones guardadas automáticamente.</p>
+                <div id="registersList"></div>
             </div>
         </div>
 
@@ -220,10 +225,7 @@
         <div id="screen-records" class="screen">
             <div class="card">
                 <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--accent);">Récords Absolutos</h3>
-                <div style="background: rgba(255,42,85,0.15); border: 1px solid rgba(255,42,85,0.4); padding: 10px; border-radius: 12px; font-size: 11px;">
-                    <strong style="display: block; color: white;">#1 Alex Márquez (Porsche 911)</strong>
-                    <span style="color: var(--cyan); font-family: monospace; font-size: 13px; font-weight: bold;">07.250s</span>
-                </div>
+                <div id="recordsList"></div>
             </div>
         </div>
 
@@ -231,18 +233,38 @@
         <div id="screen-stats" class="screen">
             <div class="card">
                 <h3 style="margin: 0 0 8px 0; font-size: 14px; color: #10b981;">Estadísticas de Pista</h3>
-                <div style="font-size: 11px; color: var(--text-muted);">
-                    <p><strong>Circuito Gijón GP:</strong> 4 sesiones / 48 vueltas / 1.17 km recorridos.</p>
-                </div>
+                <div id="statsList" style="font-size: 11px; color: var(--text-muted);"></div>
             </div>
         </div>
 
-        <!-- PANTALLA 5: DATOS -->
+        <!-- PANTALLA 5: DATOS (TOTALMENTE FUNCIONAL SIN BLOQUEOS) -->
         <div id="screen-data" class="screen">
+            <div class="card" style="margin-bottom: 10px;">
+                <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--cyan);">+ Añadir Nuevo Elemento</h3>
+                <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+                    <select id="addType" style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px; border-radius: 8px; font-size: 11px;">
+                        <option value="pilot">Piloto</option>
+                        <option value="car">Coche</option>
+                        <option value="track">Circuito</option>
+                    </select>
+                    <input type="text" id="addNameInput" placeholder="Nombre..." style="flex: 2; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px; border-radius: 8px; font-size: 11px; outline: none;">
+                </div>
+                <button onclick="addNewData()" style="background: linear-gradient(135deg, var(--accent), #ff5e3a); border: none; color: white; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; width: 100%; cursor: pointer;">Guardar en la App</button>
+            </div>
+
             <div class="card">
-                <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--cyan);">Garaje y Pilotos</h3>
-                <p style="margin: 0 0 10px 0; font-size: 11px; color: var(--text-muted);">Gestión de perfiles de vehículos y conductores.</p>
-                <button onclick="alert('Funcionalidad de añadir perfil disponible en versión Pro.')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; width: 100%; cursor: pointer;">+ Añadir Nuevo Perfil</button>
+                <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-main);">Pilotos Registrados</h3>
+                <div id="dataPilotsList"></div>
+            </div>
+
+            <div class="card" style="margin-top: 10px;">
+                <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-main);">Coches en Garaje</h3>
+                <div id="dataCarsList"></div>
+            </div>
+
+            <div class="card" style="margin-top: 10px;">
+                <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-main);">Circuitos Definidos</h3>
+                <div id="dataTracksList"></div>
             </div>
         </div>
     </div>
@@ -257,7 +279,51 @@
     </nav>
 
     <script>
-        // Navegación entre pestañas
+        // Base de Datos Local en Memoria (LocalStorage)
+        let appData = JSON.parse(localStorage.getItem('cronoslot_data')) || {
+            pilots: ['Alex Márquez', 'Carlos Sainz', 'Laura Velocidad'],
+            cars: ['Porsche 911 GT3', 'Audi R8 LMS', 'Ferrari 488'],
+            tracks: ['Gijón GP', 'Jarama Slot', 'Le Mans Slot'],
+            laps: []
+        };
+
+        function saveData() {
+            localStorage.setItem('cronoslot_data', JSON.stringify(appData));
+            updateSelects();
+            renderDataScreen();
+        }
+
+        function updateSelects() {
+            document.getElementById('pilotSelect').innerHTML = appData.pilots.map(p => `<option>${p}</option>`).join('');
+            document.getElementById('carSelect').innerHTML = appData.cars.map(c => `<option>${c}</option>`).join('');
+            document.getElementById('trackSelect').innerHTML = appData.tracks.map(t => `<option>${t}</option>`).join('');
+        }
+
+        function renderDataScreen() {
+            document.getElementById('dataPilotsList').innerHTML = appData.pilots.map(p => `<div class="data-item"><span>👤 ${p}</span></div>`).join('');
+            document.getElementById('dataCarsList').innerHTML = appData.cars.map(c => `<div class="data-item"><span>🏎️ ${c}</span></div>`).join('');
+            document.getElementById('dataTracksList').innerHTML = appData.tracks.map(t => `<div class="data-item"><span>🗺️ ${t}</span></div>`).join('');
+        }
+
+        function addNewData() {
+            const type = document.getElementById('addType').value;
+            const name = document.getElementById('addNameInput').value.trim();
+            if (!name) {
+                alert('Escribe un nombre válido.');
+                return;
+            }
+            if (type === 'pilot') appData.pilots.push(name);
+            if (type === 'car') appData.cars.push(name);
+            if (type === 'track') appData.tracks.push(name);
+
+            document.getElementById('addNameInput').value = '';
+            saveData();
+            alert('¡Añadido correctamente!');
+        }
+
+        updateSelects();
+        renderDataScreen();
+
         function switchTab(tabId, btn) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -265,12 +331,13 @@
             btn.classList.add('active');
         }
 
-        // Lógica del Cronómetro y Carrera
         let isRunning = false;
         let startTime = 0;
+        let lastPassTime = 0;
         let timerInterval = null;
-        let lapsList = [];
         let soundActive = true;
+        let cameraActive = false;
+        let prevFrameData = null;
 
         function toggleSound() {
             soundActive = !soundActive;
@@ -284,6 +351,7 @@
                 btn.innerText = "⏹ Detener Carrera";
                 btn.className = "btn-action stop";
                 startTime = performance.now();
+                lastPassTime = startTime;
                 timerInterval = setInterval(() => {
                     const elapsed = performance.now() - startTime;
                     const s = Math.floor(elapsed / 1000);
@@ -297,37 +365,89 @@
             }
         }
 
-        function simulatePass() {
+        function registerLap() {
             if (!isRunning) {
-                alert('¡Debes pulsar "Comenzar Carrera" antes para registrar tiempos!');
+                alert('¡Pulsa "Comenzar Carrera" para iniciar el crono!');
                 return;
             }
-            const elapsed = performance.now() - startTime;
-            startTime = performance.now(); // Reiniciar para la siguiente vuelta
-            lapsList.unshift(elapsed);
+            const now = performance.now();
+            const lapTime = now - lastPassTime;
+            
+            if (appData.laps.length > 0 && lapTime < 2500) return; 
 
-            document.getElementById('currentLapNum').innerText = '#' + (lapsList.length + 1);
+            lastPassTime = now;
+            startTime = now;
+            appData.laps.unshift(lapTime);
+            saveData();
+
+            document.getElementById('currentLapNum').innerText = '#' + (appData.laps.length + 1);
 
             const container = document.getElementById('lapsContainer');
-            container.innerHTML = lapsList.map((l, idx) => `
+            container.innerHTML = appData.laps.map((l, idx) => `
                 <div class="lap-row">
-                    <span>Vuelta ${lapsList.length - idx}</span>
+                    <span>Vuelta ${appData.laps.length - idx}</span>
                     <span style="color: var(--primary); font-family: monospace;">${(l/1000).toFixed(3)}s</span>
                 </div>
             `).join('');
         }
 
-        async function startCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                const video = document.getElementById('cameraFeed');
-                video.srcObject = stream;
-                video.style.display = 'block';
-                document.getElementById('camOverlay').style.display = 'none';
-                document.getElementById('camToggleBtn').innerText = "Cámara ON";
-            } catch (e) {
-                alert('No se pudo iniciar la cámara del dispositivo.');
+        async function toggleCamera() {
+            const video = document.getElementById('cameraFeed');
+            if (!cameraActive) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'environment', width: { ideal: 320 }, height: { ideal: 240 } } 
+                    });
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    document.getElementById('camOverlay').style.display = 'none';
+                    document.getElementById('camToggleBtn').innerText = "Cámara OFF";
+                    cameraActive = true;
+                    startMotionDetection();
+                } catch (e) {
+                    alert('No se pudo acceder a la cámara.');
+                }
+            } else {
+                const stream = video.srcObject;
+                if (stream) stream.getTracks().forEach(t => t.stop());
+                video.style.display = 'none';
+                document.getElementById('camOverlay').style.display = 'flex';
+                document.getElementById('camToggleBtn').innerText = "Activar Cámara";
+                cameraActive = false;
             }
+        }
+
+        function startMotionDetection() {
+            const video = document.getElementById('cameraFeed');
+            const canvas = document.getElementById('analysisCanvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+            canvas.width = 64;
+            canvas.height = 64;
+
+            function processFrame() {
+                if (!cameraActive) return;
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    ctx.drawImage(video, 0, 0, 64, 64);
+                    const frame = ctx.getImageData(0, 0, 64, 64).data;
+
+                    if (prevFrameData) {
+                        let diff = 0;
+                        for (let i = 0; i < frame.length; i += 16) {
+                            diff += Math.abs(frame[i] - prevFrameData[i]);
+                        }
+                        const motion = Math.min(100, Math.round(diff / 150));
+                        document.getElementById('motionMeter').innerText = motion + '%';
+
+                        if (motion > 35 && isRunning) {
+                            registerLap();
+                        }
+                    }
+                    prevFrameData = new Uint8ClampedArray(frame);
+                }
+                requestAnimationFrame(processFrame);
+            }
+            requestAnimationFrame(processFrame);
         }
     </script>
 </body>
