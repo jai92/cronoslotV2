@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CronoSlot Pro</title>
-    <!-- Iconos vectoriales y de aplicación integrados -->
+    <!-- Iconos vectoriales -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%2300E5FF' stroke-width='6' stroke-dasharray='10 5'/%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg-dark: #07090F;
@@ -67,63 +66,45 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
         
+        /* Desplegables Personalizados con Fotos */
         .selectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .sel-box {
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
             border-radius: 14px; padding: 8px; font-size: 11px; transition: 0.3s;
-            display: flex; flex-direction: column; gap: 4px;
         }
-        .sel-box-header { display: flex; align-items: center; gap: 6px; }
-        .sel-thumb { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; background: #222; border: 1px solid rgba(255,255,255,0.2); display: none; }
-        .sel-box span { display: block; font-weight: bold; font-size: 9px; text-transform: uppercase; }
-        .sel-box select { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 11px; outline: none; }
+        .sel-box span.lbl { display: block; font-weight: bold; font-size: 9px; text-transform: uppercase; margin-bottom: 4px; }
+        
+        .c-select { position: relative; width: 100%; user-select: none; }
+        .c-select-head { display: flex; align-items: center; gap: 6px; padding: 4px; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; }
+        .c-select-head img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; background: #222; border: 1px solid rgba(255,255,255,0.1); }
+        .c-select-head .no-img { width: 22px; height: 22px; border-radius: 6px; background: #222; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .c-select-head .txt { font-weight: bold; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; color: white; }
+        
+        .c-select-opts { display: none; position: absolute; top: 110%; left: -10px; width: calc(100% + 20px); max-height: 180px; overflow-y: auto; background: rgba(15,20,35,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .c-select-opts.open { display: block; }
+        .c-opt { display: flex; align-items: center; gap: 8px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        .c-opt:active { background: rgba(255,255,255,0.1); }
+        .c-opt img { width: 28px; height: 28px; border-radius: 6px; object-fit: cover; background: #222; }
+        .c-opt .txt { font-size: 12px; font-weight: bold; color: white; }
+        
         .sel-box.locked { opacity: 0.5; pointer-events: none; }
 
-        .cam-box {
-            position: relative; height: 160px; border-radius: 16px; overflow: hidden;
-            background: #000; border: 1px solid rgba(255,255,255,0.15);
-            display: flex; align-items: center; justify-content: center;
-        }
+        /* Cámara */
+        .cam-box { position: relative; height: 160px; border-radius: 16px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .calibration-zone {
-            position: absolute; border: 2px dashed var(--cyan);
-            width: 30%; height: 30%; border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0,225,255,0.4); pointer-events: none;
-            left: 50%; top: 50%; transform: translate(-50%, -50%); transition: 0.1s;
-        }
+        .calibration-zone { position: absolute; border: 2px dashed var(--cyan); width: 30%; height: 30%; border-radius: 12px; box-shadow: 0 0 15px rgba(0,225,255,0.4); pointer-events: none; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: 0.1s; }
         .calibration-zone.detected { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,42,85,0.8); background: rgba(255,42,85,0.2); }
-        .cam-overlay-text {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.6);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px;
-        }
+        .cam-overlay-text { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
         .calib-panel { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; }
         .calib-row { margin-bottom: 8px; }
         .calib-row span { font-size: 10px; color: var(--cyan); font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 4px; }
         .calib-row input[type="range"] { width: 100%; accent-color: var(--cyan); }
 
-        .chrono-display {
-            font-family: monospace; font-size: 44px; font-weight: 900;
-            text-align: center; color: var(--primary); letter-spacing: 1px;
-            background: rgba(0,0,0,0.5); border-radius: 16px; padding: 10px;
-            border: 1px solid rgba(0,255,136,0.2); text-shadow: 0 0 15px rgba(0,255,136,0.4);
-        }
-        .btn-action {
-            background: linear-gradient(135deg, var(--primary), #059669);
-            color: black; border: none; border-radius: 20px;
-            padding: 14px; font-size: 16px; font-weight: 900;
-            text-transform: uppercase; width: 100%; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,255,136,0.4); transition: 0.3s;
-        }
-        .btn-action.stop {
-            background: linear-gradient(135deg, var(--accent), #c81d45);
-            color: white; box-shadow: 0 4px 20px rgba(255,42,85,0.4);
-        }
+        .chrono-display { font-family: monospace; font-size: 44px; font-weight: 900; text-align: center; color: var(--primary); letter-spacing: 1px; background: rgba(0,0,0,0.5); border-radius: 16px; padding: 10px; border: 1px solid rgba(0,255,136,0.2); text-shadow: 0 0 15px rgba(0,255,136,0.4); }
+        .btn-action { background: linear-gradient(135deg, var(--primary), #059669); color: black; border: none; border-radius: 20px; padding: 14px; font-size: 16px; font-weight: 900; text-transform: uppercase; width: 100%; cursor: pointer; box-shadow: 0 4px 20px rgba(0,255,136,0.4); transition: 0.3s; }
+        .btn-action.stop { background: linear-gradient(135deg, var(--accent), #c81d45); color: white; box-shadow: 0 4px 20px rgba(255,42,85,0.4); }
 
-        .lap-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.08); font-size: 12px; font-weight: bold; margin-bottom: 6px;
-        }
+        .lap-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); font-size: 12px; font-weight: bold; margin-bottom: 6px; }
 
         /* Estilos Registros */
         .reg-card { background:rgba(0,0,0,0.3); padding:12px; border-radius:14px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.05); }
@@ -149,12 +130,7 @@
         .rec-time { font-family: monospace; font-size: 13px; font-weight: bold; color: var(--cyan); }
 
         /* Estadísticas */
-        .stat-card-menu {
-            background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6));
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px;
-            margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
-        }
+        .stat-card-menu { background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6)); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
         .stat-card-menu:active { transform: scale(0.98); }
 
         /* Modales */
@@ -165,18 +141,13 @@
         .modal-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 12px; border-radius: 12px; font-size: 12px; outline: none; margin-bottom: 10px; font-family: inherit; }
         .modal-label { font-size: 10px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; display: block; }
         .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-        .modal-btn { flex: 1; padding: 12px; border-radius: 14px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; text-transform: uppercase; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 14px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; text-transform: uppercase; text-align: center; }
         .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
         .btn-confirm { background: linear-gradient(135deg, var(--accent), #ff5e3a); color: white; }
         .btn-cyan { background: linear-gradient(135deg, var(--cyan), #00b3cc); color: black; }
 
         /* Datos */
-        .data-main-card {
-            background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6));
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px;
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 15px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3); transition: 0.2s;
-        }
+        .data-main-card { background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3); transition: 0.2s; }
         .data-main-card:active { transform: scale(0.98); }
         .data-icon { font-size: 28px; background: rgba(0,0,0,0.5); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
         .data-info h3 { margin: 0; font-size: 18px; color: white; }
@@ -191,21 +162,15 @@
         .action-btn { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; cursor: pointer; }
         .action-btn.del { background: rgba(255,42,85,0.15); color: var(--accent); }
 
-        nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(11, 14, 24, 0.95); backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 12px 16px 12px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; z-index: 100;
-        }
-        .nav-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-            padding: 6px; border-radius: 14px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase;
-        }
-        .nav-btn.active {
-            background: linear-gradient(135deg, var(--accent), #c81d45);
-            color: white; box-shadow: 0 4px 15px rgba(255,42,85,0.3);
-        }
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(11, 14, 24, 0.95); backdrop-filter: blur(15px); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 12px 16px 12px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; z-index: 100; }
+        .nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px; border-radius: 14px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .nav-btn.active { background: linear-gradient(135deg, var(--accent), #c81d45); color: white; box-shadow: 0 4px 15px rgba(255,42,85,0.3); }
+
+        /* Formulario y Cámara Interna */
+        .photo-capture-box { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        #formVideoBox { display: none; width: 100%; height: 200px; background: #000; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); overflow: hidden; position: relative; }
+        #formVideoBox video { width: 100%; height: 100%; object-fit: cover; }
+        #formPhotoPreview { width: 100%; height: 150px; object-fit: cover; border-radius: 12px; display: none; border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -217,7 +182,7 @@
             </div>
             <div>
                 <div style="font-weight: 900; font-size: 16px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 9px; color: var(--text-muted);">PRO V4.2</div>
+                <div style="font-size: 9px; color: var(--text-muted);">PRO V4.3</div>
             </div>
         </div>
     </header>
@@ -227,25 +192,42 @@
         <div id="screen-race" class="screen active">
             <div class="card">
                 <div class="selectors-grid">
+                    <!-- Piloto: Desplegable Personalizado -->
                     <div class="sel-box" id="boxPilot" style="border-color: rgba(255,42,85,0.4);">
-                        <div class="sel-box-header">
-                            <img id="pilotThumb" class="sel-thumb" src="">
-                            <span style="color: var(--accent);">Piloto</span>
+                        <span class="lbl" style="color: var(--accent);">Piloto</span>
+                        <div class="c-select" id="pilotSelectWrap">
+                            <div class="c-select-head" onclick="toggleCustomSelect('pilotOpts')">
+                                <img id="pilotHeadImg" src="" style="display:none;">
+                                <div id="pilotHeadNoImg" class="no-img">👤</div>
+                                <span class="txt" id="pilotHeadTxt">Seleccionar</span>
+                            </div>
+                            <div class="c-select-opts" id="pilotOpts"></div>
                         </div>
-                        <select id="pilotSelect" onchange="updateSelectionThumbnails()"></select>
                     </div>
+
+                    <!-- Coche: Desplegable Personalizado -->
                     <div class="sel-box" id="boxCar" style="border-color: rgba(0,225,255,0.4);">
-                        <div class="sel-box-header">
-                            <img id="carThumb" class="sel-thumb" src="">
-                            <span style="color: var(--cyan);">Coche</span>
+                        <span class="lbl" style="color: var(--cyan);">Coche</span>
+                        <div class="c-select" id="carSelectWrap">
+                            <div class="c-select-head" onclick="toggleCustomSelect('carOpts')">
+                                <img id="carHeadImg" src="" style="display:none;">
+                                <div id="carHeadNoImg" class="no-img">🏎️</div>
+                                <span class="txt" id="carHeadTxt">Seleccionar</span>
+                            </div>
+                            <div class="c-select-opts" id="carOpts"></div>
                         </div>
-                        <select id="carSelect" onchange="updateSelectionThumbnails()"></select>
                     </div>
+
+                    <!-- Pista: Desplegable Personalizado -->
                     <div class="sel-box" id="boxTrack" style="border-color: rgba(16,185,129,0.4);">
-                        <div class="sel-box-header">
-                            <span style="color: #10b981;">Pista</span>
+                        <span class="lbl" style="color: #10b981;">Pista</span>
+                        <div class="c-select" id="trackSelectWrap">
+                            <div class="c-select-head" onclick="toggleCustomSelect('trackOpts')">
+                                <div class="no-img">🗺️</div>
+                                <span class="txt" id="trackHeadTxt">Seleccionar</span>
+                            </div>
+                            <div class="c-select-opts" id="trackOpts"></div>
                         </div>
-                        <select id="trackSelect"></select>
                     </div>
                 </div>
             </div>
@@ -433,17 +415,27 @@
         </div>
     </div>
 
+    <!-- Modal de Formulario con Cámara WebRTC interna -->
     <div class="modal-overlay" id="modalForm">
         <div class="modal-card">
             <h3 class="modal-title" id="formTitle">Crear</h3>
             <div id="formDynamicFields"></div>
             
-            <label class="modal-label" style="margin-top:10px;">📸 Foto (Cámara o Galería)</label>
-            <input type="file" id="formFilePhoto" accept="image/*" capture="environment" class="modal-input" style="padding:6px; background:rgba(255,255,255,0.05);" onchange="processFilePhoto(event)">
-            <img id="formPhotoPreview" style="width:100%; height:120px; object-fit:cover; border-radius:12px; display:none; margin-bottom:10px; border:1px solid rgba(255,255,255,0.1);">
+            <label class="modal-label" style="margin-top:10px;">📸 FOTO DEL PERFIL</label>
+            <div class="photo-capture-box">
+                <button type="button" class="btn-cancel" style="padding:10px; border-radius:10px; width:100%; border:1px solid rgba(255,255,255,0.2);" onclick="startFormCamera()">📷 Abrir Cámara (Tomar Foto)</button>
+                
+                <div id="formVideoBox">
+                    <video id="formCameraStream" autoplay playsinline></video>
+                    <button type="button" class="btn-confirm" style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); padding:8px 16px; border-radius:20px;" onclick="takeFormPhoto()">Capturar</button>
+                </div>
+                
+                <canvas id="formCanvas" style="display:none;"></canvas>
+                <img id="formPhotoPreview">
+            </div>
 
             <div class="modal-btns">
-                <button class="modal-btn btn-cancel" onclick="closeModal('modalForm')">Cancelar</button>
+                <button class="modal-btn btn-cancel" onclick="closeModal('modalForm'); stopFormCamera();">Cancelar</button>
                 <button class="modal-btn btn-cyan" onclick="saveFormData()">Guardar</button>
             </div>
         </div>
@@ -458,80 +450,128 @@
         };
         let appData = defaultData;
         try {
-            const saved = localStorage.getItem('cronoslot_v10');
+            const saved = localStorage.getItem('cronoslot_v11');
             if (saved) { appData = JSON.parse(saved); }
         } catch(e) { appData = defaultData; }
         
         function saveData() { 
-            try {
-                localStorage.setItem('cronoslot_v10', JSON.stringify(appData));
-            } catch(e) {}
-            updateSelects(); 
-            updateRegistersUI(); 
-            updateRecordsUI(); 
+            try { localStorage.setItem('cronoslot_v11', JSON.stringify(appData)); } catch(e) {}
+            updateSelects(); updateRegistersUI(); updateRecordsUI(); 
         }
         const genId = () => Math.random().toString(36).substr(2, 9);
 
+        // GLOBALES DE SELECCIÓN
+        let selPilotId = appData.pilots.length ? appData.pilots[0].id : '';
+        let selCarId = appData.cars.length ? appData.cars[0].id : '';
+        let selTrackId = appData.tracks.length ? appData.tracks[0].id : '';
+
+        // CONTROL DE MENÚS DESPLEGABLES PERSONALIZADOS
+        function toggleCustomSelect(id) {
+            document.querySelectorAll('.c-select-opts').forEach(el => {
+                if(el.id !== id) el.classList.remove('open');
+            });
+            const opts = document.getElementById(id);
+            if(opts) opts.classList.toggle('open');
+        }
+
+        // Cierra desplegables al pulsar fuera
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.c-select')) {
+                document.querySelectorAll('.c-select-opts').forEach(el => el.classList.remove('open'));
+            }
+        });
+
+        function selectCustomOption(type, id) {
+            if(type === 'pilot') selPilotId = id;
+            if(type === 'car') selCarId = id;
+            if(type === 'track') selTrackId = id;
+            updateSelects();
+            document.querySelectorAll('.c-select-opts').forEach(el => el.classList.remove('open'));
+            if(type === 'track') updateMinLapText();
+        }
+
         function updateSelects() {
-            const pSel = document.getElementById('pilotSelect');
-            const cSel = document.getElementById('carSelect');
-            const tSel = document.getElementById('trackSelect');
-            if(!pSel || !cSel || !tSel) return;
+            // Asegurar que hay algo seleccionado si existen datos
+            if(!appData.pilots.find(x => x.id === selPilotId) && appData.pilots.length) selPilotId = appData.pilots[0].id;
+            if(!appData.cars.find(x => x.id === selCarId) && appData.cars.length) selCarId = appData.cars[0].id;
+            if(!appData.tracks.find(x => x.id === selTrackId) && appData.tracks.length) selTrackId = appData.tracks[0].id;
 
-            const pVal = pSel.value;
-            const cVal = cSel.value;
-            const tVal = tSel.value;
+            // Render opciones Piloto
+            const pOpts = document.getElementById('pilotOpts');
+            if(pOpts) {
+                pOpts.innerHTML = appData.pilots.map(p => `
+                    <div class="c-opt" onclick="selectCustomOption('pilot', '${p.id}')">
+                        ${p.photo ? `<img src="${p.photo}">` : `<div style="width:28px;height:28px;background:#222;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;">👤</div>`}
+                        <div class="txt">${p.nombre} ${p.apellido}</div>
+                    </div>
+                `).join('');
+                
+                const pObj = appData.pilots.find(x => x.id === selPilotId);
+                if(pObj) {
+                    document.getElementById('pilotHeadTxt').innerText = `${pObj.nombre} ${pObj.apellido}`;
+                    if(pObj.photo) {
+                        document.getElementById('pilotHeadImg').src = pObj.photo;
+                        document.getElementById('pilotHeadImg').style.display = 'block';
+                        document.getElementById('pilotHeadNoImg').style.display = 'none';
+                    } else {
+                        document.getElementById('pilotHeadImg').style.display = 'none';
+                        document.getElementById('pilotHeadNoImg').style.display = 'flex';
+                    }
+                }
+            }
 
-            pSel.innerHTML = appData.pilots.map(p => `<option value="${p.id}" data-photo="${p.photo || ''}">${p.nombre} ${p.apellido}</option>`).join('');
-            cSel.innerHTML = appData.cars.map(c => `<option value="${c.id}" data-photo="${c.photo || ''}">${c.marca} ${c.modelo}</option>`).join('');
-            tSel.innerHTML = appData.tracks.map(t => `<option value="${t.id}">${t.nombre} (${t.tiempoMinimo}s)</option>`).join('');
-            
-            if (pVal && appData.pilots.find(p => p.id === pVal)) pSel.value = pVal;
-            if (cVal && appData.cars.find(c => c.id === cVal)) cSel.value = cVal;
-            if (tVal && appData.tracks.find(t => t.id === tVal)) tSel.value = tVal;
-            
-            updateSelectionThumbnails();
+            // Render opciones Coche
+            const cOpts = document.getElementById('carOpts');
+            if(cOpts) {
+                cOpts.innerHTML = appData.cars.map(c => `
+                    <div class="c-opt" onclick="selectCustomOption('car', '${c.id}')">
+                        ${c.photo ? `<img src="${c.photo}">` : `<div style="width:28px;height:28px;background:#222;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;">🏎️</div>`}
+                        <div class="txt">${c.marca} ${c.modelo}</div>
+                    </div>
+                `).join('');
+                
+                const cObj = appData.cars.find(x => x.id === selCarId);
+                if(cObj) {
+                    document.getElementById('carHeadTxt').innerText = `${cObj.marca} ${cObj.modelo}`;
+                    if(cObj.photo) {
+                        document.getElementById('carHeadImg').src = cObj.photo;
+                        document.getElementById('carHeadImg').style.display = 'block';
+                        document.getElementById('carHeadNoImg').style.display = 'none';
+                    } else {
+                        document.getElementById('carHeadImg').style.display = 'none';
+                        document.getElementById('carHeadNoImg').style.display = 'flex';
+                    }
+                }
+            }
+
+            // Render opciones Pista
+            const tOpts = document.getElementById('trackOpts');
+            if(tOpts) {
+                tOpts.innerHTML = appData.tracks.map(t => `
+                    <div class="c-opt" onclick="selectCustomOption('track', '${t.id}')">
+                        <div style="width:28px;height:28px;background:#222;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;">🗺️</div>
+                        <div class="txt">${t.nombre} (${t.tiempoMinimo}s)</div>
+                    </div>
+                `).join('');
+                
+                const tObj = appData.tracks.find(x => x.id === selTrackId);
+                if(tObj) {
+                    document.getElementById('trackHeadTxt').innerText = `${tObj.nombre} (${tObj.tiempoMinimo}s)`;
+                }
+            }
+
             updateMinLapText();
         }
 
-        function updateSelectionThumbnails() {
-            const pSelect = document.getElementById('pilotSelect');
-            const cSelect = document.getElementById('carSelect');
-            const pThumb = document.getElementById('pilotThumb');
-            const cThumb = document.getElementById('carThumb');
-            if(!pSelect || !cSelect || !pThumb || !cThumb) return;
-
-            const pOpt = pSelect.options[pSelect.selectedIndex];
-            const cOpt = cSelect.options[cSelect.selectedIndex];
-
-            if (pOpt && pOpt.dataset.photo) {
-                pThumb.src = pOpt.dataset.photo;
-                pThumb.style.display = 'block';
-            } else {
-                pThumb.style.display = 'none';
-            }
-
-            if (cOpt && cOpt.dataset.photo) {
-                cThumb.src = cOpt.dataset.photo;
-                cThumb.style.display = 'block';
-            } else {
-                cThumb.style.display = 'none';
-            }
-        }
-
         function updateMinLapText() {
-            const tSel = document.getElementById('trackSelect');
-            const minTxt = document.getElementById('minLapTxt');
-            if(!tSel || !minTxt) return;
-            const track = appData.tracks.find(t => t.id === tSel.value);
-            if(track) minTxt.innerText = track.tiempoMinimo + 's';
+            const track = appData.tracks.find(t => t.id === selTrackId);
+            if(track) {
+                const txt = document.getElementById('minLapTxt');
+                if(txt) txt.innerText = track.tiempoMinimo + 's';
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const tSel = document.getElementById('trackSelect');
-            if(tSel) {
-                tSel.addEventListener('change', updateMinLapText);
-            }
             updateSelects(); 
             updateRegistersUI();
             updateRecordsUI();
@@ -594,14 +634,14 @@
             releaseWakeLock();
             if(currentLaps.length > 0) {
                 document.getElementById('modalSaveSession').classList.add('active');
-                const t = appData.tracks.find(x => x.id === document.getElementById('trackSelect').value);
+                const t = appData.tracks.find(x => x.id === selTrackId);
                 document.getElementById('sessionNameInput').value = `Sesión en ${t ? t.nombre : 'Pista'} #${appData.registers.length + 1}`;
             } else { closeSummaryAndReset(); }
         }
         function discardSession() { closeModal('modalSaveSession'); closeSummaryAndReset(); }
         function saveSession() {
             const name = document.getElementById('sessionNameInput').value || 'Sesión sin nombre';
-            const reg = { id: genId(), name, pilot: document.getElementById('pilotSelect').value, car: document.getElementById('carSelect').value, track: document.getElementById('trackSelect').value, date: new Date().toLocaleString(), laps: [...currentLaps] };
+            const reg = { id: genId(), name, pilot: selPilotId, car: selCarId, track: selTrackId, date: new Date().toLocaleString(), laps: [...currentLaps] };
             appData.registers.unshift(reg); saveData(); closeModal('modalSaveSession'); showSummaryModal(reg);
         }
         function showSummaryModal(reg) {
@@ -628,7 +668,7 @@
             currentLaps = [];
         }
 
-        // Datos y Fotos
+        // Datos y Formularios
         let currentDataType = '';
         let tempPhotoBase64 = '';
 
@@ -666,7 +706,8 @@
             editingId = typeof id === 'string' ? id : null;
             const container = document.getElementById('formDynamicFields');
             document.getElementById('formPhotoPreview').style.display = 'none'; 
-            document.getElementById('formFilePhoto').value = ''; 
+            document.getElementById('formVideoBox').style.display = 'none';
+            stopFormCamera();
             tempPhotoBase64 = '';
             let html = '';
 
@@ -699,38 +740,47 @@
             document.getElementById('modalForm').classList.add('active');
         }
 
-        function processFilePhoto(event) {
-            const file = event.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400;
-                        const MAX_HEIGHT = 400;
-                        let width = img.width;
-                        let height = img.height;
+        // CÁMARA INTERNA PARA FORMULARIOS (BYPASS WEBVIEW)
+        let formStream = null;
+        async function startFormCamera() {
+            document.getElementById('formPhotoPreview').style.display = 'none';
+            document.getElementById('formVideoBox').style.display = 'block';
+            const video = document.getElementById('formCameraStream');
+            try {
+                formStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 400 }, height: { ideal: 400 } } });
+                video.srcObject = formStream;
+            } catch (e) {
+                alert("No se pudo acceder a la cámara. Revisa los permisos.");
+                document.getElementById('formVideoBox').style.display = 'none';
+            }
+        }
 
-                        if (width > height) {
-                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                        } else {
-                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                        }
+        function takeFormPhoto() {
+            const video = document.getElementById('formCameraStream');
+            const canvas = document.getElementById('formCanvas');
+            if(!formStream) return;
+            
+            // Recortar en cuadrado
+            const size = Math.min(video.videoWidth, video.videoHeight);
+            canvas.width = 400; canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+            const startX = (video.videoWidth - size) / 2;
+            const startY = (video.videoHeight - size) / 2;
+            
+            ctx.drawImage(video, startX, startY, size, size, 0, 0, 400, 400);
+            tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            stopFormCamera();
+            document.getElementById('formVideoBox').style.display = 'none';
+            const prev = document.getElementById('formPhotoPreview');
+            prev.src = tempPhotoBase64;
+            prev.style.display = 'block';
+        }
 
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                        const prev = document.getElementById('formPhotoPreview');
-                        prev.src = tempPhotoBase64;
-                        prev.style.display = 'block';
-                    }
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+        function stopFormCamera() {
+            if(formStream) {
+                formStream.getTracks().forEach(t => t.stop());
+                formStream = null;
             }
         }
 
@@ -743,6 +793,7 @@
             if(currentDataType === 'cars') { item.marca = document.getElementById('f_marca').value; item.modelo = document.getElementById('f_modelo').value; item.alias = document.getElementById('f_alias').value; item.trencilla = document.getElementById('f_trencilla').value; item.chasis = document.getElementById('f_chasis').value; item.llantas = document.getElementById('f_llantas').value; item.motor = document.getElementById('f_motor').value; if(!item.modelo) return alert('Pon un modelo.'); }
             
             if (!editingId) { appData[currentDataType].push(item); } 
+            stopFormCamera();
             saveData(); closeModal('modalForm'); renderSubDataList();
         }
 
@@ -1079,7 +1130,7 @@
             }
         }
 
-        // Cámara
+        // Cámara de Carrera / Cronómetro
         let cameraActive = false; let prevFrameData = null;
         function toggleCalibPanel() { const p = document.getElementById('calibPanel'); if(p) p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
         function updateCalib() {
@@ -1113,7 +1164,7 @@
                         if (motion > threshold) {
                             if(zone) { zone.classList.add('detected'); setTimeout(() => zone.classList.remove('detected'), 200); }
                             if (isRunning) {
-                                const track = appData.tracks.find(t => t.id === document.getElementById('trackSelect').value);
+                                const track = appData.tracks.find(t => t.id === selTrackId);
                                 const minTimeMs = (track ? parseFloat(track.tiempoMinimo) : 5) * 1000;
                                 const now = performance.now(); const lapTime = now - lastPassTime;
                                 if (lapTime >= minTimeMs) {
