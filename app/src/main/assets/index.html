@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CronoSlot</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --primary: #00ff88;
+            --danger: #ff3366;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            background-color: var(--card-dark);
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--primary);
+        }
+        .camera-container {
+            width: 100%;
+            height: 30vh;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+        .calib-zone {
+            position: absolute;
+            border: 2px dashed var(--primary);
+            width: 100px;
+            height: 100px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+        .time-display {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            font-family: monospace;
+        }
+        .card {
+            background-color: var(--card-dark);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .btn-start {
+            background-color: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 30px;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            width: 100%;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+            margin-top: 10px;
+        }
+        .btn-start:active {
+            transform: scale(0.98);
+        }
+        .bottom-nav {
+            background-color: var(--card-dark);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #333;
+        }
+        .nav-item {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .nav-item.active {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <header>CRONOSLOT</header>
+
+    <div class="camera-container">
+        <video id="camera" autoplay playsinline></video>
+        <div class="calib-zone" id="calibZone"></div>
+    </div>
+
+    <div class="main-content">
+        <div class="card">
+            <div style="text-align: center; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Última Vuelta</div>
+            <div class="time-display" id="lastLap">00.000</div>
+        </div>
+        
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>Piloto: <b>Invitado</b></span>
+                <span>Vueltas: <b id="lapCount">0</b></span>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="toggleRace()" id="startBtn">▶ Comenzar</button>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active">Carrera</div>
+        <div class="nav-item">Pilotos</div>
+        <div class="nav-item">Ajustes</div>
+    </div>
+
+    <script>
+        const video = document.getElementById('camera');
+        let isRunning = false;
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => { video.srcObject = stream; })
+            .catch(err => console.error("Cámara denegada o no disponible", err));
+
+        function toggleRace() {
+            const btn = document.getElementById('startBtn');
+            isRunning = !isRunning;
+            if (isRunning) {
+                btn.innerHTML = "⏹ Detener";
+                btn.style.backgroundColor = "var(--danger)";
+                btn.style.color = "white";
+                btn.style.boxShadow = "0 4px 15px rgba(255, 51, 102, 0.4)";
+            } else {
+                btn.innerHTML = "▶ Comenzar";
+                btn.style.backgroundColor = "var(--primary)";
+                btn.style.color = "black";
+                btn.style.boxShadow = "0 4px 15px rgba(0, 255, 136, 0.4)";
+            }
+        }
+    </script>
+</body>
+</html>
