@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CronoSlot Pro</title>
+    <!-- Icono vectorial integrado para la aplicación -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%2300E5FF' stroke-width='6' stroke-dasharray='10 5'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg-dark: #07090F;
@@ -47,6 +49,7 @@
             background: linear-gradient(135deg, var(--accent), var(--cyan));
             display: flex; align-items: center; justify-content: center;
             font-weight: 900; font-size: 14px; color: #000;
+            box-shadow: 0 0 15px rgba(0,225,255,0.4);
         }
         .main-container {
             flex: 1; overflow-y: auto; padding: 14px;
@@ -142,6 +145,15 @@
         .rec-details-box { flex: 1; margin-left: 6px; }
         .rec-time { font-family: monospace; font-size: 13px; font-weight: bold; color: var(--cyan); }
 
+        /* Estilos Estadísticas */
+        .stat-card-menu {
+            background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6));
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px;
+            margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
+        }
+        .stat-card-menu:active { transform: scale(0.98); }
+
         /* Modales */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .modal-overlay.active { display: flex; }
@@ -197,10 +209,13 @@
     <div class="overlay"></div>
     <header>
         <div class="logo-box">
-            <div class="logo-icon">CS</div>
+            <div class="logo-icon">
+                <!-- Icono SVG integrado -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
             <div>
                 <div style="font-weight: 900; font-size: 16px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 9px; color: var(--text-muted);">PRO V3.1</div>
+                <div style="font-size: 9px; color: var(--text-muted);">PRO V3.6</div>
             </div>
         </div>
     </header>
@@ -292,11 +307,41 @@
             </div>
         </div>
 
-        <!-- PANTALLA 4: ESTADÍSTICAS -->
+        <!-- PANTALLA 4: ESTADÍSTICAS AVANZADAS -->
         <div id="screen-stats" class="screen">
-            <div class="card">
-                <h3 style="margin:0 0 8px 0; color:var(--primary);">Estadísticas</h3>
-                <div id="statsList" style="font-size: 11px; color: var(--text-muted);">Estadísticas operativas disponibles próximamente.</div>
+            <div id="statsMainView">
+                <h2 style="margin:0 0 15px 0; font-size:18px; color:var(--primary);">Centro Estadístico</h2>
+                <div class="stat-card-menu" onclick="openStatSubView('trackTimes')">
+                    <div>
+                        <h3 style="margin:0; font-size:15px; color:white;">📊 Tiempos por Circuito</h3>
+                        <p style="margin:4px 0 0 0; font-size:11px; color:var(--text-muted);">Top 20 mejores resultados por pista</p>
+                    </div>
+                    <div style="color:var(--text-muted);">▶</div>
+                </div>
+                <div class="stat-card-menu" onclick="openStatSubView('pilotTrackTimes')">
+                    <div>
+                        <h3 style="margin:0; font-size:15px; color:var(--cyan);">👤 Tiempos por Piloto y Circuito</h3>
+                        <p style="margin:4px 0 0 0; font-size:11px; color:var(--text-muted);">Filtrado cruzado de rendimiento</p>
+                    </div>
+                    <div style="color:var(--text-muted);">▶</div>
+                </div>
+                <div class="stat-card-menu" onclick="openStatSubView('trackUsage')">
+                    <div>
+                        <h3 style="margin:0; font-size:15px; color:var(--accent);">🗺️ Uso y Kilometraje de Circuitos</h3>
+                        <p style="margin:4px 0 0 0; font-size:11px; color:var(--text-muted);">Vueltas, km recorridos y tiempos</p>
+                    </div>
+                    <div style="color:var(--text-muted);">▶</div>
+                </div>
+            </div>
+
+            <div id="statsSubView" style="display:none;">
+                <div class="card" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                    <button onclick="closeStatSubView()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:11px;">◀ Volver</button>
+                    <h3 id="statSubTitle" style="margin:0; font-size:14px; color:var(--primary);">Estadísticas</h3>
+                    <div></div>
+                </div>
+                <div id="statFilterBar" class="card" style="margin-bottom:10px; display:flex; gap:8px; align-items:center;"></div>
+                <div id="statSubContent" style="max-height:65vh; overflow-y:auto; padding-bottom:20px;"></div>
             </div>
         </div>
 
@@ -383,8 +428,8 @@
             <h3 class="modal-title" id="formTitle">Crear</h3>
             <div id="formDynamicFields"></div>
             
-            <label class="modal-label" style="margin-top:10px;">📸 Foto (URL de la imagen)</label>
-            <input type="text" id="formPhotoUrl" class="modal-input" placeholder="Pega el enlace web de la imagen..." oninput="updatePhotoPreview()">
+            <label class="modal-label" style="margin-top:10px;">📸 Imagen desde la Galería</label>
+            <input type="file" id="formFilePhoto" accept="image/*" class="modal-input" style="padding:6px; background:rgba(255,255,255,0.05);" onchange="processFilePhoto(event)">
             <img id="formPhotoPreview" style="width:100%; height:120px; object-fit:cover; border-radius:12px; display:none; margin-bottom:10px; border:1px solid rgba(255,255,255,0.1);">
 
             <div class="modal-btns">
@@ -401,10 +446,10 @@
             tracks: [{id: 't1', nombre: 'Gijón GP', alias: 'Asturias', longitud: '25.5', tiempoMinimo: '6.0', photo: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80'}],
             registers: []
         };
-        let appData = JSON.parse(localStorage.getItem('cronoslot_v5')) || defaultData;
+        let appData = JSON.parse(localStorage.getItem('cronoslot_v6')) || defaultData;
         
         function saveData() { 
-            localStorage.setItem('cronoslot_v5', JSON.stringify(appData)); 
+            localStorage.setItem('cronoslot_v6', JSON.stringify(appData)); 
             updateSelects(); 
             updateRegistersUI(); 
             updateRecordsUI(); 
@@ -441,6 +486,7 @@
             document.getElementById('screen-' + tabId).classList.add('active');
             btn.classList.add('active');
             if(tabId === 'data') { document.getElementById('dataMainView').style.display = 'block'; document.getElementById('dataSubView').style.display = 'none'; }
+            if(tabId === 'stats') { closeStatSubView(); }
         }
 
         // Carrera
@@ -502,8 +548,10 @@
             currentLaps = [];
         }
 
-        // Datos
+        // Datos y Selector de Archivo Nativo (Galería)
         let currentDataType = '';
+        let tempPhotoBase64 = '';
+
         function openSubDataView(type) {
             currentDataType = type; document.getElementById('dataMainView').style.display = 'none'; document.getElementById('dataSubView').style.display = 'block';
             document.getElementById('subViewTitle').innerText = { pilots: 'Pilotos', cars: 'Coches', tracks: 'Circuitos' }[type]; renderSubDataList();
@@ -537,7 +585,11 @@
         function openFormModal(id = null) {
             editingId = typeof id === 'string' ? id : null;
             const container = document.getElementById('formDynamicFields');
-            document.getElementById('formPhotoPreview').style.display = 'none'; document.getElementById('formPhotoUrl').value = ''; let html = '';
+            document.getElementById('formPhotoPreview').style.display = 'none'; 
+            document.getElementById('formFilePhoto').value = ''; 
+            tempPhotoBase64 = '';
+            let html = '';
+
             if(currentDataType === 'pilots') {
                 html = `<label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input"><label class="modal-label">Apellido</label><input type="text" id="f_apellido" class="modal-input">`;
             } else if(currentDataType === 'tracks') {
@@ -550,24 +602,49 @@
                         <div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Llantas</label><input type="text" id="f_llantas" class="modal-input"></div><div style="flex:1"><label class="modal-label">Motor</label><input type="text" id="f_motor" class="modal-input"></div></div>`;
             }
             container.innerHTML = html;
+
             if(editingId) {
                 document.getElementById('formTitle').innerText = 'Editar Registro';
                 const item = appData[currentDataType].find(x => x.id === editingId);
-                document.getElementById('formPhotoUrl').value = item.photo || ''; updatePhotoPreview();
+                tempPhotoBase64 = item.photo || '';
+                if(tempPhotoBase64) {
+                    const prev = document.getElementById('formPhotoPreview');
+                    prev.src = tempPhotoBase64;
+                    prev.style.display = 'block';
+                }
                 if(currentDataType === 'pilots') { document.getElementById('f_nombre').value = item.nombre || ''; document.getElementById('f_apellido').value = item.apellido || ''; }
                 if(currentDataType === 'tracks') { document.getElementById('f_nombre').value = item.nombre || ''; document.getElementById('f_alias').value = item.alias || ''; document.getElementById('f_longitud').value = item.longitud || ''; document.getElementById('f_tiempomin').value = item.tiempoMinimo || ''; }
                 if(currentDataType === 'cars') { document.getElementById('f_marca').value = item.marca || ''; document.getElementById('f_modelo').value = item.modelo || ''; document.getElementById('f_alias').value = item.alias || ''; document.getElementById('f_trencilla').value = item.trencilla || ''; document.getElementById('f_chasis').value = item.chasis || ''; document.getElementById('f_llantas').value = item.llantas || ''; document.getElementById('f_motor').value = item.motor || ''; }
             } else { document.getElementById('formTitle').innerText = 'Crear Nuevo'; }
             document.getElementById('modalForm').classList.add('active');
         }
-        function updatePhotoPreview() { const url = document.getElementById('formPhotoUrl').value; const prev = document.getElementById('formPhotoPreview'); if (url) { prev.src = url; prev.style.display = 'block'; } else { prev.style.display = 'none'; } }
+
+        function processFilePhoto(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempPhotoBase64 = e.target.result;
+                    const prev = document.getElementById('formPhotoPreview');
+                    prev.src = tempPhotoBase64;
+                    prev.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         function saveFormData() {
-            let item = editingId ? appData[currentDataType].find(x => x.id === editingId) : { id: genId() }; item.photo = document.getElementById('formPhotoUrl').value;
+            let item = editingId ? appData[currentDataType].find(x => x.id === editingId) : { id: genId() }; 
+            item.photo = tempPhotoBase64;
+            
             if(currentDataType === 'pilots') { item.nombre = document.getElementById('f_nombre').value; item.apellido = document.getElementById('f_apellido').value; if(!item.nombre) return alert('Pon un nombre.'); }
             if(currentDataType === 'tracks') { item.nombre = document.getElementById('f_nombre').value; item.alias = document.getElementById('f_alias').value; item.longitud = document.getElementById('f_longitud').value; item.tiempoMinimo = document.getElementById('f_tiempomin').value || "5.0"; if(!item.nombre) return alert('Pon un nombre.'); }
             if(currentDataType === 'cars') { item.marca = document.getElementById('f_marca').value; item.modelo = document.getElementById('f_modelo').value; item.alias = document.getElementById('f_alias').value; item.trencilla = document.getElementById('f_trencilla').value; item.chasis = document.getElementById('f_chasis').value; item.llantas = document.getElementById('f_llantas').value; item.motor = document.getElementById('f_motor').value; if(!item.modelo) return alert('Pon un modelo.'); }
-            if (!editingId) { appData[currentDataType].push(item); } saveData(); closeModal('modalForm'); renderSubDataList();
+            
+            if (!editingId) { appData[currentDataType].push(item); } 
+            saveData(); closeModal('modalForm'); renderSubDataList();
         }
+
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
         // Registros (Acordeón)
@@ -689,6 +766,187 @@
             list.innerHTML = html || "<p style='color:var(--text-muted); font-size:11px; text-align:center;'>No hay tiempos registrados por circuito todavía.</p>";
         }
 
+        // ESTADÍSTICAS AVANZADAS
+        let currentStatView = '';
+        let statFilterTrackId = '';
+        let statFilterPilotId = '';
+
+        function openStatSubView(viewType) {
+            currentStatView = viewType;
+            document.getElementById('statsMainView').style.display = 'none';
+            document.getElementById('statsSubView').style.display = 'block';
+
+            const titleMap = {
+                trackTimes: '📊 Tiempos por Circuito (Top 20)',
+                pilotTrackTimes: '👤 Tiempos por Piloto y Circuito',
+                trackUsage: '🗺️ Uso y Kilometraje por Circuito'
+            };
+            document.getElementById('statSubTitle').innerText = titleMap[viewType];
+            renderStatFilters();
+            renderStatContent();
+        }
+
+        function closeStatSubView() {
+            document.getElementById('statsMainView').style.display = 'block';
+            document.getElementById('statsSubView').style.display = 'none';
+        }
+
+        function renderStatFilters() {
+            const bar = document.getElementById('statFilterBar');
+            if (currentStatView === 'trackTimes') {
+                bar.style.display = 'flex';
+                bar.innerHTML = `
+                    <span style="font-size:10px; font-weight:bold; color:var(--text-muted);">CIRCUITO:</span>
+                    <select id="statSelTrack" class="modal-input" style="margin:0; flex:1;" onchange="statFilterTrackId=this.value; renderStatContent();">
+                        ${appData.tracks.map(t => `<option value="${t.id}">${t.nombre}</option>`).join('')}
+                    </select>`;
+                statFilterTrackId = document.getElementById('statSelTrack')?.value || '';
+            } else if (currentStatView === 'pilotTrackTimes') {
+                bar.style.display = 'flex';
+                bar.innerHTML = `
+                    <div style="flex:1;">
+                        <span style="font-size:9px; color:var(--text-muted);">PILOTO:</span>
+                        <select id="statSelPilot" class="modal-input" style="margin:0; font-size:11px;" onchange="statFilterPilotId=this.value; renderStatContent();">
+                            ${appData.pilots.map(p => `<option value="${p.id}">${p.nombre} ${p.apellido || ''}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <span style="font-size:9px; color:var(--text-muted);">CIRCUITO:</span>
+                        <select id="statSelTrack2" class="modal-input" style="margin:0; font-size:11px;" onchange="statFilterTrackId=this.value; renderStatContent();">
+                            ${appData.tracks.map(t => `<option value="${t.id}">${t.nombre}</option>`).join('')}
+                        </select>
+                    </div>`;
+                statFilterPilotId = document.getElementById('statSelPilot')?.value || '';
+                statFilterTrackId = document.getElementById('statSelTrack2')?.value || '';
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        function renderStatContent() {
+            const content = document.getElementById('statSubContent');
+            if (appData.registers.length === 0) {
+                content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:11px;'>No hay datos suficientes de carreras.</p>";
+                return;
+            }
+
+            if (currentStatView === 'trackTimes') {
+                let laps = [];
+                appData.registers.forEach(reg => {
+                    if (reg.track === statFilterTrackId) {
+                        const p = appData.pilots.find(x => x.id === reg.pilot);
+                        const c = appData.cars.find(x => x.id === reg.car);
+                        reg.laps.forEach(t => {
+                            laps.push({
+                                time: t,
+                                pilot: p ? `${p.nombre} ${p.apellido || ''}` : 'Desconocido',
+                                car: c ? `${c.marca} ${c.modelo}` : 'Desconocido'
+                            });
+                        });
+                    }
+                });
+                laps.sort((a, b) => a.time - b.time);
+                const top20 = laps.slice(0, 20);
+
+                if (top20.length === 0) {
+                    content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:11px;'>Sin tiempos para este circuito.</p>";
+                    return;
+                }
+
+                content.innerHTML = top20.map((item, idx) => `
+                    <div class="rec-item">
+                        <div class="rec-rank ${idx===0?'rec-rank-1':idx===1?'rec-rank-2':idx===2?'rec-rank-3':''}">#${idx+1}</div>
+                        <div class="rec-details-box">
+                            <div style="font-weight:bold; color:white;">👤 ${item.pilot}</div>
+                            <div style="font-size:10px; color:var(--text-muted);">🏎️ ${item.car}</div>
+                        </div>
+                        <div class="rec-time">${(item.time/1000).toFixed(3)}s</div>
+                    </div>`).join('');
+
+            } else if (currentStatView === 'pilotTrackTimes') {
+                let laps = [];
+                appData.registers.forEach(reg => {
+                    if (reg.track === statFilterTrackId && reg.pilot === statFilterPilotId) {
+                        const c = appData.cars.find(x => x.id === reg.car);
+                        reg.laps.forEach(t => {
+                            laps.push({
+                                time: t,
+                                car: c ? `${c.marca} ${c.modelo}` : 'Desconocido'
+                            });
+                        });
+                    }
+                });
+                laps.sort((a, b) => a.time - b.time);
+                const top20 = laps.slice(0, 20);
+
+                if (top20.length === 0) {
+                    content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:11px;'>Sin registros para esta combinación.</p>";
+                    return;
+                }
+
+                content.innerHTML = top20.map((item, idx) => `
+                    <div class="rec-item">
+                        <div class="rec-rank ${idx===0?'rec-rank-1':idx===1?'rec-rank-2':idx===2?'rec-rank-3':''}">#${idx+1}</div>
+                        <div class="rec-details-box">
+                            <div style="font-weight:bold; color:white;">🏎️ Coche: ${item.car}</div>
+                        </div>
+                        <div class="rec-time">${(item.time/1000).toFixed(3)}s</div>
+                    </div>`).join('');
+
+            } else if (currentStatView === 'trackUsage') {
+                let html = '';
+                appData.tracks.forEach(track => {
+                    let totalLaps = 0;
+                    let carStats = {}; 
+                    const trackLengthMeters = parseFloat(track.longitud) || 0;
+
+                    appData.registers.forEach(reg => {
+                        if (reg.track === track.id) {
+                            totalLaps += reg.laps.length;
+                            if (!carStats[reg.car]) { carStats[reg.car] = { laps: 0, bestTime: Infinity }; }
+                            carStats[reg.car].laps += reg.laps.length;
+                            reg.laps.forEach(t => {
+                                if (t < carStats[reg.car].bestTime) { carStats[reg.car].bestTime = t; }
+                            });
+                        }
+                    });
+
+                    let carsArray = Object.keys(carStats).map(carId => {
+                        const cObj = appData.cars.find(c => c.id === carId);
+                        return {
+                            carName: cObj ? `${cObj.marca} ${cObj.modelo}` : 'Coche Desconocido',
+                            laps: carStats[carId].laps,
+                            bestTime: carStats[carId].bestTime,
+                            km: ((carStats[carId].laps * trackLengthMeters) / 1000).toFixed(2)
+                        };
+                    });
+                    carsArray.sort((a, b) => a.bestTime - b.bestTime);
+
+                    html += `
+                    <div class="rec-track-card">
+                        <div class="rec-track-title">🗺️ ${track.nombre} <span style="font-size:10px; color:var(--text-muted); font-weight:normal; margin-left:auto;">Total Vueltas: ${totalLaps}</span></div>`;
+                        
+                    if (carsArray.length === 0) {
+                        html += `<div style="font-size:11px; color:var(--text-muted); text-align:center; padding:6px;">Sin actividad en este circuito.</div>`;
+                    } else {
+                        carsArray.forEach((car, idx) => {
+                            html += `
+                            <div class="rec-item">
+                                <div class="rec-rank">#${idx+1}</div>
+                                <div class="rec-details-box">
+                                    <div style="font-weight:bold; color:white;">🏎️ ${car.carName}</div>
+                                    <div style="font-size:10px; color:var(--text-muted);">Vueltas: ${car.laps} • Recorrido: ${car.km} km</div>
+                                </div>
+                                <div class="rec-time">${car.bestTime !== Infinity ? (car.bestTime/1000).toFixed(3) + 's' : '--'}</div>
+                            </div>`;
+                        });
+                    }
+                    html += `</div>`;
+                });
+                content.innerHTML = html;
+            }
+        }
+
         // Cámara
         let cameraActive = false; let prevFrameData = null;
         function toggleCalibPanel() { const p = document.getElementById('calibPanel'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
@@ -739,15 +997,11 @@
             requestAnimationFrame(processFrame);
         }
 
-        // Inicialización general segura
+        // Inicialización general
         updateSelects(); 
         updateRegistersUI();
         updateRecordsUI();
     </script>
 </body>
 </html>
-        updateRegistersUI();
-        updateRecordsUI();
-    </script>
-</body>
 </html>
