@@ -6,6 +6,7 @@
     <title>CronoSlot Pro</title>
     <!-- Iconos vectoriales -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%2300E5FF' stroke-width='6' stroke-dasharray='10 5'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg-dark: #07090F;
@@ -66,26 +67,27 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
         
-        /* Desplegables Personalizados con Fotos */
+        /* Desplegables Personalizados con Fotos y Fix Z-Index */
         .selectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .sel-box {
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 14px; padding: 8px; font-size: 11px; transition: 0.3s;
+            border-radius: 14px; padding: 8px; font-size: 12px; transition: 0.3s;
         }
-        .sel-box span.lbl { display: block; font-weight: bold; font-size: 9px; text-transform: uppercase; margin-bottom: 4px; }
+        .sel-box span.lbl { display: block; font-weight: bold; font-size: 10px; text-transform: uppercase; margin-bottom: 4px; }
         
         .c-select { position: relative; width: 100%; user-select: none; }
         .c-select-head { display: flex; align-items: center; gap: 6px; padding: 4px; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; }
         .c-select-head img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; background: #222; border: 1px solid rgba(255,255,255,0.1); }
-        .c-select-head .no-img { width: 22px; height: 22px; border-radius: 6px; background: #222; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-        .c-select-head .txt { font-weight: bold; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; color: white; }
+        .c-select-head .no-img { width: 22px; height: 22px; border-radius: 6px; background: #222; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .c-select-head .txt { font-weight: bold; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; color: white; text-transform: uppercase; }
         
-        .c-select-opts { display: none; position: absolute; top: 110%; left: -10px; width: calc(100% + 20px); max-height: 180px; overflow-y: auto; background: rgba(15,20,35,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .c-select-opts { display: none; position: absolute; top: 110%; left: -10px; width: calc(100% + 20px); max-height: 220px; overflow-y: auto; background: rgba(15,20,35,0.98); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; z-index: 9999; box-shadow: 0 10px 40px rgba(0,0,0,0.9); }
         .c-select-opts.open { display: block; }
         .c-opt { display: flex; align-items: center; gap: 8px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
         .c-opt:active { background: rgba(255,255,255,0.1); }
         .c-opt img { width: 28px; height: 28px; border-radius: 6px; object-fit: cover; background: #222; }
-        .c-opt .txt { font-size: 12px; font-weight: bold; color: white; }
+        .c-opt .txt { font-size: 13px; font-weight: bold; color: white; }
+        .c-opt .txt-alias { color: var(--cyan); margin-right: 4px; }
         
         .sel-box.locked { opacity: 0.5; pointer-events: none; }
 
@@ -97,51 +99,52 @@
         .cam-overlay-text { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
         .calib-panel { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; }
         .calib-row { margin-bottom: 8px; }
-        .calib-row span { font-size: 10px; color: var(--cyan); font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .calib-row span { font-size: 12px; color: var(--cyan); font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 4px; }
         .calib-row input[type="range"] { width: 100%; accent-color: var(--cyan); }
 
-        .chrono-display { font-family: monospace; font-size: 44px; font-weight: 900; text-align: center; color: var(--primary); letter-spacing: 1px; background: rgba(0,0,0,0.5); border-radius: 16px; padding: 10px; border: 1px solid rgba(0,255,136,0.2); text-shadow: 0 0 15px rgba(0,255,136,0.4); }
-        .btn-action { background: linear-gradient(135deg, var(--primary), #059669); color: black; border: none; border-radius: 20px; padding: 14px; font-size: 16px; font-weight: 900; text-transform: uppercase; width: 100%; cursor: pointer; box-shadow: 0 4px 20px rgba(0,255,136,0.4); transition: 0.3s; }
+        .chrono-display { font-family: monospace; font-size: 48px; font-weight: 900; text-align: center; color: var(--primary); letter-spacing: 1px; background: rgba(0,0,0,0.5); border-radius: 16px; padding: 10px; border: 1px solid rgba(0,255,136,0.2); text-shadow: 0 0 15px rgba(0,255,136,0.4); }
+        .btn-action { background: linear-gradient(135deg, var(--primary), #059669); color: black; border: none; border-radius: 20px; padding: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; width: 100%; cursor: pointer; box-shadow: 0 4px 20px rgba(0,255,136,0.4); transition: 0.3s; }
         .btn-action.stop { background: linear-gradient(135deg, var(--accent), #c81d45); color: white; box-shadow: 0 4px 20px rgba(255,42,85,0.4); }
 
-        .lap-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); font-size: 12px; font-weight: bold; margin-bottom: 6px; }
+        .lap-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: bold; margin-bottom: 6px; }
 
-        /* Estilos Registros */
+        /* Estilos Registros y Récords */
         .reg-card { background:rgba(0,0,0,0.3); padding:12px; border-radius:14px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.05); }
         .reg-header { display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; }
-        .reg-title { color: white; font-weight: bold; font-size: 13px; margin-bottom: 4px; }
-        .reg-sub { color: var(--text-muted); font-size: 10px; margin-bottom: 3px; line-height: 1.3; }
-        .reg-highlight { color: var(--cyan); font-family: monospace; font-size: 12px; margin-top: 6px; font-weight: bold; }
-        .reg-del-btn { background: rgba(255,42,85,0.15); color: var(--accent); border: 1px solid rgba(255,42,85,0.3); padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .reg-title { color: white; font-weight: bold; font-size: 15px; margin-bottom: 4px; }
+        .reg-sub { color: var(--text-muted); font-size: 12px; margin-bottom: 3px; line-height: 1.4; }
+        .reg-highlight { color: var(--cyan); font-family: monospace; font-size: 13px; margin-top: 6px; font-weight: bold; }
+        .reg-del-btn { background: rgba(255,42,85,0.15); color: var(--accent); border: 1px solid rgba(255,42,85,0.3); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .reg-details { display: none; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
         .reg-details.open { display: block; }
         .reg-lap-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .reg-lap-del { background: transparent; color: var(--accent); border: none; font-size: 14px; cursor: pointer; padding: 4px; }
+        .reg-lap-del { background: transparent; color: var(--accent); border: none; font-size: 15px; cursor: pointer; padding: 4px; }
 
-        /* Estilos Récords */
         .rec-track-card { background: rgba(0,0,0,0.4); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); padding: 12px; margin-bottom: 12px; }
-        .rec-track-title { font-size: 14px; font-weight: 900; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
-        .rec-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
-        .rec-rank { font-weight: 900; font-size: 12px; width: 22px; }
+        .rec-track-title { font-size: 16px; font-weight: 900; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
+        .rec-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+        .rec-rank { font-weight: 900; font-size: 14px; width: 24px; }
         .rec-rank-1 { color: #ffd700; }
         .rec-rank-2 { color: #c0c0c0; }
         .rec-rank-3 { color: #cd7f32; }
         .rec-details-box { flex: 1; margin-left: 6px; }
-        .rec-time { font-family: monospace; font-size: 13px; font-weight: bold; color: var(--cyan); }
+        .rec-time { font-family: monospace; font-size: 14px; font-weight: bold; color: var(--cyan); }
 
         /* Estadísticas */
         .stat-card-menu { background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6)); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .stat-card-menu h3 { font-size: 16px; }
+        .stat-card-menu p { font-size: 12px; }
         .stat-card-menu:active { transform: scale(0.98); }
 
         /* Modales */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .modal-overlay.active { display: flex; }
         .modal-card { background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; width: 100%; max-width: 400px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); max-height: 85vh; overflow-y: auto; }
-        .modal-title { font-size: 16px; font-weight: 900; color: white; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .modal-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 12px; border-radius: 12px; font-size: 12px; outline: none; margin-bottom: 10px; font-family: inherit; }
-        .modal-label { font-size: 10px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .modal-title { font-size: 18px; font-weight: 900; color: white; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .modal-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 12px; border-radius: 12px; font-size: 14px; outline: none; margin-bottom: 10px; font-family: inherit; }
+        .modal-label { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; display: block; }
         .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-        .modal-btn { flex: 1; padding: 12px; border-radius: 14px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; text-transform: uppercase; text-align: center; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 14px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; text-transform: uppercase; text-align: center; }
         .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
         .btn-confirm { background: linear-gradient(135deg, var(--accent), #ff5e3a); color: white; }
         .btn-cyan { background: linear-gradient(135deg, var(--cyan), #00b3cc); color: black; }
@@ -150,20 +153,20 @@
         .data-main-card { background: linear-gradient(135deg, rgba(17,22,38,0.9), rgba(0,0,0,0.6)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3); transition: 0.2s; }
         .data-main-card:active { transform: scale(0.98); }
         .data-icon { font-size: 28px; background: rgba(0,0,0,0.5); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
-        .data-info h3 { margin: 0; font-size: 18px; color: white; }
-        .data-info p { margin: 4px 0 0 0; font-size: 11px; color: var(--text-muted); }
+        .data-info h3 { margin: 0; font-size: 19px; color: white; }
+        .data-info p { margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted); }
         
         .list-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(0,0,0,0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 10px; }
         .list-photo { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; background: #222; border: 1px solid rgba(255,255,255,0.1); }
         .list-details { flex: 1; }
-        .list-title { font-size: 13px; font-weight: bold; color: white; margin-bottom: 2px; }
-        .list-sub { font-size: 10px; color: var(--cyan); }
+        .list-title { font-size: 15px; font-weight: bold; color: white; margin-bottom: 2px; }
+        .list-sub { font-size: 12px; color: var(--cyan); }
         .list-actions { display: flex; gap: 6px; }
-        .action-btn { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; cursor: pointer; }
+        .action-btn { background: rgba(255,255,255,0.1); border: none; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; cursor: pointer; }
         .action-btn.del { background: rgba(255,42,85,0.15); color: var(--accent); }
 
         nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(11, 14, 24, 0.95); backdrop-filter: blur(15px); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 12px 16px 12px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; z-index: 100; }
-        .nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px; border-radius: 14px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px; border-radius: 14px; font-size: 11px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
         .nav-btn.active { background: linear-gradient(135deg, var(--accent), #c81d45); color: white; box-shadow: 0 4px 15px rgba(255,42,85,0.3); }
 
         /* Formulario y Cámara Interna */
@@ -181,8 +184,8 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
             <div>
-                <div style="font-weight: 900; font-size: 16px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 9px; color: var(--text-muted);">PRO V4.3</div>
+                <div style="font-weight: 900; font-size: 18px; letter-spacing: -0.5px;">CRONOSLOT</div>
+                <div style="font-size: 10px; color: var(--text-muted);">PRO V4.5</div>
             </div>
         </div>
     </header>
@@ -190,7 +193,8 @@
     <div class="main-container">
         <!-- PANTALLA 1: CARRERA -->
         <div id="screen-race" class="screen active">
-            <div class="card">
+            <!-- AQUÍ ESTÁ EL FIX DE Z-INDEX PARA EL DESPLEGABLE -->
+            <div class="card" style="position: relative; z-index: 50;">
                 <div class="selectors-grid">
                     <!-- Piloto: Desplegable Personalizado -->
                     <div class="sel-box" id="boxPilot" style="border-color: rgba(255,42,85,0.4);">
@@ -233,11 +237,11 @@
             </div>
 
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: bold;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: bold;">
                     <span style="color: var(--text-muted);">Cámara & Calibración</span>
                     <div>
-                        <button onclick="toggleCalibPanel()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:white; padding:4px 8px; border-radius:6px; font-size:9px; margin-right:4px;">Ajustes</button>
-                        <button onclick="toggleCamera()" id="camToggleBtn" style="background: rgba(0,225,255,0.2); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 4px 10px; border-radius: 8px; font-size: 10px; cursor: pointer;">Activar Cámara</button>
+                        <button onclick="toggleCalibPanel()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:white; padding:4px 8px; border-radius:6px; font-size:11px; margin-right:4px;">Ajustes</button>
+                        <button onclick="toggleCamera()" id="camToggleBtn" style="background: rgba(0,225,255,0.2); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 4px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;">Activar Cámara</button>
                     </div>
                 </div>
                 <div class="cam-box">
@@ -245,8 +249,8 @@
                     <canvas id="analysisCanvas" style="display: none;"></canvas>
                     <div class="calibration-zone" id="calibZone"></div>
                     <div id="camOverlay" class="cam-overlay-text">
-                        <span style="color: var(--cyan); font-weight: bold; font-size: 12px;">Cámara en Espera</span>
-                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Pulsa "Activar Cámara"</span>
+                        <span style="color: var(--cyan); font-weight: bold; font-size: 14px;">Cámara en Espera</span>
+                        <span style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Pulsa "Activar Cámara"</span>
                     </div>
                 </div>
                 
@@ -267,7 +271,7 @@
             </div>
 
             <div class="card" style="text-align: center;">
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: bold;">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: bold;">
                     <span>VUELTA ACTUAL: <strong id="currentLapNum" style="color: white;">#0</strong></span>
                     <span>TIEMPO MÍN: <strong id="minLapTxt" style="color: var(--cyan);">0.0s</strong></span>
                 </div>
@@ -276,9 +280,9 @@
             </div>
 
             <div class="card">
-                <div style="font-size: 11px; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Tiempos en Vivo</div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Tiempos en Vivo</div>
                 <div id="lapsContainer" style="max-height: 120px; overflow-y: auto;">
-                    <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 10px;">Aún no hay vueltas.</div>
+                    <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 10px;">Aún no hay vueltas.</div>
                 </div>
             </div>
         </div>
@@ -286,7 +290,7 @@
         <!-- PANTALLA 2: REGISTROS -->
         <div id="screen-registers" class="screen">
             <div class="card">
-                <h3 style="margin:0 0 10px 0; color:var(--cyan);">Historial de Sesiones</h3>
+                <h3 style="margin:0 0 10px 0; color:var(--cyan); font-size:18px;">Historial de Sesiones</h3>
                 <div id="registersList"></div>
             </div>
         </div>
@@ -294,7 +298,7 @@
         <!-- PANTALLA 3: RÉCORDS ABSOLUTOS -->
         <div id="screen-records" class="screen">
             <div class="card">
-                <h3 style="margin:0 0 10px 0; color:var(--accent);">🏆 Récords Absolutos (Top 3)</h3>
+                <h3 style="margin:0 0 10px 0; color:var(--accent); font-size:18px;">🏆 Récords Absolutos (Top 3)</h3>
                 <div id="recordsList"></div>
             </div>
         </div>
@@ -302,25 +306,25 @@
         <!-- PANTALLA 4: ESTADÍSTICAS -->
         <div id="screen-stats" class="screen">
             <div id="statsMainView">
-                <h2 style="margin:0 0 15px 0; font-size:18px; color:var(--primary);">Centro Estadístico</h2>
+                <h2 style="margin:0 0 15px 0; font-size:20px; color:var(--primary);">Centro Estadístico</h2>
                 <div class="stat-card-menu" onclick="openStatSubView('trackTimes')">
                     <div>
-                        <h3 style="margin:0; font-size:15px; color:white;">📊 Tiempos por Circuito</h3>
-                        <p style="margin:4px 0 0 0; font-size:11px; color:var(--text-muted);">Top 20 mejores resultados por pista</p>
+                        <h3 style="margin:0; font-size:16px; color:white;">📊 Tiempos por Circuito</h3>
+                        <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted);">Top 20 mejores resultados por pista</p>
                     </div>
                     <div style="color:var(--text-muted);">▶</div>
                 </div>
                 <div class="stat-card-menu" onclick="openStatSubView('pilotTrackTimes')">
                     <div>
-                        <h3 style="margin:0; font-size:15px; color:var(--cyan);">👤 Tiempos por Piloto y Circuito</h3>
-                        <p style="margin:4px 0 0 0; font-size:11px; color:var(--text-muted);">Filtrado cruzado de rendimiento</p>
+                        <h3 style="margin:0; font-size:16px; color:var(--cyan);">👤 Tiempos por Piloto y Circuito</h3>
+                        <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted);">Filtrado cruzado de rendimiento</p>
                     </div>
                     <div style="color:var(--text-muted);">▶</div>
                 </div>
                 <div class="stat-card-menu" onclick="openStatSubView('trackUsage')">
                     <div>
-                        <h3 style="margin:0; font-size:15px; color:var(--accent);">🗺️ Uso y Kilometraje de Circuitos</h3>
-                        <p style="margin:4px 0 0 0; font-size:11px; color:var(--text-muted);">Vueltas, km recorridos y tiempos</p>
+                        <h3 style="margin:0; font-size:16px; color:var(--accent);">🗺️ Uso y Kilometraje de Circuitos</h3>
+                        <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted);">Vueltas, km recorridos y tiempos</p>
                     </div>
                     <div style="color:var(--text-muted);">▶</div>
                 </div>
@@ -328,8 +332,8 @@
 
             <div id="statsSubView" style="display:none;">
                 <div class="card" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                    <button onclick="closeStatSubView()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:11px;">◀ Volver</button>
-                    <h3 id="statSubTitle" style="margin:0; font-size:14px; color:var(--primary);">Estadísticas</h3>
+                    <button onclick="closeStatSubView()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:13px;">◀ Volver</button>
+                    <h3 id="statSubTitle" style="margin:0; font-size:15px; color:var(--primary);">Estadísticas</h3>
                     <div></div>
                 </div>
                 <div id="statFilterBar" class="card" style="margin-bottom:10px; display:flex; gap:8px; align-items:center;"></div>
@@ -340,7 +344,7 @@
         <!-- PANTALLA 5: DATOS -->
         <div id="screen-data" class="screen">
             <div id="dataMainView">
-                <h2 style="margin:0 0 15px 0; font-size:18px;">Base de Datos</h2>
+                <h2 style="margin:0 0 15px 0; font-size:20px;">Base de Datos</h2>
                 <div class="data-main-card" onclick="openSubDataView('pilots')">
                     <div style="display:flex; gap:15px; align-items:center;">
                         <div class="data-icon">👤</div>
@@ -366,9 +370,9 @@
 
             <div id="dataSubView" style="display:none;">
                 <div class="card" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                    <button onclick="closeSubDataView()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:11px;">◀ Volver</button>
-                    <h3 id="subViewTitle" style="margin:0; font-size:16px;">Título</h3>
-                    <button onclick="openFormModal()" style="background:var(--cyan); border:none; color:black; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:11px;">+ Crear</button>
+                    <button onclick="closeSubDataView()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:13px;">◀ Volver</button>
+                    <h3 id="subViewTitle" style="margin:0; font-size:18px;">Título</h3>
+                    <button onclick="openFormModal()" style="background:var(--cyan); border:none; color:black; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:13px;">+ Crear</button>
                 </div>
                 <div id="subViewList" style="overflow-y:auto; max-height:60vh; padding-bottom:20px;"></div>
             </div>
@@ -387,7 +391,7 @@
     <div class="modal-overlay" id="modalConfirmStop">
         <div class="modal-card">
             <h3 class="modal-title" style="color:var(--accent);">⚠️ Detener Carrera</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">¿Estás seguro de que quieres detener la carrera actual? El cronómetro se pausará.</p>
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">¿Estás seguro de que quieres detener la carrera actual? El cronómetro se pausará.</p>
             <div class="modal-btns">
                 <button class="modal-btn btn-cancel" onclick="closeModal('modalConfirmStop')">Cancelar</button>
                 <button class="modal-btn btn-confirm" onclick="confirmStopRace()">Sí, Detener</button>
@@ -423,11 +427,11 @@
             
             <label class="modal-label" style="margin-top:10px;">📸 FOTO DEL PERFIL</label>
             <div class="photo-capture-box">
-                <button type="button" class="btn-cancel" style="padding:10px; border-radius:10px; width:100%; border:1px solid rgba(255,255,255,0.2);" onclick="startFormCamera()">📷 Abrir Cámara (Tomar Foto)</button>
+                <button type="button" class="btn-cancel" style="padding:10px; border-radius:10px; width:100%; border:1px solid rgba(255,255,255,0.2); font-size:13px;" onclick="startFormCamera()">📷 Abrir Cámara (Tomar Foto)</button>
                 
                 <div id="formVideoBox">
                     <video id="formCameraStream" autoplay playsinline></video>
-                    <button type="button" class="btn-confirm" style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); padding:8px 16px; border-radius:20px;" onclick="takeFormPhoto()">Capturar</button>
+                    <button type="button" class="btn-confirm" style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); padding:8px 16px; border-radius:20px; font-size:13px;" onclick="takeFormPhoto()">Capturar</button>
                 </div>
                 
                 <canvas id="formCanvas" style="display:none;"></canvas>
@@ -443,19 +447,26 @@
 
     <script>
         let defaultData = {
-            pilots: [{id: 'p1', nombre: 'Alex', apellido: 'Márquez', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80'}],
-            cars: [{id: 'c1', modelo: '911 GT3 RS', marca: 'Porsche', alias: 'La Bestia', trencilla: 'Cobre', chasis: 'Blando', llantas: 'Aluminio', motor: 'Flat-6', photo: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&q=80'}],
-            tracks: [{id: 't1', nombre: 'Gijón GP', alias: 'Asturias', longitud: '25.5', tiempoMinimo: '6.0', photo: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80'}],
+            pilots: [{id: 'p1', nombre: 'Alex', apellido: 'Márquez', alias: 'ALEX73', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80'}],
+            cars: [{id: 'c1', modelo: '911 GT3 RS', marca: 'Porsche', alias: '911-GT3', trencilla: 'Cobre', chasis: 'Blando', llantas: 'Aluminio', motor: 'Flat-6', photo: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&q=80'}],
+            tracks: [{id: 't1', nombre: 'Gijón GP', alias: 'GIJON', longitud: '25.5', tiempoMinimo: '6.0', photo: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80'}],
             registers: []
         };
         let appData = defaultData;
+        
+        // Carga y migración segura para aplicar los Alias a datos antiguos
         try {
-            const saved = localStorage.getItem('cronoslot_v11');
-            if (saved) { appData = JSON.parse(saved); }
+            const saved = localStorage.getItem('cronoslot_v12');
+            if (saved) { 
+                appData = JSON.parse(saved); 
+                appData.pilots.forEach(p => { if(!p.alias) p.alias = p.nombre; });
+                appData.cars.forEach(c => { if(!c.alias) c.alias = c.modelo; });
+                appData.tracks.forEach(t => { if(!t.alias) t.alias = t.nombre; });
+            }
         } catch(e) { appData = defaultData; }
         
         function saveData() { 
-            try { localStorage.setItem('cronoslot_v11', JSON.stringify(appData)); } catch(e) {}
+            try { localStorage.setItem('cronoslot_v12', JSON.stringify(appData)); } catch(e) {}
             updateSelects(); updateRegistersUI(); updateRecordsUI(); 
         }
         const genId = () => Math.random().toString(36).substr(2, 9);
@@ -474,7 +485,6 @@
             if(opts) opts.classList.toggle('open');
         }
 
-        // Cierra desplegables al pulsar fuera
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.c-select')) {
                 document.querySelectorAll('.c-select-opts').forEach(el => el.classList.remove('open'));
@@ -490,8 +500,8 @@
             if(type === 'track') updateMinLapText();
         }
 
+        // RENDERIZA LAS SELECCIONES Y RESTRINGE A 12 CARACTERES EL ALIAS
         function updateSelects() {
-            // Asegurar que hay algo seleccionado si existen datos
             if(!appData.pilots.find(x => x.id === selPilotId) && appData.pilots.length) selPilotId = appData.pilots[0].id;
             if(!appData.cars.find(x => x.id === selCarId) && appData.cars.length) selCarId = appData.cars[0].id;
             if(!appData.tracks.find(x => x.id === selTrackId) && appData.tracks.length) selTrackId = appData.tracks[0].id;
@@ -502,13 +512,14 @@
                 pOpts.innerHTML = appData.pilots.map(p => `
                     <div class="c-opt" onclick="selectCustomOption('pilot', '${p.id}')">
                         ${p.photo ? `<img src="${p.photo}">` : `<div style="width:28px;height:28px;background:#222;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;">👤</div>`}
-                        <div class="txt">${p.nombre} ${p.apellido}</div>
+                        <div class="txt"><span class="txt-alias">[${p.alias || '---'}]</span> ${p.nombre}</div>
                     </div>
                 `).join('');
                 
                 const pObj = appData.pilots.find(x => x.id === selPilotId);
                 if(pObj) {
-                    document.getElementById('pilotHeadTxt').innerText = `${pObj.nombre} ${pObj.apellido}`;
+                    const dispAlias = (pObj.alias || pObj.nombre).substring(0, 12);
+                    document.getElementById('pilotHeadTxt').innerText = dispAlias;
                     if(pObj.photo) {
                         document.getElementById('pilotHeadImg').src = pObj.photo;
                         document.getElementById('pilotHeadImg').style.display = 'block';
@@ -526,13 +537,14 @@
                 cOpts.innerHTML = appData.cars.map(c => `
                     <div class="c-opt" onclick="selectCustomOption('car', '${c.id}')">
                         ${c.photo ? `<img src="${c.photo}">` : `<div style="width:28px;height:28px;background:#222;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;">🏎️</div>`}
-                        <div class="txt">${c.marca} ${c.modelo}</div>
+                        <div class="txt"><span class="txt-alias">[${c.alias || '---'}]</span> ${c.modelo}</div>
                     </div>
                 `).join('');
                 
                 const cObj = appData.cars.find(x => x.id === selCarId);
                 if(cObj) {
-                    document.getElementById('carHeadTxt').innerText = `${cObj.marca} ${cObj.modelo}`;
+                    const dispAlias = (cObj.alias || cObj.modelo).substring(0, 12);
+                    document.getElementById('carHeadTxt').innerText = dispAlias;
                     if(cObj.photo) {
                         document.getElementById('carHeadImg').src = cObj.photo;
                         document.getElementById('carHeadImg').style.display = 'block';
@@ -550,13 +562,14 @@
                 tOpts.innerHTML = appData.tracks.map(t => `
                     <div class="c-opt" onclick="selectCustomOption('track', '${t.id}')">
                         <div style="width:28px;height:28px;background:#222;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;">🗺️</div>
-                        <div class="txt">${t.nombre} (${t.tiempoMinimo}s)</div>
+                        <div class="txt"><span class="txt-alias">[${t.alias || '---'}]</span> ${t.nombre}</div>
                     </div>
                 `).join('');
                 
                 const tObj = appData.tracks.find(x => x.id === selTrackId);
                 if(tObj) {
-                    document.getElementById('trackHeadTxt').innerText = `${tObj.nombre} (${tObj.tiempoMinimo}s)`;
+                    const dispAlias = (tObj.alias || tObj.nombre).substring(0, 12);
+                    document.getElementById('trackHeadTxt').innerText = dispAlias;
                 }
             }
 
@@ -664,7 +677,7 @@
             document.getElementById('boxPilot').classList.remove('locked'); document.getElementById('boxCar').classList.remove('locked'); document.getElementById('boxTrack').classList.remove('locked');
             const btn = document.getElementById('mainRaceBtn'); btn.innerText = "▶ Comenzar Carrera"; btn.className = "btn-action";
             document.getElementById('chronoDisplay').innerText = "00.000s"; document.getElementById('currentLapNum').innerText = "#0";
-            document.getElementById('lapsContainer').innerHTML = "<div style='text-align:center; color:var(--text-muted); font-size:11px; padding:10px;'>Aún no hay vueltas.</div>";
+            document.getElementById('lapsContainer').innerHTML = "<div style='text-align:center; color:var(--text-muted); font-size:13px; padding:10px;'>Aún no hay vueltas.</div>";
             currentLaps = [];
         }
 
@@ -683,8 +696,8 @@
             if(appData[currentDataType].length === 0) { list.innerHTML = "<p style='color:#fff;text-align:center;'>No hay registros.</p>"; return; }
             list.innerHTML = appData[currentDataType].map(item => {
                 let title = '', sub = '';
-                if(currentDataType === 'pilots') { title = `${item.nombre} ${item.apellido}`; sub = 'Piloto'; }
-                if(currentDataType === 'cars') { title = `${item.marca} ${item.modelo}`; sub = `Motor: ${item.motor}`; }
+                if(currentDataType === 'pilots') { title = `${item.nombre} ${item.apellido}`; sub = `Alias: ${item.alias || ''}`; }
+                if(currentDataType === 'cars') { title = `${item.marca} ${item.modelo}`; sub = `Alias: ${item.alias || ''}`; }
                 if(currentDataType === 'tracks') { title = item.nombre; sub = `${item.longitud}m • Mín: ${item.tiempoMinimo}s`; }
                 let img = item.photo || 'https://via.placeholder.com/150/222222/555555?text=Sin+Foto';
                 
@@ -711,14 +724,19 @@
             tempPhotoBase64 = '';
             let html = '';
 
+            // FORMULARIOS CON ALIAS OBLIGATORIO Y MAXLENGTH
             if(currentDataType === 'pilots') {
-                html = `<label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input"><label class="modal-label">Apellido</label><input type="text" id="f_apellido" class="modal-input">`;
+                html = `<label class="modal-label">Alias (Máx 12)*</label><input type="text" id="f_alias" class="modal-input" maxlength="12">
+                        <label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input">
+                        <label class="modal-label">Apellido</label><input type="text" id="f_apellido" class="modal-input">`;
             } else if(currentDataType === 'tracks') {
-                html = `<label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input"><label class="modal-label">Alias</label><input type="text" id="f_alias" class="modal-input">
-                        <label class="modal-label">Longitud (metros)</label><input type="number" step="0.1" id="f_longitud" class="modal-input"><label class="modal-label">Tiempo Mín. Vuelta (s)</label><input type="number" step="0.5" id="f_tiempomin" class="modal-input">`;
+                html = `<label class="modal-label">Alias (Máx 12)*</label><input type="text" id="f_alias" class="modal-input" maxlength="12">
+                        <label class="modal-label">Nombre</label><input type="text" id="f_nombre" class="modal-input">
+                        <label class="modal-label">Longitud (metros)</label><input type="number" step="0.1" id="f_longitud" class="modal-input">
+                        <label class="modal-label">Tiempo Mín. Vuelta (s)</label><input type="number" step="0.5" id="f_tiempomin" class="modal-input">`;
             } else if(currentDataType === 'cars') {
-                html = `<div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Marca</label><input type="text" id="f_marca" class="modal-input"></div><div style="flex:1"><label class="modal-label">Modelo</label><input type="text" id="f_modelo" class="modal-input"></div></div>
-                        <label class="modal-label">Alias</label><input type="text" id="f_alias" class="modal-input">
+                html = `<label class="modal-label">Alias (Máx 12)*</label><input type="text" id="f_alias" class="modal-input" maxlength="12">
+                        <div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Marca</label><input type="text" id="f_marca" class="modal-input"></div><div style="flex:1"><label class="modal-label">Modelo</label><input type="text" id="f_modelo" class="modal-input"></div></div>
                         <div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Trencilla</label><input type="text" id="f_trencilla" class="modal-input"></div><div style="flex:1"><label class="modal-label">Chasis</label><input type="text" id="f_chasis" class="modal-input"></div></div>
                         <div style="display:flex; gap:10px;"><div style="flex:1"><label class="modal-label">Llantas</label><input type="text" id="f_llantas" class="modal-input"></div><div style="flex:1"><label class="modal-label">Motor</label><input type="text" id="f_motor" class="modal-input"></div></div>`;
             }
@@ -733,14 +751,15 @@
                     prev.src = tempPhotoBase64;
                     prev.style.display = 'block';
                 }
+                document.getElementById('f_alias').value = item.alias || '';
                 if(currentDataType === 'pilots') { document.getElementById('f_nombre').value = item.nombre || ''; document.getElementById('f_apellido').value = item.apellido || ''; }
-                if(currentDataType === 'tracks') { document.getElementById('f_nombre').value = item.nombre || ''; document.getElementById('f_alias').value = item.alias || ''; document.getElementById('f_longitud').value = item.longitud || ''; document.getElementById('f_tiempomin').value = item.tiempoMinimo || ''; }
-                if(currentDataType === 'cars') { document.getElementById('f_marca').value = item.marca || ''; document.getElementById('f_modelo').value = item.modelo || ''; document.getElementById('f_alias').value = item.alias || ''; document.getElementById('f_trencilla').value = item.trencilla || ''; document.getElementById('f_chasis').value = item.chasis || ''; document.getElementById('f_llantas').value = item.llantas || ''; document.getElementById('f_motor').value = item.motor || ''; }
+                if(currentDataType === 'tracks') { document.getElementById('f_nombre').value = item.nombre || ''; document.getElementById('f_longitud').value = item.longitud || ''; document.getElementById('f_tiempomin').value = item.tiempoMinimo || ''; }
+                if(currentDataType === 'cars') { document.getElementById('f_marca').value = item.marca || ''; document.getElementById('f_modelo').value = item.modelo || ''; document.getElementById('f_trencilla').value = item.trencilla || ''; document.getElementById('f_chasis').value = item.chasis || ''; document.getElementById('f_llantas').value = item.llantas || ''; document.getElementById('f_motor').value = item.motor || ''; }
             } else { document.getElementById('formTitle').innerText = 'Crear Nuevo'; }
             document.getElementById('modalForm').classList.add('active');
         }
 
-        // CÁMARA INTERNA PARA FORMULARIOS (BYPASS WEBVIEW)
+        // CÁMARA INTERNA PARA FORMULARIOS
         let formStream = null;
         async function startFormCamera() {
             document.getElementById('formPhotoPreview').style.display = 'none';
@@ -760,7 +779,6 @@
             const canvas = document.getElementById('formCanvas');
             if(!formStream) return;
             
-            // Recortar en cuadrado
             const size = Math.min(video.videoWidth, video.videoHeight);
             canvas.width = 400; canvas.height = 400;
             const ctx = canvas.getContext('2d');
@@ -788,9 +806,14 @@
             let item = editingId ? appData[currentDataType].find(x => x.id === editingId) : { id: genId() }; 
             item.photo = tempPhotoBase64;
             
+            // Validación de Alias Obligatorio
+            const aliasVal = document.getElementById('f_alias').value.trim();
+            if(!aliasVal) return alert('El Alias es obligatorio (máximo 12 caracteres).');
+            item.alias = aliasVal.substring(0, 12);
+
             if(currentDataType === 'pilots') { item.nombre = document.getElementById('f_nombre').value; item.apellido = document.getElementById('f_apellido').value; if(!item.nombre) return alert('Pon un nombre.'); }
-            if(currentDataType === 'tracks') { item.nombre = document.getElementById('f_nombre').value; item.alias = document.getElementById('f_alias').value; item.longitud = document.getElementById('f_longitud').value; item.tiempoMinimo = document.getElementById('f_tiempomin').value || "5.0"; if(!item.nombre) return alert('Pon un nombre.'); }
-            if(currentDataType === 'cars') { item.marca = document.getElementById('f_marca').value; item.modelo = document.getElementById('f_modelo').value; item.alias = document.getElementById('f_alias').value; item.trencilla = document.getElementById('f_trencilla').value; item.chasis = document.getElementById('f_chasis').value; item.llantas = document.getElementById('f_llantas').value; item.motor = document.getElementById('f_motor').value; if(!item.modelo) return alert('Pon un modelo.'); }
+            if(currentDataType === 'tracks') { item.nombre = document.getElementById('f_nombre').value; item.longitud = document.getElementById('f_longitud').value; item.tiempoMinimo = document.getElementById('f_tiempomin').value || "5.0"; if(!item.nombre) return alert('Pon un nombre.'); }
+            if(currentDataType === 'cars') { item.marca = document.getElementById('f_marca').value; item.modelo = document.getElementById('f_modelo').value; item.trencilla = document.getElementById('f_trencilla').value; item.chasis = document.getElementById('f_chasis').value; item.llantas = document.getElementById('f_llantas').value; item.motor = document.getElementById('f_motor').value; if(!item.modelo) return alert('Pon un modelo.'); }
             
             if (!editingId) { appData[currentDataType].push(item); } 
             stopFormCamera();
@@ -804,7 +827,7 @@
         function updateRegistersUI() {
             const list = document.getElementById('registersList');
             if(!list) return;
-            if(appData.registers.length === 0) { list.innerHTML = "<p style='color:#fff;font-size:11px;text-align:center;'>No hay sesiones registradas.</p>"; return; }
+            if(appData.registers.length === 0) { list.innerHTML = "<p style='color:#fff;font-size:13px;text-align:center;'>No hay sesiones registradas.</p>"; return; }
             
             list.innerHTML = appData.registers.map(r => {
                 const pObj = appData.pilots.find(p => p.id === r.pilot);
@@ -833,9 +856,9 @@
 
                 const lapsHtml = r.laps.map((l, idx) => `
                     <div class="reg-lap-row">
-                        <span style="color:var(--text-muted); font-size:11px;">Vuelta ${r.laps.length - idx} ${l === bestMs ? '🏆' : ''}</span>
+                        <span style="color:var(--text-muted); font-size:12px;">Vuelta ${r.laps.length - idx} ${l === bestMs ? '🏆' : ''}</span>
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <span style="color:var(--primary); font-family:monospace; font-size:13px; font-weight:bold;">${(l/1000).toFixed(3)}s</span>
+                            <span style="color:var(--primary); font-family:monospace; font-size:14px; font-weight:bold;">${(l/1000).toFixed(3)}s</span>
                             <button class="reg-lap-del" onclick="deleteLapBtn('${r.id}', ${idx}, event)">🗑️</button>
                         </div>
                     </div>
@@ -851,13 +874,13 @@
                             <div class="reg-sub" style="margin-top:4px;">📅 ${r.date} • ${r.laps.length} vueltas</div>
                             <div style="display:flex; justify-content:space-between; margin-top:6px;">
                                 <div class="reg-highlight">Mejor: ${bestStr}</div>
-                                <div style="color:var(--primary); font-family:monospace; font-size:12px; font-weight:bold;">Vel. Media: ${avgSpeedStr}</div>
+                                <div style="color:var(--primary); font-family:monospace; font-size:13px; font-weight:bold;">Vel. Media: ${avgSpeedStr}</div>
                             </div>
                         </div>
                         <button class="reg-del-btn" onclick="deleteSessionBtn('${r.id}', event)">Eliminar</button>
                     </div>
                     <div class="reg-details ${isOpen}" id="details-${r.id}">
-                        ${lapsHtml || '<div style="color:var(--text-muted); font-size:11px; text-align:center; margin-top:5px;">Sin vueltas.</div>'}
+                        ${lapsHtml || '<div style="color:var(--text-muted); font-size:12px; text-align:center; margin-top:5px;">Sin vueltas.</div>'}
                     </div>
                 </div>`;
             }).join('');
@@ -887,12 +910,12 @@
             }
         }
 
-        // Récords Absolutos Top 3 por Circuito (con velocidad media de la vuelta)
+        // Récords Absolutos Top 3 por Circuito
         function updateRecordsUI() {
             const list = document.getElementById('recordsList');
             if(!list) return;
             if(appData.tracks.length === 0 || appData.registers.length === 0) {
-                list.innerHTML = "<p style='color:var(--text-muted); font-size:11px; text-align:center;'>Aún no hay registros suficientes para calcular récords.</p>";
+                list.innerHTML = "<p style='color:var(--text-muted); font-size:13px; text-align:center;'>Aún no hay registros suficientes para calcular récords.</p>";
                 return;
             }
 
@@ -933,11 +956,11 @@
                                 <div class="rec-rank rec-rank-${index+1}">#${index+1}</div>
                                 <div class="rec-details-box">
                                     <div style="font-weight:bold; color:white;">👤 ${rec.pilot}</div>
-                                    <div style="font-size:10px; color:var(--text-muted);">🏎️ ${rec.car}</div>
+                                    <div style="font-size:11px; color:var(--text-muted);">🏎️ ${rec.car}</div>
                                 </div>
                                 <div style="text-align:right;">
                                     <div class="rec-time">${(rec.time/1000).toFixed(3)}s</div>
-                                    <div style="font-size:9px; color:var(--primary); font-family:monospace;">${rec.speed > 0 ? rec.speed.toFixed(1) + ' km/h' : ''}</div>
+                                    <div style="font-size:10px; color:var(--primary); font-family:monospace;">${rec.speed > 0 ? rec.speed.toFixed(1) + ' km/h' : ''}</div>
                                 </div>
                             </div>
                         `).join('')}
@@ -945,7 +968,7 @@
                 }
             });
 
-            list.innerHTML = html || "<p style='color:var(--text-muted); font-size:11px; text-align:center;'>No hay tiempos registrados por circuito todavía.</p>";
+            list.innerHTML = html || "<p style='color:var(--text-muted); font-size:13px; text-align:center;'>No hay tiempos registrados por circuito todavía.</p>";
         }
 
         // Estadísticas Avanzadas
@@ -978,7 +1001,7 @@
             if (currentStatView === 'trackTimes') {
                 bar.style.display = 'flex';
                 bar.innerHTML = `
-                    <span style="font-size:10px; font-weight:bold; color:var(--text-muted);">CIRCUITO:</span>
+                    <span style="font-size:11px; font-weight:bold; color:var(--text-muted);">CIRCUITO:</span>
                     <select id="statSelTrack" class="modal-input" style="margin:0; flex:1;" onchange="statFilterTrackId=this.value; renderStatContent();">
                         ${appData.tracks.map(t => `<option value="${t.id}">${t.nombre}</option>`).join('')}
                     </select>`;
@@ -987,14 +1010,14 @@
                 bar.style.display = 'flex';
                 bar.innerHTML = `
                     <div style="flex:1;">
-                        <span style="font-size:9px; color:var(--text-muted);">PILOTO:</span>
-                        <select id="statSelPilot" class="modal-input" style="margin:0; font-size:11px;" onchange="statFilterPilotId=this.value; renderStatContent();">
+                        <span style="font-size:10px; color:var(--text-muted);">PILOTO:</span>
+                        <select id="statSelPilot" class="modal-input" style="margin:0; font-size:12px;" onchange="statFilterPilotId=this.value; renderStatContent();">
                             ${appData.pilots.map(p => `<option value="${p.id}">${p.nombre} ${p.apellido || ''}</option>`).join('')}
                         </select>
                     </div>
                     <div style="flex:1;">
-                        <span style="font-size:9px; color:var(--text-muted);">CIRCUITO:</span>
-                        <select id="statSelTrack2" class="modal-input" style="margin:0; font-size:11px;" onchange="statFilterTrackId=this.value; renderStatContent();">
+                        <span style="font-size:10px; color:var(--text-muted);">CIRCUITO:</span>
+                        <select id="statSelTrack2" class="modal-input" style="margin:0; font-size:12px;" onchange="statFilterTrackId=this.value; renderStatContent();">
                             ${appData.tracks.map(t => `<option value="${t.id}">${t.nombre}</option>`).join('')}
                         </select>
                     </div>`;
@@ -1009,7 +1032,7 @@
             const content = document.getElementById('statSubContent');
             if(!content) return;
             if (appData.registers.length === 0) {
-                content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:11px;'>No hay datos suficientes de carreras.</p>";
+                content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:13px;'>No hay datos suficientes de carreras.</p>";
                 return;
             }
 
@@ -1032,7 +1055,7 @@
                 const top20 = laps.slice(0, 20);
 
                 if (top20.length === 0) {
-                    content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:11px;'>Sin tiempos para este circuito.</p>";
+                    content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:13px;'>Sin tiempos para este circuito.</p>";
                     return;
                 }
 
@@ -1041,7 +1064,7 @@
                         <div class="rec-rank ${idx===0?'rec-rank-1':idx===1?'rec-rank-2':idx===2?'rec-rank-3':''}">#${idx+1}</div>
                         <div class="rec-details-box">
                             <div style="font-weight:bold; color:white;">👤 ${item.pilot}</div>
-                            <div style="font-size:10px; color:var(--text-muted);">🏎️ ${item.car}</div>
+                            <div style="font-size:11px; color:var(--text-muted);">🏎️ ${item.car}</div>
                         </div>
                         <div class="rec-time">${(item.time/1000).toFixed(3)}s</div>
                     </div>`).join('');
@@ -1063,7 +1086,7 @@
                 const top20 = laps.slice(0, 20);
 
                 if (top20.length === 0) {
-                    content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:11px;'>Sin registros para esta combinación.</p>";
+                    content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:13px;'>Sin registros para esta combinación.</p>";
                     return;
                 }
 
@@ -1107,10 +1130,10 @@
 
                     html += `
                     <div class="rec-track-card">
-                        <div class="rec-track-title">🗺️ ${track.nombre} <span style="font-size:10px; color:var(--text-muted); font-weight:normal; margin-left:auto;">Total Vueltas: ${totalLaps}</span></div>`;
+                        <div class="rec-track-title">🗺️ ${track.nombre} <span style="font-size:11px; color:var(--text-muted); font-weight:normal; margin-left:auto;">Total Vueltas: ${totalLaps}</span></div>`;
                         
                     if (carsArray.length === 0) {
-                        html += `<div style="font-size:11px; color:var(--text-muted); text-align:center; padding:6px;">Sin actividad en este circuito.</div>`;
+                        html += `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:6px;">Sin actividad en este circuito.</div>`;
                     } else {
                         carsArray.forEach((car, idx) => {
                             html += `
@@ -1118,7 +1141,7 @@
                                 <div class="rec-rank">#${idx+1}</div>
                                 <div class="rec-details-box">
                                     <div style="font-weight:bold; color:white;">🏎️ ${car.carName}</div>
-                                    <div style="font-size:10px; color:var(--text-muted);">Vueltas: ${car.laps} • Recorrido: ${car.km} km</div>
+                                    <div style="font-size:11px; color:var(--text-muted);">Vueltas: ${car.laps} • Recorrido: ${car.km} km</div>
                                 </div>
                                 <div class="rec-time">${car.bestTime !== Infinity ? (car.bestTime/1000).toFixed(3) + 's' : '--'}</div>
                             </div>`;
