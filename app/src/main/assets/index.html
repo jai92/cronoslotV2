@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CronoSlot Pro</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%2300E5FF' stroke-width='6' stroke-dasharray='10 5'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg-dark: #07090F;
@@ -65,7 +66,6 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
         
-        /* Selectores de Carrera con Miniatura */
         .selectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .sel-box {
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
@@ -124,7 +124,7 @@
             border: 1px solid rgba(255,255,255,0.08); font-size: 12px; font-weight: bold; margin-bottom: 6px;
         }
 
-        /* Registros */
+        /* Estilos Registros */
         .reg-card { background:rgba(0,0,0,0.3); padding:12px; border-radius:14px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.05); }
         .reg-header { display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; }
         .reg-title { color: white; font-weight: bold; font-size: 13px; margin-bottom: 4px; }
@@ -136,7 +136,7 @@
         .reg-lap-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .reg-lap-del { background: transparent; color: var(--accent); border: none; font-size: 14px; cursor: pointer; padding: 4px; }
 
-        /* Récords */
+        /* Estilos Récords */
         .rec-track-card { background: rgba(0,0,0,0.4); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); padding: 12px; margin-bottom: 12px; }
         .rec-track-title { font-size: 14px; font-weight: 900; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
         .rec-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
@@ -216,7 +216,7 @@
             </div>
             <div>
                 <div style="font-weight: 900; font-size: 16px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 9px; color: var(--text-muted);">PRO V3.7</div>
+                <div style="font-size: 9px; color: var(--text-muted);">PRO V4.1</div>
             </div>
         </div>
     </header>
@@ -226,7 +226,6 @@
         <div id="screen-race" class="screen active">
             <div class="card">
                 <div class="selectors-grid">
-                    <!-- Piloto con miniatura -->
                     <div class="sel-box" id="boxPilot" style="border-color: rgba(255,42,85,0.4);">
                         <div class="sel-box-header">
                             <img id="pilotThumb" class="sel-thumb" src="">
@@ -234,7 +233,6 @@
                         </div>
                         <select id="pilotSelect" onchange="updateSelectionThumbnails()"></select>
                     </div>
-                    <!-- Coche con miniatura -->
                     <div class="sel-box" id="boxCar" style="border-color: rgba(0,225,255,0.4);">
                         <div class="sel-box-header">
                             <img id="carThumb" class="sel-thumb" src="">
@@ -242,7 +240,6 @@
                         </div>
                         <select id="carSelect" onchange="updateSelectionThumbnails()"></select>
                     </div>
-                    <!-- Pista -->
                     <div class="sel-box" id="boxTrack" style="border-color: rgba(16,185,129,0.4);">
                         <div class="sel-box-header">
                             <span style="color: #10b981;">Pista</span>
@@ -319,7 +316,7 @@
             </div>
         </div>
 
-        <!-- PANTALLA 4: ESTADÍSTICAS AVANZADAS -->
+        <!-- PANTALLA 4: ESTADÍSTICAS -->
         <div id="screen-stats" class="screen">
             <div id="statsMainView">
                 <h2 style="margin:0 0 15px 0; font-size:18px; color:var(--primary);">Centro Estadístico</h2>
@@ -435,13 +432,12 @@
         </div>
     </div>
 
-    <!-- Formulario Dinámico con Captura Directa de Cámara de Android -->
     <div class="modal-overlay" id="modalForm">
         <div class="modal-card">
             <h3 class="modal-title" id="formTitle">Crear</h3>
             <div id="formDynamicFields"></div>
             
-            <label class="modal-label" style="margin-top:10px;">📸 Hacer Foto (Cámara o Galería)</label>
+            <label class="modal-label" style="margin-top:10px;">📸 Foto (Cámara o Galería)</label>
             <input type="file" id="formFilePhoto" accept="image/*" capture="environment" class="modal-input" style="padding:6px; background:rgba(255,255,255,0.05);" onchange="processFilePhoto(event)">
             <img id="formPhotoPreview" style="width:100%; height:120px; object-fit:cover; border-radius:12px; display:none; margin-bottom:10px; border:1px solid rgba(255,255,255,0.1);">
 
@@ -459,29 +455,39 @@
             tracks: [{id: 't1', nombre: 'Gijón GP', alias: 'Asturias', longitud: '25.5', tiempoMinimo: '6.0', photo: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80'}],
             registers: []
         };
-        let appData = JSON.parse(localStorage.getItem('cronoslot_v7')) || defaultData;
+        let appData = defaultData;
+        try {
+            const saved = localStorage.getItem('cronoslot_v10');
+            if (saved) { appData = JSON.parse(saved); }
+        } catch(e) { appData = defaultData; }
         
         function saveData() { 
-            localStorage.setItem('cronoslot_v7', JSON.stringify(appData)); 
+            try {
+                localStorage.setItem('cronoslot_v10', JSON.stringify(appData));
+            } catch(e) {}
             updateSelects(); 
             updateRegistersUI(); 
             updateRecordsUI(); 
         }
         const genId = () => Math.random().toString(36).substr(2, 9);
 
-        // SELECTORES DE CARRERA CON MINIATURAS VISIBLES
         function updateSelects() {
-            const pVal = document.getElementById('pilotSelect').value;
-            const cVal = document.getElementById('carSelect').value;
-            const tVal = document.getElementById('trackSelect').value;
+            const pSel = document.getElementById('pilotSelect');
+            const cSel = document.getElementById('carSelect');
+            const tSel = document.getElementById('trackSelect');
+            if(!pSel || !cSel || !tSel) return;
 
-            document.getElementById('pilotSelect').innerHTML = appData.pilots.map(p => `<option value="${p.id}" data-photo="${p.photo || ''}">${p.nombre} ${p.apellido}</option>`).join('');
-            document.getElementById('carSelect').innerHTML = appData.cars.map(c => `<option value="${c.id}" data-photo="${c.photo || ''}">${c.marca} ${c.modelo}</option>`).join('');
-            document.getElementById('trackSelect').innerHTML = appData.tracks.map(t => `<option value="${t.id}">${t.nombre} (${t.tiempoMinimo}s)</option>`).join('');
+            const pVal = pSel.value;
+            const cVal = cSel.value;
+            const tVal = tSel.value;
+
+            pSel.innerHTML = appData.pilots.map(p => `<option value="${p.id}" data-photo="${p.photo || ''}">${p.nombre} ${p.apellido}</option>`).join('');
+            cSel.innerHTML = appData.cars.map(c => `<option value="${c.id}" data-photo="${c.photo || ''}">${c.marca} ${c.modelo}</option>`).join('');
+            tSel.innerHTML = appData.tracks.map(t => `<option value="${t.id}">${t.nombre} (${t.tiempoMinimo}s)</option>`).join('');
             
-            if (pVal && appData.pilots.find(p => p.id === pVal)) document.getElementById('pilotSelect').value = pVal;
-            if (cVal && appData.cars.find(c => c.id === cVal)) document.getElementById('carSelect').value = cVal;
-            if (tVal && appData.tracks.find(t => t.id === tVal)) document.getElementById('trackSelect').value = tVal;
+            if (pVal && appData.pilots.find(p => p.id === pVal)) pSel.value = pVal;
+            if (cVal && appData.cars.find(c => c.id === cVal)) cSel.value = cVal;
+            if (tVal && appData.tracks.find(t => t.id === tVal)) tSel.value = tVal;
             
             updateSelectionThumbnails();
             updateMinLapText();
@@ -490,9 +496,9 @@
         function updateSelectionThumbnails() {
             const pSelect = document.getElementById('pilotSelect');
             const cSelect = document.getElementById('carSelect');
-            
             const pThumb = document.getElementById('pilotThumb');
             const cThumb = document.getElementById('carThumb');
+            if(!pSelect || !cSelect || !pThumb || !cThumb) return;
 
             const pOpt = pSelect.options[pSelect.selectedIndex];
             const cOpt = cSelect.options[cSelect.selectedIndex];
@@ -513,20 +519,50 @@
         }
 
         function updateMinLapText() {
-            const trackId = document.getElementById('trackSelect').value;
-            const track = appData.tracks.find(t => t.id === trackId);
-            if(track) document.getElementById('minLapTxt').innerText = track.tiempoMinimo + 's';
+            const tSel = document.getElementById('trackSelect');
+            const minTxt = document.getElementById('minLapTxt');
+            if(!tSel || !minTxt) return;
+            const track = appData.tracks.find(t => t.id === tSel.value);
+            if(track) minTxt.innerText = track.tiempoMinimo + 's';
         }
-        
-        document.getElementById('trackSelect').addEventListener('change', updateMinLapText);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tSel = document.getElementById('trackSelect');
+            if(tSel) {
+                tSel.addEventListener('change', updateMinLapText);
+            }
+            updateSelects(); 
+            updateRegistersUI();
+            updateRecordsUI();
+        });
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('screen-' + tabId).classList.add('active');
-            btn.classList.add('active');
-            if(tabId === 'data') { document.getElementById('dataMainView').style.display = 'block'; document.getElementById('dataSubView').style.display = 'none'; }
+            const target = document.getElementById('screen-' + tabId);
+            if(target) target.classList.add('active');
+            if(btn) btn.classList.add('active');
+            if(tabId === 'data') { 
+                document.getElementById('dataMainView').style.display = 'block'; 
+                document.getElementById('dataSubView').style.display = 'none'; 
+            }
             if(tabId === 'stats') { closeStatSubView(); }
+        }
+
+        // BLOQUEO DE PANTALLA (WAKE LOCK API)
+        let wakeLockObj = null;
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLockObj = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {}
+        }
+        function releaseWakeLock() {
+            if (wakeLockObj) {
+                wakeLockObj.release().catch(() => {});
+                wakeLockObj = null;
+            }
         }
 
         // Carrera
@@ -534,6 +570,7 @@
         function handleRaceClick() {
             if(!isRunning) {
                 isRunning = true;
+                requestWakeLock();
                 document.getElementById('boxPilot').classList.add('locked');
                 document.getElementById('boxCar').classList.add('locked');
                 document.getElementById('boxTrack').classList.add('locked');
@@ -553,6 +590,7 @@
         }
         function confirmStopRace() {
             closeModal('modalConfirmStop'); clearInterval(raceTimer); isRunning = false;
+            releaseWakeLock();
             if(currentLaps.length > 0) {
                 document.getElementById('modalSaveSession').classList.add('active');
                 const t = appData.tracks.find(x => x.id === document.getElementById('trackSelect').value);
@@ -581,6 +619,7 @@
         }
         function closeSummaryAndReset() {
             closeModal('modalSummary');
+            releaseWakeLock();
             document.getElementById('boxPilot').classList.remove('locked'); document.getElementById('boxCar').classList.remove('locked'); document.getElementById('boxTrack').classList.remove('locked');
             const btn = document.getElementById('mainRaceBtn'); btn.innerText = "▶ Comenzar Carrera"; btn.className = "btn-action";
             document.getElementById('chronoDisplay').innerText = "00.000s"; document.getElementById('currentLapNum').innerText = "#0";
@@ -588,7 +627,7 @@
             currentLaps = [];
         }
 
-        // Datos y Procesamiento de la Cámara / Archivo de Android
+        // Datos y Fotos
         let currentDataType = '';
         let tempPhotoBase64 = '';
 
@@ -659,7 +698,6 @@
             document.getElementById('modalForm').classList.add('active');
         }
 
-        // Compresión y conversión interna segura para Android
         function processFilePhoto(event) {
             const file = event.target.files[0];
             if(file) {
@@ -709,10 +747,11 @@
 
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Registros (Acordeón)
+        // Registros (Acordeón con velocidad media)
         let openRegisters = new Set();
         function updateRegistersUI() {
             const list = document.getElementById('registersList');
+            if(!list) return;
             if(appData.registers.length === 0) { list.innerHTML = "<p style='color:#fff;font-size:11px;text-align:center;'>No hay sesiones registradas.</p>"; return; }
             
             list.innerHTML = appData.registers.map(r => {
@@ -722,9 +761,22 @@
                 const cName = cObj ? (cObj.marca + " " + cObj.modelo) : 'Desconocido';
                 const tObj = appData.tracks.find(t => t.id === r.track);
                 const tName = tObj ? tObj.nombre : 'Desconocido';
+                const trackLenMeters = tObj ? parseFloat(tObj.longitud) || 0 : 0;
 
                 const bestMs = r.laps.length > 0 ? Math.min(...r.laps) : 0;
                 const bestStr = bestMs > 0 ? (bestMs/1000).toFixed(3) + 's' : '--';
+
+                let avgSpeedStr = '--';
+                if(r.laps.length > 0 && trackLenMeters > 0) {
+                    const totalDistMeters = r.laps.length * trackLenMeters;
+                    const totalTimeSeconds = r.laps.reduce((sum, l) => sum + l, 0) / 1000;
+                    if(totalTimeSeconds > 0) {
+                        const metersPerSecond = totalDistMeters / totalTimeSeconds;
+                        const kmh = metersPerSecond * 3.6;
+                        avgSpeedStr = kmh.toFixed(1) + ' km/h';
+                    }
+                }
+
                 const isOpen = openRegisters.has(r.id) ? 'open' : '';
 
                 const lapsHtml = r.laps.map((l, idx) => `
@@ -742,10 +794,13 @@
                     <div class="reg-header" onclick="toggleRegAccordion('${r.id}')">
                         <div style="flex:1;">
                             <div class="reg-title">${r.name}</div>
-                            <div class="reg-sub">🗺️ ${tName}</div>
+                            <div class="reg-sub">🗺️ ${tName} (${trackLenMeters}m)</div>
                             <div class="reg-sub">👤 ${pName} | 🏎️ ${cName}</div>
                             <div class="reg-sub" style="margin-top:4px;">📅 ${r.date} • ${r.laps.length} vueltas</div>
-                            <div class="reg-highlight">Mejor: ${bestStr}</div>
+                            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+                                <div class="reg-highlight">Mejor: ${bestStr}</div>
+                                <div style="color:var(--primary); font-family:monospace; font-size:12px; font-weight:bold;">Vel. Media: ${avgSpeedStr}</div>
+                            </div>
                         </div>
                         <button class="reg-del-btn" onclick="deleteSessionBtn('${r.id}', event)">Eliminar</button>
                     </div>
@@ -758,6 +813,7 @@
 
         function toggleRegAccordion(id) {
             const el = document.getElementById('details-' + id);
+            if(!el) return;
             if(el.classList.contains('open')) { el.classList.remove('open'); openRegisters.delete(id); }
             else { el.classList.add('open'); openRegisters.add(id); }
         }
@@ -779,9 +835,10 @@
             }
         }
 
-        // Récords Absolutos Top 3 por Circuito
+        // Récords Absolutos Top 3 por Circuito (con velocidad media de la vuelta)
         function updateRecordsUI() {
             const list = document.getElementById('recordsList');
+            if(!list) return;
             if(appData.tracks.length === 0 || appData.registers.length === 0) {
                 list.innerHTML = "<p style='color:var(--text-muted); font-size:11px; text-align:center;'>Aún no hay registros suficientes para calcular récords.</p>";
                 return;
@@ -790,13 +847,21 @@
             let html = '';
             appData.tracks.forEach(track => {
                 let trackLaps = [];
+                const trackLenMeters = parseFloat(track.longitud) || 0;
+
                 appData.registers.forEach(reg => {
                     if(reg.track === track.id) {
                         const pObj = appData.pilots.find(p => p.id === reg.pilot);
                         const cObj = appData.cars.find(c => c.id === reg.car);
                         reg.laps.forEach(lapTime => {
+                            let speedKmh = 0;
+                            if(lapTime > 0 && trackLenMeters > 0) {
+                                const seconds = lapTime / 1000;
+                                speedKmh = (trackLenMeters / seconds) * 3.6;
+                            }
                             trackLaps.push({
                                 time: lapTime,
+                                speed: speedKmh,
                                 pilot: pObj ? `${pObj.nombre} ${pObj.apellido || ''}` : 'Piloto Desconocido',
                                 car: cObj ? `${cObj.marca} ${cObj.modelo}` : 'Coche Desconocido'
                             });
@@ -810,7 +875,7 @@
                 if(top3.length > 0) {
                     html += `
                     <div class="rec-track-card">
-                        <div class="rec-track-title">🗺️ ${track.nombre}</div>
+                        <div class="rec-track-title">🗺️ ${track.nombre} (${trackLenMeters}m)</div>
                         ${top3.map((rec, index) => `
                             <div class="rec-item">
                                 <div class="rec-rank rec-rank-${index+1}">#${index+1}</div>
@@ -818,7 +883,10 @@
                                     <div style="font-weight:bold; color:white;">👤 ${rec.pilot}</div>
                                     <div style="font-size:10px; color:var(--text-muted);">🏎️ ${rec.car}</div>
                                 </div>
-                                <div class="rec-time">${(rec.time/1000).toFixed(3)}s</div>
+                                <div style="text-align:right;">
+                                    <div class="rec-time">${(rec.time/1000).toFixed(3)}s</div>
+                                    <div style="font-size:9px; color:var(--primary); font-family:monospace;">${rec.speed > 0 ? rec.speed.toFixed(1) + ' km/h' : ''}</div>
+                                </div>
                             </div>
                         `).join('')}
                     </div>`;
@@ -887,6 +955,7 @@
 
         function renderStatContent() {
             const content = document.getElementById('statSubContent');
+            if(!content) return;
             if (appData.registers.length === 0) {
                 content.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:11px;'>No hay datos suficientes de carreras.</p>";
                 return;
@@ -1011,11 +1080,12 @@
 
         // Cámara
         let cameraActive = false; let prevFrameData = null;
-        function toggleCalibPanel() { const p = document.getElementById('calibPanel'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
+        function toggleCalibPanel() { const p = document.getElementById('calibPanel'); if(p) p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
         function updateCalib() {
             const sens = document.getElementById('camSens').value; const size = document.getElementById('camSize').value; const pos = document.getElementById('camPos').value;
             document.getElementById('valSens').innerText = sens + '%'; document.getElementById('valSize').innerText = size + '%'; document.getElementById('valPos').innerText = pos + '%';
-            const zone = document.getElementById('calibZone'); zone.style.width = size + '%'; zone.style.height = size + '%'; zone.style.left = pos + '%';
+            const zone = document.getElementById('calibZone'); 
+            if(zone) { zone.style.width = size + '%'; zone.style.height = size + '%'; zone.style.left = pos + '%'; }
         }
         async function toggleCamera() {
             const video = document.getElementById('cameraFeed');
@@ -1040,7 +1110,7 @@
                         const threshold = 120 - parseInt(document.getElementById('camSens').value); const motion = diff / 150;
                         const zone = document.getElementById('calibZone');
                         if (motion > threshold) {
-                            zone.classList.add('detected'); setTimeout(() => zone.classList.remove('detected'), 200);
+                            if(zone) { zone.classList.add('detected'); setTimeout(() => zone.classList.remove('detected'), 200); }
                             if (isRunning) {
                                 const track = appData.tracks.find(t => t.id === document.getElementById('trackSelect').value);
                                 const minTimeMs = (track ? parseFloat(track.tiempoMinimo) : 5) * 1000;
@@ -1058,10 +1128,9 @@
             }
             requestAnimationFrame(processFrame);
         }
-
-        // Inicialización general
-        updateSelects(); 
-        updateRegistersUI();
+    </script>
+</body>
+</html>
         updateRecordsUI();
     </script>
 </body>
