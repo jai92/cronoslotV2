@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CronoSlot Pro V4.9</title>
+    <title>CronoSlot Pro V5.0</title>
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%2300E5FF' stroke-width='6' stroke-dasharray='10 5'/%3E%3C/svg%3E">
     
@@ -103,7 +103,7 @@
             </div>
             <div>
                 <div style="font-weight: 900; font-size: 18px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 10px; color: var(--text-muted);">PRO V4.9</div>
+                <div style="font-size: 10px; color: var(--text-muted);">PRO V5.0</div>
             </div>
         </div>
         <button id="camToggleBtn" class="btn-cam-toggle" onclick="toggleCamera()">CÁMARA OFF</button>
@@ -346,10 +346,10 @@
 
     <script>
         // ----------------------------------------------------
-        // 1. BASE DE DATOS Y ESTADO GLOBAL (V4.9 MASTER)
+        // 1. BASE DE DATOS Y ESTADO GLOBAL (V5.0 MASTER)
         // ----------------------------------------------------
-        // FORZAMOS NUEVA CLAVE para resetear fotos rotas antiguas
-        const STORAGE_KEY = 'cronoslot_v49_master';
+        // FORZAMOS NUEVA CLAVE para resetear completamente el sistema
+        const STORAGE_KEY = 'cronoslot_v50_master';
         
         // Base de Datos Súper Amplia por defecto
         const defaultDB = {
@@ -361,13 +361,13 @@
                 { id:'p5', nombre:'Pedro', apellidos:'Martín', alias:'Pete', photo:'' }
             ],
             cars: [
-                { id:'c1', marca:'Porsche', modelo:'911 GT3 RS', categoria:'GT3', motor:'Flat-6', photo:'' },
-                { id:'c2', marca:'Aston Martin', modelo:'Vantage GT3', categoria:'GT3', motor:'V8', photo:'' },
-                { id:'c3', marca:'Ferrari', modelo:'488 GT3', categoria:'GT3', motor:'V8 Turbo', photo:'' },
-                { id:'c4', marca:'Audi', modelo:'R8 LMS', categoria:'GT3', motor:'V10', photo:'' },
-                { id:'c5', marca:'McLaren', modelo:'720S GT3', categoria:'GT3', motor:'V8 Twin-Turbo', photo:'' },
-                { id:'c6', marca:'Ford', modelo:'GT LM', categoria:'GTE', motor:'EcoBoost V6', photo:'' },
-                { id:'c7', marca:'Chevrolet', modelo:'Corvette C8.R', categoria:'GTE', motor:'V8', photo:'' }
+                { id:'c1', marca:'Porsche', modelo:'911 GT3 RS', alias:'Porsche GT3', categoria:'GT3', motor:'Flat-6', chasis:'De Serie', escobillas:'Cobre', llantaDelantera:'15.8mm', llantaTrasera:'16.5mm', neumaticoDelantero:'Perfil Bajo', neumaticoTrasero:'Slick Compuesto Blando', photo:'' },
+                { id:'c2', marca:'Aston Martin', modelo:'Vantage GT3', alias:'Vantage', categoria:'GT3', motor:'V8', chasis:'Ligero', escobillas:'Plata', llantaDelantera:'16mm', llantaTrasera:'16.5mm', neumaticoDelantero:'Grip Zero', neumaticoTrasero:'Slick Compuesto Medio', photo:'' },
+                { id:'c3', marca:'Ferrari', modelo:'488 GT3', alias:'El Coche Rojo', categoria:'GT3', motor:'V8 Turbo', chasis:'Competición', escobillas:'Cobre Pro', llantaDelantera:'15.5mm', llantaTrasera:'16.2mm', neumaticoDelantero:'Perfil Bajo', neumaticoTrasero:'Slick Súper Blando', photo:'' },
+                { id:'c4', marca:'Audi', modelo:'R8 LMS', alias:'Audi R8', categoria:'GT3', motor:'V10', chasis:'De Serie', escobillas:'Estaño', llantaDelantera:'16mm', llantaTrasera:'16mm', neumaticoDelantero:'Grip Zero', neumaticoTrasero:'Slick Medio', photo:'' },
+                { id:'c5', marca:'McLaren', modelo:'720S GT3', alias:'Macca 720', categoria:'GT3', motor:'V8 Twin-Turbo', chasis:'Carbono Sim', escobillas:'Plata', llantaDelantera:'15.8mm', llantaTrasera:'16.2mm', neumaticoDelantero:'Perfil Bajo', neumaticoTrasero:'Slick Blando', photo:'' },
+                { id:'c6', marca:'Ford', modelo:'GT LM', alias:'Ford Pro', categoria:'GTE', motor:'EcoBoost V6', chasis:'3D Impreso', escobillas:'Cobre', llantaDelantera:'15.8mm', llantaTrasera:'16.5mm', neumaticoDelantero:'Grip Zero', neumaticoTrasero:'Slick Compuesto Blando', photo:'' },
+                { id:'c7', marca:'Chevrolet', modelo:'Corvette C8.R', alias:'Corvette', categoria:'GTE', motor:'V8', chasis:'Competición', escobillas:'Plata Pro', llantaDelantera:'16.2mm', llantaTrasera:'16.8mm', neumaticoDelantero:'Perfil Medio', neumaticoTrasero:'Slick Duro', photo:'' }
             ],
             tracks: [
                 { id:'t1', nombre:'Gijón GP', alias:'Gijón', lugar:'Casa', distancia:'25.5', tiempoMinimo:'5.0', photo:'' },
@@ -397,7 +397,7 @@
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
             } catch (e) {
-                alert("Error al guardar: La memoria del navegador está llena. Borra registros o crea una nueva versión de la app.");
+                alert("Error al guardar: La memoria del navegador está llena. Borra registros o fotos antiguas.");
             }
         };
         const genId = () => Math.random().toString(36).substring(2, 9);
@@ -405,7 +405,6 @@
         // Creador de Fotos y Avatares dinámicos
         const getPhoto = (photoStr, type, nameStr) => {
             if (photoStr && photoStr.trim() !== '') return photoStr;
-            // Si no hay foto, generamos un avatar chulo con su inicial
             let initial = nameStr ? nameStr.charAt(0).toUpperCase() : '?';
             let colorHex = type==='pilots' ? '00ff88' : type==='cars' ? '00E5FF' : 'FF2A55';
             
@@ -585,7 +584,7 @@
             if (pilot && car) { raceConfig.pilots.push({ pilot, car, laps: [] }); renderRacePilotsAdd(); }
         }
         function renderRacePilotsAdd() {
-            document.getElementById('racePilotsList').innerHTML = raceConfig.pilots.map((item, index) => `<div class="card" style="padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;"><span>👤 ${item.pilot.alias || item.pilot.nombre} | 🏎️ ${item.car.modelo}</span><button onclick="raceConfig.pilots.splice(${index},1); renderRacePilotsAdd()" style="background:transparent; border:none; color:var(--accent); cursor:pointer; font-size:16px;">❌</button></div>`).join('');
+            document.getElementById('racePilotsList').innerHTML = raceConfig.pilots.map((item, index) => `<div class="card" style="padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;"><span>👤 ${item.pilot.alias || item.pilot.nombre} | 🏎️ ${item.car.alias || item.car.modelo}</span><button onclick="raceConfig.pilots.splice(${index},1); renderRacePilotsAdd()" style="background:transparent; border:none; color:var(--accent); cursor:pointer; font-size:16px;">❌</button></div>`).join('');
         }
         function startRaceMode() {
             if (!raceConfig.pilots.length) return alert('Añade al menos un participante.');
@@ -597,7 +596,7 @@
             mode = 'race'; appState = 'stopped'; lapsData = []; targetLaps = raceConfig.laps; sesRecord = Infinity;
             const turnData = raceConfig.pilots[raceIdx];
             document.getElementById('raceRunTitle').innerText = turnData.pilot.alias || turnData.pilot.nombre;
-            document.getElementById('raceRunSub').innerText = `${turnData.car.modelo} - Vueltas: ${targetLaps}`;
+            document.getElementById('raceRunSub').innerText = `${turnData.car.alias || turnData.car.modelo} - Vueltas: ${targetLaps}`;
             const btn = document.getElementById('btnRaceAction'); btn.innerText = "▶ INICIAR TURNO"; btn.className = "btn-action";
             document.getElementById('chronoLapR').innerText = "L0"; document.getElementById('chronoTimeR').innerText = "00.000s";
             document.getElementById('chronoTimeR').style.color = ""; document.getElementById('chronoLapR').style.color = ""; document.getElementById('chronoPanelR').className = "big-chrono-panel color-gray";
@@ -628,7 +627,7 @@
             activeSelector = { type, context };
             document.getElementById('selectorTitle').innerText = "Selecciona " + (type === 'pilots' ? "Piloto" : type === 'cars' ? "Coche" : "Circuito");
             document.getElementById('selectorList').innerHTML = appData[type].map(item => {
-                let dName = (type === 'pilots' || type === 'tracks') ? (item.alias || item.nombre) : (item.marca + ' ' + item.modelo);
+                let dName = (type === 'pilots' || type === 'tracks') ? (item.alias || item.nombre) : (item.alias || item.modelo);
                 return `<div class="selector-item" onclick="selectItem('${item.id}')"><img src="${getPhoto(item.photo, type, dName)}"><div style="font-weight:bold; font-size:14px;">${dName}</div></div>`;
             }).join('') || '<p style="text-align:center; color:gray; padding:20px;">No hay elementos creados aún.</p>';
             document.getElementById('modalSelector').classList.add('active');
@@ -640,11 +639,11 @@
         }
         function updateSelectionUI() {
             const pT = appData.pilots.find(x => x.id === currentSelections.T.pilot); if (pT) { document.getElementById('txtSelPilotT').innerText = pT.alias || pT.nombre; document.getElementById('imgSelPilotT').src = getPhoto(pT.photo, 'pilots', pT.alias||pT.nombre); }
-            const cT = appData.cars.find(x => x.id === currentSelections.T.car); if (cT) { document.getElementById('txtSelCarT').innerText = cT.modelo; document.getElementById('imgSelCarT').src = getPhoto(cT.photo, 'cars', cT.modelo); }
+            const cT = appData.cars.find(x => x.id === currentSelections.T.car); if (cT) { document.getElementById('txtSelCarT').innerText = cT.alias || cT.modelo; document.getElementById('imgSelCarT').src = getPhoto(cT.photo, 'cars', cT.alias||cT.modelo); }
             const tT = appData.tracks.find(x => x.id === currentSelections.T.track); if (tT) { document.getElementById('txtSelTrackT').innerText = tT.alias || tT.nombre; document.getElementById('imgSelTrackT').src = getPhoto(tT.photo, 'tracks', tT.alias||tT.nombre); document.getElementById('minLapTxtT').innerText = tT.tiempoMinimo + 's'; }
             const tR = appData.tracks.find(x => x.id === currentSelections.R.track); if (tR) { document.getElementById('txtSelTrackR').innerText = tR.alias || tR.nombre; document.getElementById('imgSelTrackR').src = getPhoto(tR.photo, 'tracks', tR.alias||tR.nombre); }
             const pA = appData.pilots.find(x => x.id === currentSelections.RAdd.pilot); if (pA) document.getElementById('txtSelPilotRAdd').innerText = pA.alias || pA.nombre;
-            const cA = appData.cars.find(x => x.id === currentSelections.RAdd.car); if (cA) document.getElementById('txtSelCarRAdd').innerText = cA.modelo;
+            const cA = appData.cars.find(x => x.id === currentSelections.RAdd.car); if (cA) document.getElementById('txtSelCarRAdd').innerText = cA.alias || cA.modelo;
         }
 
         // ----------------------------------------------------
@@ -663,7 +662,7 @@
                 const tr = appData.tracks.find(x => x.id === r.track); const pi = appData.pilots.find(x => x.id === r.pilot); const ca = appData.cars.find(x => x.id === r.car);
                 return `<div class="reg-card" onclick="this.classList.toggle('expanded')">
                     <div class="flex-between"><span style="font-weight:bold; color:var(--primary);">${r.name}</span><span style="font-size:11px; color:gray;">${new Date(r.date).toLocaleDateString('es-ES',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span></div>
-                    <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">🗺️ ${tr?tr.alias||tr.nombre:'--'} | 👤 ${pi?pi.alias||pi.nombre:'--'} | 🏎️ ${ca?ca.modelo:'--'}</div>
+                    <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">🗺️ ${tr?tr.alias||tr.nombre:'--'} | 👤 ${pi?pi.alias||pi.nombre:'--'} | 🏎️ ${ca?ca.alias||ca.modelo:'--'}</div>
                     <div style="font-size:13px; color:var(--cyan); margin-top:5px; font-weight:bold;">Mejor: ${r.laps.length?(Math.min(...r.laps)/1000).toFixed(3)+'s':'--'}</div>
                     <div class="reg-details"><div class="reg-laps-list">${r.laps.map((l,i)=>`<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span>Vuelta ${r.laps.length-i}</span><span style="font-family:monospace; color:var(--primary);">${(l/1000).toFixed(3)}s</span></div>`).join('')}</div><button onclick="event.stopPropagation(); deleteReg('train','${r.id}')" style="margin-top:12px; background:rgba(255,42,85,0.2); color:var(--accent); border:1px solid rgba(255,42,85,0.4); padding:10px; border-radius:10px; width:100%; font-weight:bold; cursor:pointer;">Borrar Registro</button></div></div>`;
             }).join('') || '<p style="text-align:center; color:gray;">Sin entrenamientos.</p>';
@@ -690,7 +689,7 @@
             else if (type === 'pilotTimes') { document.getElementById('statSubTitle').innerText = '👤 Tiempos Piloto'; bar.innerHTML = piSel + trSel; }
             else if (type === 'trackUsage') { document.getElementById('statSubTitle').innerText = '🗺️ Uso y Km'; bar.innerHTML = ''; }
             else if (type === 'pilotRank') { document.getElementById('statSubTitle').innerText = '🏆 Ranking Pilotos'; bar.innerHTML = trSel; }
-            else if (type === 'compare') { document.getElementById('statSubTitle').innerText = '⚖️ Comparador Coches'; bar.innerHTML = trSel + `<div style="display:flex; gap:5px; width:100%; margin-top:5px;"><select id="stCarAdd" class="modal-input" style="flex:1; margin:0;">${appData.cars.map(c => `<option value="${c.id}">${c.modelo}</option>`).join('')}</select><button onclick="addCompCar()" style="background:var(--primary); color:black; border:none; border-radius:10px; padding:10px 15px; font-weight:bold; cursor:pointer;">Añadir</button></div>`; }
+            else if (type === 'compare') { document.getElementById('statSubTitle').innerText = '⚖️ Comparador Coches'; bar.innerHTML = trSel + `<div style="display:flex; gap:5px; width:100%; margin-top:5px;"><select id="stCarAdd" class="modal-input" style="flex:1; margin:0;">${appData.cars.map(c => `<option value="${c.id}">${c.alias||c.modelo}</option>`).join('')}</select><button onclick="addCompCar()" style="background:var(--primary); color:black; border:none; border-radius:10px; padding:10px 15px; font-weight:bold; cursor:pointer;">Añadir</button></div>`; }
             renderStatData();
         }
         function closeStat() { document.getElementById('statsMainView').style.display = 'block'; document.getElementById('statsSubView').style.display = 'none'; compCars = []; }
@@ -705,7 +704,7 @@
                 appData.regTrain.forEach(r => {
                     if (r.track !== tid || (pid && r.pilot !== pid)) return;
                     const cO = appData.cars.find(x => x.id === r.car);
-                    if (!cStats[r.car]) cStats[r.car] = { best: Infinity, name: cO ? cO.modelo : 'Desc.' };
+                    if (!cStats[r.car]) cStats[r.car] = { best: Infinity, name: cO ? (cO.alias||cO.modelo) : 'Desc.' };
                     r.laps.forEach(l => { if (l < cStats[r.car].best) cStats[r.car].best = l; });
                 });
                 cont.innerHTML = Object.values(cStats).sort((a,b)=>a.best-b.best).map((c,i) => `<div class="card" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; ${i===0?'border-color:var(--yellow);':''}"><span style="color:${i===0?'var(--yellow)':'white'}; font-weight:bold;">${i+1}º ${c.name}</span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">${(c.best/1000).toFixed(3)}s</span></div>`).join('') || '<p style="text-align:center; color:gray; padding:20px;">Sin datos.</p>';
@@ -715,12 +714,12 @@
                     if (r.track !== tid) return;
                     const pO = appData.pilots.find(x => x.id === r.pilot);
                     if (!pStats[r.pilot]) pStats[r.pilot] = { best: Infinity, name: pO ? (pO.alias||pO.nombre) : 'Desc.', carName: '' };
-                    r.laps.forEach(l => { if (l < pStats[r.pilot].best) { pStats[r.pilot].best = l; const cO = appData.cars.find(x => x.id === r.car); pStats[r.pilot].carName = cO ? cO.modelo : '--'; } });
+                    r.laps.forEach(l => { if (l < pStats[r.pilot].best) { pStats[r.pilot].best = l; const cO = appData.cars.find(x => x.id === r.car); pStats[r.pilot].carName = cO ? (cO.alias||cO.modelo) : '--'; } });
                 });
                 cont.innerHTML = Object.values(pStats).sort((a,b)=>a.best-b.best).map((p,i) => `<div class="card" style="margin-bottom:8px; ${i===0?'border-color:var(--yellow);':''}"><div class="flex-between"><span style="color:${i===0?'var(--yellow)':'white'}; font-weight:bold; font-size:15px;">${i+1}º ${p.name}</span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">${(p.best/1000).toFixed(3)}s</span></div><div style="font-size:12px; color:gray; margin-top:4px;">Logrado con: ${p.carName}</div></div>`).join('') || '<p style="text-align:center; color:gray; padding:20px;">Sin datos.</p>';
             } else if (curStat === 'compare') {
                 if (!compCars.length) return cont.innerHTML = '<p style="text-align:center; color:gray; padding:20px;">Añade vehículos arriba.</p>';
-                let stats = {}; compCars.forEach(cId => { const cO = appData.cars.find(x => x.id === cId); stats[cId] = { best: Infinity, laps: 0, name: cO ? cO.modelo : 'Desc.' }; });
+                let stats = {}; compCars.forEach(cId => { const cO = appData.cars.find(x => x.id === cId); stats[cId] = { best: Infinity, laps: 0, name: cO ? (cO.alias||cO.modelo) : 'Desc.' }; });
                 appData.regTrain.forEach(r => { if (r.track !== tid || !stats[r.car]) return; r.laps.forEach(l => { if (l < stats[r.car].best) stats[r.car].best = l; }); stats[r.car].laps += r.laps.length; });
                 cont.innerHTML = Object.values(stats).map(c => `<div class="card" style="margin-bottom:10px; border-left:4px solid var(--primary);"><div style="font-weight:bold; color:white; font-size:15px;">🏎️ ${c.name}</div><div class="flex-between" style="font-size:12px; margin-top:8px;"><span style="color:gray;">Vueltas: <span style="color:white; font-weight:bold;">${c.laps}</span></span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">Mejor: ${c.best!==Infinity?(c.best/1000).toFixed(3)+'s':'--'}</span></div></div>`).join('');
             } else if (curStat === 'trackUsage') {
@@ -728,14 +727,14 @@
                     let carC = {}; let tot = 0;
                     appData.regTrain.forEach(r => { if (r.track !== t.id) return; tot += r.laps.length; if (!carC[r.car]) carC[r.car] = 0; carC[r.car] += r.laps.length; });
                     let bestC = null; let maxL = -1; Object.entries(carC).forEach(([id, c]) => { if (c > maxL) { maxL = c; bestC = id; } });
-                    const cO = appData.cars.find(x => x.id === bestC); const bestName = cO ? cO.modelo : 'Ninguno';
+                    const cO = appData.cars.find(x => x.id === bestC); const bestName = cO ? (cO.alias||cO.modelo) : 'Ninguno';
                     return `<div class="card" style="margin-bottom:12px;"><div style="font-weight:bold; color:var(--accent); font-size:16px;">🗺️ ${t.alias||t.nombre}</div><div style="font-size:12px; color:gray; margin-top:6px;">Vueltas Históricas: <span style="color:white; font-weight:bold;">${tot}</span></div><div style="font-size:12px; color:gray; margin-top:4px;">Vehículo Estrella: <span style="color:var(--cyan); font-weight:bold;">${bestName}</span></div></div>`;
                 }).join('');
             }
         }
 
         // ----------------------------------------------------
-        // 7. GESTIÓN COMPLETA BASE DE DATOS Y COMPRESIÓN FOTOS
+        // 7. GESTIÓN COMPLETA BASE DE DATOS Y CÁMARA DIRECTA
         // ----------------------------------------------------
         function switchMainTab(tabName, btnEl) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + tabName).classList.add('active');
@@ -762,19 +761,18 @@
         }
         function renderSubDataList() {
             document.getElementById('subViewList').innerHTML = appData[dbType].map(item => {
-                let dName = (dbType === 'pilots' || dbType === 'tracks') ? (item.alias||item.nombre) : item.modelo;
+                let dName = (dbType === 'pilots' || dbType === 'tracks') ? (item.alias||item.nombre) : (item.alias||item.modelo);
                 return `<div class="card" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
                     <div style="display:flex; align-items:center; gap:12px;"><img src="${getPhoto(item.photo, dbType, dName)}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; background:#222;"><span style="font-weight:bold; font-size:14px;">${dName}</span></div>
                     <div style="display:flex; gap:10px;"><button onclick="openFormModal('${item.id}')" style="background:none; border:none; color:var(--cyan); font-size:18px; cursor:pointer;">✏️</button><button onclick="deleteDataEntity('${item.id}')" style="background:none; border:none; color:var(--accent); font-size:18px; cursor:pointer;">🗑️</button></div></div>`;
             }).join('') || '<p style="text-align:center; color:gray;">Lista vacía.</p>';
         }
         
-        // EL CORAZÓN DE LA REPARACIÓN: Compresión robusta e inmediata
+        // FOTO DIRECTA CON CÁMARA (capture="environment") y compresión segura
         function handlePhotoUploadEvent(e) {
             const file = e.target.files[0];
             if (!file) return;
             
-            // Bloqueamos botón guardar para evitar guardados vacíos mientras comprime
             document.getElementById('btnSaveForm').disabled = true;
             document.getElementById('btnSaveForm').innerText = "Cargando...";
 
@@ -783,7 +781,7 @@
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 250; 
+                    const MAX_SIZE = 300; // Un poco de mejor calidad sin romper memoria
                     let w = img.width; let h = img.height;
                     
                     if (w > h) { if (w > MAX_SIZE) { h *= MAX_SIZE / w; w = MAX_SIZE; } } 
@@ -793,17 +791,14 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, w, h);
                     
-                    // Comprimir drásticamente (calidad 70%) para que nunca crashee localStorage
-                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    // Comprimir drásticamente
+                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
                     
                     const prev = document.getElementById('photoPreview');
                     prev.src = currentPhotoBase64; prev.style.display = 'block';
                     
-                    // Liberar botón
                     document.getElementById('btnSaveForm').disabled = false;
                     document.getElementById('btnSaveForm').innerText = "Guardar";
-                    
-                    // Reset input
                     e.target.value = '';
                 };
                 img.src = ev.target.result;
@@ -820,8 +815,12 @@
             
             document.getElementById('formTitle').innerText = (idToEdit ? "Editar " : "Crear ") + (dbType === 'pilots' ? "Piloto" : dbType === 'cars' ? "Coche" : "Circuito");
             
-            let html = `<div class="photo-upload-box" onclick="document.getElementById('fileUpload').click()"><img id="photoPreview" class="photo-preview" src="${currentPhotoBase64||''}" style="${currentPhotoBase64?'display:block;':'display:none;'}"><span style="font-size:12px; color:var(--cyan); font-weight:bold;">📸 Toca para subir/cambiar foto</span></div>
-                        <input type="file" id="fileUpload" accept="image/*" style="display:none;" onchange="handlePhotoUploadEvent(event)">`;
+            // ATENCIÓN AQUÍ: capture="environment" obliga a abrir la cámara directamente en móviles
+            let html = `<div class="photo-upload-box" onclick="document.getElementById('fileUpload').click()">
+                            <img id="photoPreview" class="photo-preview" src="${currentPhotoBase64||''}" style="${currentPhotoBase64?'display:block;':'display:none;'}">
+                            <span style="font-size:12px; color:var(--cyan); font-weight:bold;">📸 Tomar Foto</span>
+                        </div>
+                        <input type="file" id="fileUpload" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUploadEvent(event)">`;
 
             if (dbType === 'pilots') {
                 html += `<label class="modal-label">Nombre</label><input type="text" id="f_nom" class="modal-input" value="${obj.nombre||''}">
@@ -830,8 +829,15 @@
             } else if (dbType === 'cars') {
                 html += `<label class="modal-label">Marca</label><input type="text" id="f_mar" class="modal-input" value="${obj.marca||''}">
                          <label class="modal-label">Modelo</label><input type="text" id="f_mod" class="modal-input" value="${obj.modelo||''}">
+                         <label class="modal-label">Alias</label><input type="text" id="f_ali" class="modal-input" value="${obj.alias||''}">
                          <label class="modal-label">Categoría</label><input type="text" id="f_cat" class="modal-input" value="${obj.categoria||''}">
-                         <label class="modal-label">Motor</label><input type="text" id="f_mot" class="modal-input" value="${obj.motor||''}">`;
+                         <label class="modal-label">Motor</label><input type="text" id="f_mot" class="modal-input" value="${obj.motor||''}">
+                         <label class="modal-label">Tipo de Chasis</label><input type="text" id="f_cha" class="modal-input" value="${obj.chasis||''}">
+                         <label class="modal-label">Escobillas</label><input type="text" id="f_esc" class="modal-input" value="${obj.escobillas||''}">
+                         <label class="modal-label">Llantas Delanteras</label><input type="text" id="f_lld" class="modal-input" value="${obj.llantaDelantera||''}">
+                         <label class="modal-label">Llantas Traseras</label><input type="text" id="f_llt" class="modal-input" value="${obj.llantaTrasera||''}">
+                         <label class="modal-label">Neumáticos Delanteros</label><input type="text" id="f_ned" class="modal-input" value="${obj.neumaticoDelantero||''}">
+                         <label class="modal-label">Neumáticos Traseros</label><input type="text" id="f_net" class="modal-input" value="${obj.neumaticoTrasero||''}">`;
             } else if (dbType === 'tracks') {
                 html += `<label class="modal-label">Nombre oficial</label><input type="text" id="f_nom" class="modal-input" value="${obj.nombre||''}">
                          <label class="modal-label">Alias</label><input type="text" id="f_ali" class="modal-input" value="${obj.alias||''}">
@@ -855,7 +861,8 @@
                 obj.nombre = document.getElementById('f_nom').value.trim(); obj.apellidos = document.getElementById('f_ape').value.trim(); obj.alias = document.getElementById('f_ali').value.trim();
                 if (!obj.nombre) return alert("El nombre es obligatorio");
             } else if (dbType === 'cars') {
-                obj.marca = document.getElementById('f_mar').value.trim(); obj.modelo = document.getElementById('f_mod').value.trim(); obj.categoria = document.getElementById('f_cat').value.trim(); obj.motor = document.getElementById('f_mot').value.trim();
+                obj.marca = document.getElementById('f_mar').value.trim(); obj.modelo = document.getElementById('f_mod').value.trim(); obj.alias = document.getElementById('f_ali').value.trim(); obj.categoria = document.getElementById('f_cat').value.trim(); obj.motor = document.getElementById('f_mot').value.trim();
+                obj.chasis = document.getElementById('f_cha').value.trim(); obj.escobillas = document.getElementById('f_esc').value.trim(); obj.llantaDelantera = document.getElementById('f_lld').value.trim(); obj.llantaTrasera = document.getElementById('f_llt').value.trim(); obj.neumaticoDelantero = document.getElementById('f_ned').value.trim(); obj.neumaticoTrasero = document.getElementById('f_net').value.trim();
                 if (!obj.modelo) return alert("El modelo es obligatorio");
             } else if (dbType === 'tracks') {
                 obj.nombre = document.getElementById('f_nom').value.trim(); obj.alias = document.getElementById('f_ali').value.trim(); obj.lugar = document.getElementById('f_lug').value.trim(); obj.distancia = document.getElementById('f_dis').value.trim();
