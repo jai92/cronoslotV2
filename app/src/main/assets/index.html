@@ -626,9 +626,13 @@
         }
 
         async function requestWakeLock() {
+            try { if (window.AndroidBridge && AndroidBridge.keepScreenOn) AndroidBridge.keepScreenOn(true); } catch (e) {}
             try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) {}
         }
-        function releaseWakeLock() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
+        function releaseWakeLock() {
+            try { if (window.AndroidBridge && AndroidBridge.keepScreenOn) AndroidBridge.keepScreenOn(false); } catch (e) {}
+            try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null;
+        }
         document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cameraActive) { requestWakeLock(); prevFrame = null; camReadyAt = performance.now() + 800; } });
 
         function motionThreshold() { return 0.40 * (1 - appData.settings.sens / 100) + 0.02; }
@@ -1437,18 +1441,32 @@
                 const d = new Date(), pad = n => String(n).padStart(2, '0');
                 const name = `CronoSlot_${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.xlsx`;
                 const mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-                lastExport = { blob: new Blob([bytes], { type: mime }), name, mime };
+                lastExport = { blob: new Blob([bytes], { type: mime }), bytes, name, mime };
                 $('exportInfo').textContent = `${name} · ${appData.regTrain.length} entrenamientos y ${appData.regRace.length} carreras.`;
-                let canShare = false;
-                try { canShare = !!(navigator.canShare && navigator.canShare({ files: [new File([lastExport.blob], name, { type: mime })] })); } catch (e) {}
+                let canShare = !!window.AndroidBridge;
+                if (!canShare) try { canShare = !!(navigator.canShare && navigator.canShare({ files: [new File([lastExport.blob], name, { type: mime })] })); } catch (e) {}
                 $('btnShareExport').style.display = canShare ? 'block' : 'none';
                 openModal('modalExport');
             } catch (e) {
                 alert('No se pudo generar el Excel: ' + e.message);
             }
         }
+        // Dentro de la APK: el archivo se pasa a Android (el navegador interno no sabe descargar)
+        function bytesToBase64(bytes) {
+            let bin = '';
+            for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+            return btoa(bin);
+        }
+        function nativeExport(method) {
+            const r = String(AndroidBridge[method](lastExport.name, lastExport.mime, bytesToBase64(lastExport.bytes)));
+            if (r === 'OK') { if (method === 'saveFile') toast('Guardado en Descargas: ' + lastExport.name); }
+            else if (r === 'PERMISO') toast('Concede el permiso de almacenamiento para guardar el archivo.');
+            else alert('No se pudo ' + (method === 'saveFile' ? 'guardar' : 'compartir') + ' el archivo: ' + r);
+        }
+
         function downloadExport() {
             if (!lastExport) return;
+            if (window.AndroidBridge && AndroidBridge.saveFile) { nativeExport('saveFile'); return; }
             const url = URL.createObjectURL(lastExport.blob);
             const a = document.createElement('a');
             a.href = url; a.download = lastExport.name; a.style.display = 'none';
@@ -1458,6 +1476,7 @@
         }
         async function shareExport() {
             if (!lastExport) return;
+            if (window.AndroidBridge && AndroidBridge.shareFile) { nativeExport('shareFile'); return; }
             try {
                 await navigator.share({ files: [new File([lastExport.blob], lastExport.name, { type: lastExport.mime })], title: 'CronoSlot - Exportación' });
             } catch (e) {
