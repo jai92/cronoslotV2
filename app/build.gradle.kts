@@ -10,8 +10,19 @@ android {
         applicationId = "com.cronoslot"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 51
+        versionName = "5.1"
+    }
+
+    // Firma fija: así cada APK nueva se instala ENCIMA de la anterior sin desinstalar
+    // (y sin perder pilotos, coches, circuitos ni registros).
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 }
 
