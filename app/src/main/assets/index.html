@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CronoSlot Pro V5.0</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#07090F">
+    <title>CronoSlot Pro V5.1</title>
+
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%2307090F'/%3E%3Cpath d='M30 50h40M50 30v40' stroke='%2300ff88' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%2300E5FF' stroke-width='6' stroke-dasharray='10 5'/%3E%3C/svg%3E">
-    
+
     <style>
         :root {
             --bg-dark: #07090F;
@@ -20,32 +21,40 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; background-color: var(--bg-dark); color: var(--text-main); font-family: system-ui, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=1000&auto=format&fit=crop&q=80'); background-size: cover; background-position: center; }
-        .overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(9,12,21,0.92), rgba(7,9,15,0.98)); z-index: -1; }
+        body { margin: 0; padding: 0; background-color: var(--bg-dark); color: var(--text-main); font-family: system-ui, sans-serif; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=1000&auto=format&fit=crop&q=80'); background-size: cover; background-position: center; }
+        .overlay { position: fixed; inset: 0; background: linear-gradient(to bottom, rgba(9,12,21,0.92), rgba(7,9,15,0.98)); z-index: -1; }
 
         header { background: rgba(11, 14, 24, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; z-index: 10; }
         .logo-box { display: flex; align-items: center; gap: 10px; }
         .logo-icon { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--cyan)); display: flex; align-items: center; justify-content: center; color: #000; box-shadow: 0 0 15px rgba(0,225,255,0.4); }
-        .btn-cam-toggle { background: rgba(0,225,255,0.2); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-cam-toggle { background: rgba(0,225,255,0.15); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-cam-toggle.on { background: rgba(255,42,85,0.2); border-color: rgba(255,42,85,0.5); color: var(--accent); }
 
-        nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(11, 14, 24, 0.95); backdrop-filter: blur(15px); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 8px 16px 8px; display: flex; justify-content: space-between; z-index: 100; }
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(11, 14, 24, 0.95); backdrop-filter: blur(15px); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 8px calc(12px + env(safe-area-inset-bottom)) 8px; display: flex; justify-content: space-between; z-index: 100; }
         .nav-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px; border-radius: 14px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
         .nav-btn.active { background: linear-gradient(135deg, var(--accent), #c81d45); color: white; box-shadow: 0 4px 15px rgba(255,42,85,0.3); }
 
-        .main-container { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; z-index: 5; }
+        .main-container { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 96px; z-index: 5; }
         .screen { display: none; flex-direction: column; gap: 12px; }
         .screen.active { display: flex; }
         .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
 
-        .cam-box { position: relative; height: 160px; border-radius: 16px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .calibration-zone { position: absolute; border: 2px dashed var(--cyan); width: 30%; height: 30%; border-radius: 12px; box-shadow: 0 0 15px rgba(0,225,255,0.4); left: 50%; top: 50%; transform: translate(-50%, -50%); transition: 0.1s; }
-        .calibration-zone.detected { border-color: var(--accent); background: rgba(255,42,85,0.2); box-shadow: 0 0 20px rgba(255,42,85,0.8); }
-        .cam-overlay-text { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .cam-box { position: relative; height: 180px; border-radius: 16px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.15); margin-bottom: 8px; cursor: crosshair; }
+        video { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .calibration-zone { position: absolute; border: 2px dashed var(--cyan); width: 30%; height: 30%; border-radius: 12px; box-shadow: 0 0 15px rgba(0,225,255,0.4); left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+        .calibration-zone.detected { border-color: var(--accent); background: rgba(255,42,85,0.25); box-shadow: 0 0 20px rgba(255,42,85,0.8); }
+        .cam-hint { position: absolute; left: 8px; bottom: 6px; font-size: 10px; color: rgba(255,255,255,0.75); background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 6px; pointer-events: none; }
+        .cam-warm { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); color: var(--yellow); font-weight: bold; font-size: 13px; pointer-events: none; }
+        .cam-tools { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; font-size: 11px; color: var(--text-muted); font-weight: bold; }
+        .cam-tools input[type=range] { width: 100%; accent-color: var(--cyan); }
+        .meter { position: relative; height: 8px; background: rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; }
+        .meter-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--primary); transition: width 0.08s linear; }
+        .meter-bar.hot { background: var(--accent); }
+        .meter-mark { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: var(--yellow); }
 
         .selectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .custom-selector { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; transition: transform 0.2s; }
+        .custom-selector { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; transition: transform 0.2s; min-width: 0; }
         .custom-selector:active { transform: scale(0.95); }
         .sel-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #222; border: 2px solid rgba(255,255,255,0.1); }
         .sel-lbl { font-weight: bold; font-size: 10px; text-transform: uppercase; color: var(--text-muted); }
@@ -62,22 +71,28 @@
         .btn-action { background: linear-gradient(135deg, var(--primary), #059669); color: black; border: none; border-radius: 16px; padding: 14px; font-size: 16px; font-weight: 900; text-transform: uppercase; width: 100%; cursor: pointer; box-shadow: 0 4px 15px rgba(0,255,136,0.4); transition: 0.2s; margin-bottom: 8px; }
         .btn-action.stop { background: linear-gradient(135deg, var(--accent), #c81d45); color: white; box-shadow: 0 4px 15px rgba(255,42,85,0.4); }
         .btn-action.pause { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; box-shadow: 0 4px 15px rgba(245,158,11,0.4); width: auto; padding: 14px 20px; }
+        .btn-small { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-danger { background: rgba(255,42,85,0.2); color: var(--accent); border: 1px solid rgba(255,42,85,0.4); padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 12px; }
 
         .lap-row { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: bold; margin-bottom: 6px; }
-        .tabs-header { display: flex; gap: 10px; margin-bottom: 15px; }
+        .empty-msg { text-align: center; color: var(--text-muted); font-size: 13px; padding: 10px; }
+        .tabs-header { display: flex; gap: 10px; }
         .tab-btn { flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; font-size: 13px; }
         .tab-btn.active { background: rgba(0,225,255,0.2); color: var(--cyan); border-color: var(--cyan); }
 
         .reg-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
-        .reg-details { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .reg-details { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); cursor: default; }
         .reg-card.expanded .reg-details { display: block; }
-        .reg-laps-list { max-height: 200px; overflow-y: auto; font-size: 12px; }
+        .reg-laps-list { max-height: 220px; overflow-y: auto; font-size: 12px; }
+        .reg-row { display: flex; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+        .muted { color: var(--text-muted); }
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .modal-overlay.active { display: flex; }
         .modal-card { background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; width: 100%; max-width: 450px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
         .modal-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: bold; }
-        .modal-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 12px; border-radius: 12px; font-size: 14px; outline: none; margin-bottom: 12px; font-family: inherit; }
+        .modal-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 12px; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 12px; font-family: inherit; }
+        select.modal-input option { background: #111; }
         .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
         .modal-btn { flex: 1; padding: 12px; border-radius: 14px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; text-transform: uppercase; }
         .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
@@ -86,9 +101,17 @@
         .selector-item:hover { background: rgba(255,255,255,0.05); }
         .selector-item img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #222; }
 
-        .photo-upload-box { border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; overflow: hidden; }
-        .photo-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: none; z-index: 2; }
-        .photo-upload-box:active { background: rgba(255,255,255,0.05); }
+        .photo-box { display: flex; align-items: center; gap: 14px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 14px; padding: 12px; margin-bottom: 15px; }
+        .photo-preview { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; background: #222; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.15); }
+        .photo-btns { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .photo-btn { position: relative; display: block; text-align: center; background: rgba(0,225,255,0.15); border: 1px solid rgba(0,225,255,0.4); color: var(--cyan); padding: 9px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; overflow: hidden; }
+        .photo-btn.secondary { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: white; }
+        .photo-btn.remove { background: transparent; border-color: rgba(255,42,85,0.4); color: var(--accent); font-size: 12px; padding: 6px; }
+        /* input de archivo oculto pero "clicable" mediante su <label> (funciona en Android, iOS y escritorio) */
+        .file-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; left: 0; top: 0; }
+
+        .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: rgba(17,22,38,0.97); border: 1px solid rgba(0,229,255,0.4); color: white; padding: 10px 16px; border-radius: 12px; font-size: 13px; font-weight: bold; opacity: 0; pointer-events: none; transition: 0.25s; z-index: 2000; max-width: 90vw; text-align: center; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
@@ -103,23 +126,29 @@
             </div>
             <div>
                 <div style="font-weight: 900; font-size: 18px; letter-spacing: -0.5px;">CRONOSLOT</div>
-                <div style="font-size: 10px; color: var(--text-muted);">PRO V5.0</div>
+                <div style="font-size: 10px; color: var(--text-muted);">PRO V5.1</div>
             </div>
         </div>
-        <button id="camToggleBtn" class="btn-cam-toggle" onclick="toggleCamera()">CÁMARA OFF</button>
+        <button id="camToggleBtn" class="btn-cam-toggle" onclick="toggleCamera()">📷 ACTIVAR CÁMARA</button>
     </header>
 
     <div class="main-container">
         <!-- ZONA CÁMARA -->
-        <div id="cameraZone" style="display:none;">
-            <div class="cam-box">
-                <video id="cameraFeed" autoplay playsinline muted style="display: none;"></video>
+        <div id="cameraZone" class="card" style="display:none; padding:10px;">
+            <div class="cam-box" id="camBox" onclick="onCamBoxTap(event)">
+                <video id="cameraFeed" autoplay playsinline muted></video>
                 <canvas id="analysisCanvas" style="display: none;"></canvas>
                 <div class="calibration-zone" id="calibZone"></div>
-                <div id="camOverlay" class="cam-overlay-text">
-                    <span style="color: var(--cyan); font-weight: bold; font-size: 14px;">Cámara en Espera</span>
-                    <span style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Pulsa Activar Cámara arriba</span>
-                </div>
+                <div class="cam-warm" id="camWarm">Ajustando cámara…</div>
+                <div class="cam-hint">Toca la imagen para colocar la zona sobre la línea de meta</div>
+            </div>
+            <div class="cam-tools">
+                <span>Movimiento</span>
+                <div class="meter"><div class="meter-bar" id="meterBar"></div><div class="meter-mark"></div></div>
+                <span>Sensibilidad</span>
+                <input type="range" id="sensRange" min="1" max="100" oninput="onSensChange(this.value)">
+                <span>Tamaño zona</span>
+                <input type="range" id="zoneSizeRange" min="10" max="70" oninput="onZoneSizeChange(this.value)">
             </div>
         </div>
 
@@ -129,44 +158,42 @@
                 <div class="selectors-grid">
                     <div class="custom-selector" onclick="openSelectorModal('pilots', 'T')">
                         <span class="sel-lbl" style="color: var(--accent);">Piloto</span>
-                        <img id="imgSelPilotT" class="sel-img" src="">
+                        <img id="imgSelPilotT" class="sel-img" alt="">
                         <span id="txtSelPilotT" class="sel-val">--</span>
                     </div>
                     <div class="custom-selector" onclick="openSelectorModal('cars', 'T')">
                         <span class="sel-lbl" style="color: var(--cyan);">Coche</span>
-                        <img id="imgSelCarT" class="sel-img" src="">
+                        <img id="imgSelCarT" class="sel-img" alt="">
                         <span id="txtSelCarT" class="sel-val">--</span>
                     </div>
                     <div class="custom-selector" onclick="openSelectorModal('tracks', 'T')">
                         <span class="sel-lbl" style="color: #10b981;">Circuito</span>
-                        <img id="imgSelTrackT" class="sel-img" src="">
+                        <img id="imgSelTrackT" class="sel-img" alt="">
                         <span id="txtSelTrackT" class="sel-val">--</span>
                     </div>
                 </div>
             </div>
-            
+
             <div class="card" style="text-align: center;">
                 <div class="flex-between" style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: bold;">
-                    <span>LISTO PARA ENTRENAR</span>
-                    <span>MÍN: <strong id="minLapTxtT" style="color: var(--cyan);">0.0s</strong></span>
+                    <span id="trainStatusTxt">LISTO PARA ENTRENAR</span>
+                    <span>MÍN: <strong id="minLapTxtT" style="color: var(--cyan);">--</strong></span>
                 </div>
-                
+
                 <div id="chronoPanelT" class="big-chrono-panel color-gray">
                     <div id="chronoLapT" class="chrono-lap">L0</div>
                     <div id="chronoTimeT" class="chrono-time">00.000s</div>
                 </div>
 
                 <div style="display:flex; gap:10px;">
-                    <button id="btnTrainStart" class="btn-action" onclick="handleTrainStart()">▶ COMENZAR ENTRENAMIENTO</button>
-                    <button id="btnTrainPause" class="btn-action pause" style="display:none;" onclick="togglePauseTrain()">⏸</button>
+                    <button id="btnActionT" class="btn-action" onclick="handleTrainAction()">▶ COMENZAR ENTRENAMIENTO</button>
+                    <button id="btnPauseT" class="btn-action pause" style="display:none;" onclick="togglePause()">⏸</button>
                 </div>
             </div>
 
             <div class="card">
                 <div style="font-size: 13px; font-weight: bold; color: var(--text-muted); margin-bottom: 8px;">TIEMPOS EN VIVO</div>
-                <div id="lapsContainerT" style="max-height: 150px; overflow-y: auto;">
-                    <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 10px;">Aún no hay vueltas.</div>
-                </div>
+                <div id="lapsContainerT" style="max-height: 180px; overflow-y: auto;"></div>
             </div>
         </div>
 
@@ -174,26 +201,26 @@
         <div id="screen-race" class="screen">
             <div class="card" id="raceSetupView">
                 <h3 style="color:var(--accent); margin:0 0 15px 0;">🏁 Configurar Gran Premio</h3>
-                
+
                 <label class="modal-label">Circuito</label>
                 <div class="custom-selector" style="flex-direction:row; justify-content:flex-start;" onclick="openSelectorModal('tracks', 'R')">
-                    <img id="imgSelTrackR" class="sel-img" src="" style="width:30px; height:30px;">
+                    <img id="imgSelTrackR" class="sel-img" alt="" style="width:30px; height:30px;">
                     <span id="txtSelTrackR" class="sel-val" style="text-align:left;">--</span>
                 </div>
-                
+
                 <label class="modal-label" style="margin-top:15px;">Vueltas por Piloto</label>
-                <input type="number" id="raceLapsInput" class="modal-input" value="10" min="1">
-                
-                <div style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
-                    <label class="modal-label">Añadir Participante (Toca para cambiar)</label>
-                    <div style="display:flex; gap:5px; margin-bottom:10px; align-items:center;">
-                        <div class="custom-selector" style="flex:1; padding:4px;" onclick="openSelectorModal('pilots', 'RAdd')">
+                <input type="number" id="raceLapsInput" class="modal-input" value="10" min="1" inputmode="numeric">
+
+                <div style="margin-top:5px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                    <label class="modal-label">Añadir Participante (toca para cambiar)</label>
+                    <div style="display:flex; gap:5px; margin-bottom:10px; align-items:stretch;">
+                        <div class="custom-selector" style="flex:1; padding:8px 4px;" onclick="openSelectorModal('pilots', 'RAdd')">
                             <span id="txtSelPilotRAdd" class="sel-val" style="font-size:11px;">Piloto</span>
                         </div>
-                        <div class="custom-selector" style="flex:1; padding:4px;" onclick="openSelectorModal('cars', 'RAdd')">
+                        <div class="custom-selector" style="flex:1; padding:8px 4px;" onclick="openSelectorModal('cars', 'RAdd')">
                             <span id="txtSelCarRAdd" class="sel-val" style="font-size:11px;">Coche</span>
                         </div>
-                        <button onclick="addPilotToRace()" style="background:var(--primary); color:black; border:none; padding:10px; border-radius:10px; font-weight:bold; height:100%; cursor:pointer;">+</button>
+                        <button onclick="addPilotToRace()" style="background:var(--primary); color:black; border:none; padding:0 16px; border-radius:10px; font-weight:bold; font-size:18px; cursor:pointer;">+</button>
                     </div>
                     <div id="racePilotsList"></div>
                 </div>
@@ -201,25 +228,31 @@
             </div>
 
             <div class="card" id="raceRunView" style="display:none; text-align:center;">
+                <div class="flex-between" style="margin-bottom:8px;">
+                    <span style="font-size:11px; color:var(--text-muted); font-weight:bold;" id="raceProgressTxt">TURNO 1/1</span>
+                    <button class="btn-small" style="color:var(--accent);" onclick="cancelRace()">✕ Cancelar carrera</button>
+                </div>
                 <h3 id="raceRunTitle" style="margin:0 0 5px 0; color:var(--primary);">Turno</h3>
-                <p id="raceRunSub" style="margin:0 0 15px 0; font-size:13px; color:var(--text-muted);">0/10</p>
+                <p id="raceRunSub" style="margin:0 0 15px 0; font-size:13px; color:var(--text-muted);">--</p>
                 <div id="chronoPanelR" class="big-chrono-panel color-gray">
                     <div id="chronoLapR" class="chrono-lap">L0</div>
                     <div id="chronoTimeR" class="chrono-time">00.000s</div>
                 </div>
                 <div style="display:flex; gap:10px;">
-                    <button id="btnRaceAction" class="btn-action" onclick="handleRaceTurnAction()">▶ COMENZAR TURNO</button>
-                    <button id="btnRacePause" class="btn-action pause" style="display:none;" onclick="togglePauseRace()">⏸</button>
+                    <button id="btnActionR" class="btn-action" onclick="handleRaceTurnAction()">▶ INICIAR TURNO</button>
+                    <button id="btnPauseR" class="btn-action pause" style="display:none;" onclick="togglePause()">⏸</button>
                 </div>
+                <div id="lapsContainerR" style="max-height: 160px; overflow-y: auto; text-align:left; margin-top:6px;"></div>
             </div>
         </div>
 
         <!-- REGISTROS -->
         <div id="screen-registers" class="screen">
             <div class="tabs-header">
-                <div class="tab-btn active" onclick="switchRegTab('train', this)">Entrenamientos</div>
-                <div class="tab-btn" onclick="switchRegTab('race', this)">Carreras</div>
+                <div class="tab-btn active" data-reg="train" onclick="switchRegTab('train')">Entrenamientos</div>
+                <div class="tab-btn" data-reg="race" onclick="switchRegTab('race')">Carreras</div>
             </div>
+            <button class="btn-small" style="align-self:flex-end;" onclick="exportExcel()">📤 Exportar a Excel</button>
             <div id="listRegTrain"></div>
             <div id="listRegRace" style="display:none;"></div>
         </div>
@@ -227,20 +260,21 @@
         <!-- ESTADÍSTICAS -->
         <div id="screen-stats" class="screen">
             <div id="statsMainView">
-                <h2 style="margin:0 0 15px 0; color:var(--primary);">Estadísticas (Entrenos)</h2>
+                <h2 style="margin:0 0 15px 0; color:var(--primary);">Estadísticas</h2>
                 <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="openStat('trackTimes')"><h3 style="margin:0;">⏱️ Tiempos por Circuito</h3></div>
                 <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="openStat('pilotTimes')"><h3 style="margin:0; color:var(--cyan);">👤 Tiempos Piloto/Circuito</h3></div>
                 <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="openStat('trackUsage')"><h3 style="margin:0; color:var(--accent);">🗺️ Uso y Kilometraje</h3></div>
                 <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="openStat('pilotRank')"><h3 style="margin:0; color:var(--yellow);">🏆 Ranking de Pilotos</h3></div>
                 <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="openStat('compare')"><h3 style="margin:0; color:#a855f7;">⚖️ Comparador de Coches</h3></div>
+                <p class="muted" style="font-size:11px; text-align:center;">Los tiempos y rankings usan los entrenamientos. Uso y kilometraje suma entrenamientos y carreras.</p>
             </div>
-            
+
             <div id="statsSubView" style="display:none;">
                 <div class="card flex-between" style="margin-bottom:10px;">
-                    <button onclick="closeStat()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; cursor:pointer;">◀ Volver</button>
-                    <h3 id="statSubTitle" style="margin:0; font-size:15px; color:var(--primary);">Estadísticas</h3><div></div>
+                    <button onclick="closeStat()" class="btn-small">◀ Volver</button>
+                    <h3 id="statSubTitle" style="margin:0; font-size:15px; color:var(--primary);">Estadísticas</h3><div style="width:60px;"></div>
                 </div>
-                <div id="statFilterBar" class="card" style="margin-bottom:10px; display:flex; gap:8px;"></div>
+                <div id="statFilterBar" class="card" style="margin-bottom:10px; display:flex; flex-wrap:wrap; gap:8px;"></div>
                 <div id="statSubContent"></div>
             </div>
         </div>
@@ -252,11 +286,13 @@
                 <div class="card flex-between" style="margin-bottom:12px; cursor:pointer;" onclick="openSubDataView('pilots')"><h3 style="margin:0;">👤 PILOTOS</h3><span style="color:gray;">▶</span></div>
                 <div class="card flex-between" style="margin-bottom:12px; cursor:pointer;" onclick="openSubDataView('cars')"><h3 style="margin:0; color:var(--cyan);">🏎️ COCHES</h3><span style="color:gray;">▶</span></div>
                 <div class="card flex-between" style="margin-bottom:12px; cursor:pointer;" onclick="openSubDataView('tracks')"><h3 style="margin:0; color:var(--primary);">🗺️ CIRCUITOS</h3><span style="color:gray;">▶</span></div>
+                <div class="card flex-between" style="margin-bottom:12px; cursor:pointer; border-color:rgba(0,255,136,0.35);" onclick="exportExcel()"><h3 style="margin:0; color:var(--primary);">📤 EXPORTAR A EXCEL</h3><span style="color:gray;">▶</span></div>
+                <p class="muted" style="font-size:11px; text-align:center;" id="storageInfo"></p>
             </div>
-            
+
             <div id="dataSubView" style="display:none;">
                 <div class="card flex-between" style="margin-bottom:10px;">
-                    <button onclick="closeSubDataView()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:bold; cursor:pointer;">◀ Volver</button>
+                    <button onclick="closeSubDataView()" class="btn-small">◀ Volver</button>
                     <h3 id="subViewTitle" style="margin:0;">Título</h3>
                     <button onclick="openFormModal()" style="background:var(--cyan); border:none; color:black; padding:8px 12px; border-radius:10px; font-weight:bold; cursor:pointer;">+ Crear</button>
                 </div>
@@ -267,12 +303,14 @@
 
     <!-- NAVEGACIÓN -->
     <nav>
-        <button onclick="switchMainTab('train', this)" class="nav-btn active"><span>⏱️</span><span>Entreno</span></button>
-        <button onclick="switchMainTab('race', this)" class="nav-btn"><span>🏁</span><span>Carrera</span></button>
-        <button onclick="switchMainTab('registers', this)" class="nav-btn"><span>📋</span><span>Registros</span></button>
-        <button onclick="switchMainTab('stats', this)" class="nav-btn"><span>📊</span><span>Estadíst.</span></button>
-        <button onclick="switchMainTab('data', this)" class="nav-btn"><span>👥</span><span>Datos</span></button>
+        <button data-tab="train" onclick="switchMainTab('train')" class="nav-btn active"><span>⏱️</span><span>Entreno</span></button>
+        <button data-tab="race" onclick="switchMainTab('race')" class="nav-btn"><span>🏁</span><span>Carrera</span></button>
+        <button data-tab="registers" onclick="switchMainTab('registers')" class="nav-btn"><span>📋</span><span>Registros</span></button>
+        <button data-tab="stats" onclick="switchMainTab('stats')" class="nav-btn"><span>📊</span><span>Estadíst.</span></button>
+        <button data-tab="data" onclick="switchMainTab('data')" class="nav-btn"><span>👥</span><span>Datos</span></button>
     </nav>
+
+    <div class="toast" id="toast"></div>
 
     <!-- MODALES GLOBALES -->
     <div class="modal-overlay" id="modalSelector">
@@ -289,17 +327,19 @@
         <div class="modal-card">
             <h3 style="margin-top:0; color:var(--primary);">Configurar Entrenamiento</h3>
             <label class="modal-label">Número de vueltas</label>
-            <input type="number" id="trainLapsInput" class="modal-input" placeholder="Vacío = Ilimitadas">
+            <input type="number" id="trainLapsInput" class="modal-input" placeholder="Vacío = Ilimitadas" min="1" inputmode="numeric">
             <div class="modal-btns">
+                <button class="modal-btn btn-cancel" onclick="closeModal('modalTrainSetup')">Cancelar</button>
                 <button class="modal-btn btn-cancel" onclick="startTrain(0)">Ilimitadas</button>
                 <button class="modal-btn" style="background:var(--primary); color:black;" onclick="confirmTrainSetup()">Aceptar</button>
             </div>
         </div>
     </div>
-    
+
     <div class="modal-overlay" id="modalSaveTrain">
         <div class="modal-card">
             <h3 style="margin-top:0; color:var(--cyan);">💾 Guardar Entrenamiento</h3>
+            <p id="saveTrainSummary" class="muted" style="font-size:13px; margin-top:0;"></p>
             <label class="modal-label">Nombre de la sesión</label>
             <input type="text" id="trainSessionName" class="modal-input" placeholder="Test Libre">
             <div class="modal-btns">
@@ -323,7 +363,7 @@
     <div class="modal-overlay" id="modalRacePodium">
         <div class="modal-card">
             <h3 style="margin-top:0; color:var(--yellow);">🏆 Podio de Carrera</h3>
-            <div id="racePodiumList" style="max-height:250px; overflow-y:auto; margin-bottom:15px;"></div>
+            <div id="racePodiumList" style="max-height:280px; overflow-y:auto; margin-bottom:15px;"></div>
             <label class="modal-label">Nombre de la carrera</label>
             <input type="text" id="raceSessionName" class="modal-input" value="Gran Premio">
             <div class="modal-btns">
@@ -344,14 +384,52 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modalExport">
+        <div class="modal-card">
+            <h3 style="margin-top:0; color:var(--primary);">📤 Exportar a Excel</h3>
+            <p class="muted" style="font-size:13px; margin-top:0;" id="exportInfo"></p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <button class="modal-btn" style="background:var(--primary); color:black;" onclick="downloadExport()">⬇️ Descargar archivo</button>
+                <button class="modal-btn" id="btnShareExport" style="background:var(--cyan); color:black;" onclick="shareExport()">📲 Compartir (Drive, WhatsApp, correo…)</button>
+                <button class="modal-btn btn-cancel" onclick="closeModal('modalExport')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ----------------------------------------------------
-        // 1. BASE DE DATOS Y ESTADO GLOBAL (V5.0 MASTER)
+        // 1. UTILIDADES
         // ----------------------------------------------------
-        // FORZAMOS NUEVA CLAVE para resetear completamente el sistema
+        const $ = id => document.getElementById(id);
+        const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+        const fmtS = ms => Number.isFinite(ms) ? (ms / 1000).toFixed(3) + 's' : '--';
+        const genId = () => Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
+        const sum = arr => arr.reduce((a, b) => a + b, 0);
+        const EMPTY_LAPS = '<div class="empty-msg">Aún no hay vueltas.</div>';
+
+        function fmtClock(ms) {
+            const s = Math.floor(ms / 1000), m = Math.floor(s / 60);
+            const rest = `${String(s % 60).padStart(2, '0')}.${String(Math.floor(ms % 1000)).padStart(3, '0')}`;
+            return m ? `${m}:${rest}` : rest + 's';
+        }
+        const pilotName = p => p ? (p.alias || p.nombre || '--') : '--';
+        const carName = c => c ? (c.alias || c.modelo || c.marca || '--') : '--';
+        const trackName = t => t ? (t.alias || t.nombre || '--') : '--';
+        const nameOf = (type, item) => type === 'pilots' ? pilotName(item) : type === 'cars' ? carName(item) : trackName(item);
+
+        let toastTimer = null;
+        function toast(msg) {
+            const t = $('toast'); t.textContent = msg; t.classList.add('show');
+            clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+        }
+        function openModal(id) { $(id).classList.add('active'); }
+        function closeModal(id) { $(id).classList.remove('active'); }
+
+        // ----------------------------------------------------
+        // 2. BASE DE DATOS (con recuperación de versiones anteriores)
+        // ----------------------------------------------------
         const STORAGE_KEY = 'cronoslot_v50_master';
-        
-        // Base de Datos Súper Amplia por defecto
+
         const defaultDB = {
             pilots: [
                 { id:'p1', nombre:'Alex', apellidos:'García', alias:'AlexG', photo:'' },
@@ -376,53 +454,106 @@
                 { id:'t4', nombre:'Mónaco Indoor', alias:'Mónaco', lugar:'Salón', distancia:'18.5', tiempoMinimo:'4.2', photo:'' }
             ],
             regTrain: [],
-            regRace: []
+            regRace: [],
+            settings: {}
         };
 
-        let appData = {};
-        
-        try {
-            const dataStr = localStorage.getItem(STORAGE_KEY);
-            if (dataStr) {
-                appData = JSON.parse(dataStr);
-            } else {
-                appData = JSON.parse(JSON.stringify(defaultDB));
-            }
-        } catch(e) {
-            console.error("Error cargando DB, reseteando a valores por defecto:", e);
-            appData = JSON.parse(JSON.stringify(defaultDB));
+        function normalizeDB(d) {
+            const out = (d && typeof d === 'object') ? d : {};
+            ['pilots', 'cars', 'tracks', 'regTrain', 'regRace'].forEach(k => { if (!Array.isArray(out[k])) out[k] = []; });
+            ['pilots', 'cars', 'tracks'].forEach(k => {
+                out[k] = out[k].filter(x => x && typeof x === 'object');
+                out[k].forEach(x => { if (!x.id) x.id = genId(); if (typeof x.photo !== 'string') x.photo = ''; });
+            });
+            const cleanLaps = a => Array.isArray(a) ? a.map(Number).filter(n => Number.isFinite(n) && n > 0) : [];
+            out.regTrain = out.regTrain.filter(r => r && typeof r === 'object');
+            out.regTrain.forEach(r => { if (!r.id) r.id = genId(); r.laps = cleanLaps(r.laps); if (!r.date) r.date = new Date().toISOString(); });
+            out.regRace = out.regRace.filter(r => r && typeof r === 'object');
+            out.regRace.forEach(r => {
+                if (!r.id) r.id = genId(); if (!r.date) r.date = new Date().toISOString();
+                r.pilots = Array.isArray(r.pilots) ? r.pilots.filter(Boolean) : [];
+                r.pilots.forEach(p => {
+                    p.laps = cleanLaps(p.laps);
+                    // quitar fotos guardadas dentro de las carreras (llenaban la memoria)
+                    if (p.pilot) delete p.pilot.photo; if (p.car) delete p.car.photo;
+                });
+                r.lapsTarget = parseInt(r.lapsTarget) || Math.max(0, ...r.pilots.map(p => p.laps.length));
+            });
+            if (!out.settings || typeof out.settings !== 'object') out.settings = {};
+            const s = out.settings;
+            if (!Number.isFinite(s.sens)) s.sens = 60;
+            if (!Number.isFinite(s.zoneX)) s.zoneX = 50;
+            if (!Number.isFinite(s.zoneY)) s.zoneY = 50;
+            if (!Number.isFinite(s.zoneSize)) s.zoneSize = 30;
+            return out;
         }
-        
-        const saveDB = () => {
+
+        let migratedFrom = null;
+        function loadDB() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) return normalizeDB(JSON.parse(raw));
+            } catch (e) { console.error('Error leyendo la base de datos:', e); }
+
+            // No hay datos V5: buscar datos de versiones anteriores de CronoSlot
+            try {
+                let best = null, bestScore = -1;
+                Object.keys(localStorage).forEach(k => {
+                    if (k === STORAGE_KEY || !/crono/i.test(k)) return;
+                    try {
+                        const obj = JSON.parse(localStorage.getItem(k));
+                        if (!obj || typeof obj !== 'object' || !Array.isArray(obj.pilots)) return;
+                        const score = (obj.regTrain || []).length * 10 + (obj.regRace || []).length * 10 + obj.pilots.length + (obj.cars || []).length + (obj.tracks || []).length;
+                        if (score > bestScore) { bestScore = score; best = { k, obj }; }
+                    } catch (e) {}
+                });
+                if (best) { migratedFrom = best.k; return normalizeDB(best.obj); }
+            } catch (e) {}
+
+            return normalizeDB(JSON.parse(JSON.stringify(defaultDB)));
+        }
+
+        let appData = loadDB();
+
+        function saveDB() {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                return true;
             } catch (e) {
-                alert("Error al guardar: La memoria del navegador está llena. Borra registros o fotos antiguas.");
+                alert("Error al guardar: la memoria del navegador está llena. Borra registros o fotos antiguas.");
+                return false;
             }
-        };
-        const genId = () => Math.random().toString(36).substring(2, 9);
-        
-        // Creador de Fotos y Avatares dinámicos
-        const getPhoto = (photoStr, type, nameStr) => {
-            if (photoStr && photoStr.trim() !== '') return photoStr;
-            let initial = nameStr ? nameStr.charAt(0).toUpperCase() : '?';
-            let colorHex = type==='pilots' ? '00ff88' : type==='cars' ? '00E5FF' : 'FF2A55';
-            
-            return `data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23222'/%3E%3Ccircle cx='50' cy='50' r='40' fill='%23${colorHex}' opacity='0.2'/%3E%3Ctext x='50' y='60' font-size='35' fill='%23${colorHex}' font-family='sans-serif' font-weight='bold' text-anchor='middle'%3E${initial}%3C/text%3E%3C/svg%3E`;
-        };
+        }
+        const findById = (type, id) => appData[type].find(x => x.id === id);
 
-        let currentSelections = { T: { pilot: '', car: '', track: '' }, R: { track: '' }, RAdd: { pilot: '', car: '' } };
+        // Avatares dinámicos (iniciales) cuando no hay foto
+        function getPhoto(photoStr, type, nameStr) {
+            if (photoStr && photoStr.trim() !== '') return photoStr;
+            const initial = (nameStr ? String(nameStr).trim().charAt(0).toUpperCase() : '') || '?';
+            const color = type === 'pilots' ? '#00ff88' : type === 'cars' ? '#00E5FF' : '#FF2A55';
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#222"/><circle cx="50" cy="50" r="40" fill="${color}" opacity="0.2"/><text x="50" y="62" font-size="38" fill="${color}" font-family="sans-serif" font-weight="bold" text-anchor="middle">${esc(initial)}</text></svg>`;
+            return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+        }
+
+        const savedSel = appData.settings.sel || {};
+        let currentSelections = {
+            T: { pilot: '', car: '', track: '', ...(savedSel.T || {}) },
+            R: { track: '', ...(savedSel.R || {}) },
+            RAdd: { pilot: '', car: '', ...(savedSel.RAdd || {}) }
+        };
 
         // ----------------------------------------------------
-        // 2. AUDIO & CÁMARA
+        // 3. AUDIO
         // ----------------------------------------------------
         let audioCtx = null;
         function initAudio() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator(); osc.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.01);
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator(); const g = audioCtx.createGain(); g.gain.value = 0.0001;
+                osc.connect(g); g.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.01);
+            } catch (e) {}
         }
-        
         function playBeeps(times) {
             if (!audioCtx) return;
             for (let i = 0; i < times; i++) {
@@ -435,459 +566,916 @@
             }
         }
 
-        let cameraActive = false; let prevFrame = null;
-        function toggleCamera() {
-            const vid = document.getElementById('cameraFeed');
-            const camOverlay = document.getElementById('camOverlay');
-            const toggleBtn = document.getElementById('camToggleBtn');
-            const camZone = document.getElementById('cameraZone');
+        // ----------------------------------------------------
+        // 4. CÁMARA Y DETECCIÓN (solo dentro de la zona marcada)
+        // ----------------------------------------------------
+        const AW = 40, AH = 40;      // resolución de análisis de la zona
+        const PIX_T = 28;            // diferencia de brillo para considerar un píxel "cambiado"
+        let cameraActive = false, camStream = null, rafId = null, prevFrame = null;
+        let camReadyAt = 0, lastTrigger = 0, flashTimer = null, wakeLock = null, currentTab = 'train';
 
-            if (!cameraActive) {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-                    .then(stream => { vid.srcObject = stream; vid.style.display = 'block'; camOverlay.style.display = 'none'; toggleBtn.innerText = "CÁMARA OFF"; cameraActive = true; camZone.style.display = 'block'; requestAnimationFrame(processMotion); })
-                    .catch(err => { alert("Error al acceder a la cámara."); });
-            } else {
-                if (vid.srcObject) vid.srcObject.getTracks().forEach(t => t.stop());
-                vid.style.display = 'none'; camOverlay.style.display = 'flex'; toggleBtn.innerText = "CÁMARA ON"; cameraActive = false;
+        function sessionLive() { return appState === 'armed' || appState === 'running' || appState === 'paused'; }
+
+        async function startCamera() {
+            if (cameraActive) return true;
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Este navegador no deja usar la cámara aquí. Abre la app desde una dirección https:// en Chrome o Safari.');
+                return false;
             }
+            try {
+                camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+            } catch (err) {
+                const why = err && err.name === 'NotAllowedError' ? 'permiso denegado. Actívalo en los ajustes del navegador.' : (err && (err.message || err.name)) || 'error desconocido';
+                alert('No se pudo acceder a la cámara: ' + why);
+                return false;
+            }
+            const vid = $('cameraFeed');
+            vid.srcObject = camStream;
+            try { await vid.play(); } catch (e) {}
+            cameraActive = true; prevFrame = null;
+            camReadyAt = performance.now() + 1500;   // dejar que la cámara ajuste exposición/enfoque
+            cancelAnimationFrame(rafId); rafId = requestAnimationFrame(processMotion);
+            requestWakeLock();
+            updateCameraUI();
+            return true;
+        }
+
+        function stopCamera() {
+            cancelAnimationFrame(rafId); rafId = null;
+            if (camStream) camStream.getTracks().forEach(t => t.stop());
+            camStream = null; $('cameraFeed').srcObject = null;
+            cameraActive = false; prevFrame = null;
+            releaseWakeLock();
+            updateCameraUI();
+        }
+
+        function toggleCamera() {
+            if (cameraActive) {
+                if (sessionLive() && !confirm('Hay una sesión en marcha. Si apagas la cámara no se detectarán más vueltas. ¿Apagar igualmente?')) return;
+                stopCamera();
+            } else startCamera();
+        }
+
+        function updateCameraUI() {
+            const onChronoTab = currentTab === 'train' || currentTab === 'race';
+            $('cameraZone').style.display = (cameraActive && (onChronoTab || sessionLive())) ? 'block' : 'none';
+            const btn = $('camToggleBtn');
+            btn.textContent = cameraActive ? '📷 APAGAR CÁMARA' : '📷 ACTIVAR CÁMARA';
+            btn.classList.toggle('on', cameraActive);
+            btn.style.display = (onChronoTab || sessionLive()) ? 'block' : 'none';
+        }
+
+        async function requestWakeLock() {
+            try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) {}
+        }
+        function releaseWakeLock() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cameraActive) { requestWakeLock(); prevFrame = null; camReadyAt = performance.now() + 800; } });
+
+        function motionThreshold() { return 0.40 * (1 - appData.settings.sens / 100) + 0.02; }
+
+        // Calcula qué parte del vídeo real corresponde al recuadro (teniendo en cuenta object-fit: cover)
+        function zoneSourceRect(vid) {
+            const box = $('camBox').getBoundingClientRect(), z = $('calibZone').getBoundingClientRect();
+            if (!box.width || !box.height || !vid.videoWidth) return null;
+            const vw = vid.videoWidth, vh = vid.videoHeight, sc = Math.max(box.width / vw, box.height / vh);
+            const ox = (box.width - vw * sc) / 2, oy = (box.height - vh * sc) / 2;
+            let sx = (z.left - box.left - ox) / sc, sy = (z.top - box.top - oy) / sc, sw = z.width / sc, sh = z.height / sc;
+            if (sx < 0) { sw += sx; sx = 0; } if (sy < 0) { sh += sy; sy = 0; }
+            sw = Math.min(sw, vw - sx); sh = Math.min(sh, vh - sy);
+            if (sw < 2 || sh < 2) return null;
+            return { sx, sy, sw, sh };
         }
 
         function processMotion() {
             if (!cameraActive) return;
-            const vid = document.getElementById('cameraFeed'); const cvs = document.getElementById('analysisCanvas');
-            if (vid.readyState === vid.HAVE_ENOUGH_DATA) {
-                const ctx = cvs.getContext('2d', { willReadFrequently: true }); cvs.width = 64; cvs.height = 64; ctx.drawImage(vid, 0, 0, 64, 64);
-                const frame = ctx.getImageData(0, 0, 64, 64).data;
-                if (prevFrame) {
-                    let diff = 0; for (let i = 0; i < frame.length; i += 16) diff += Math.abs(frame[i] - prevFrame[i]);
-                    if ((diff / 150) > 50) {
-                        document.getElementById('calibZone').classList.add('detected'); setTimeout(() => document.getElementById('calibZone').classList.remove('detected'), 200);
-                        if (appState === 'armed') triggerStart(); else if (appState === 'running') triggerLap();
-                    }
-                }
-                prevFrame = new Uint8ClampedArray(frame);
-            }
-            requestAnimationFrame(processMotion);
+            rafId = requestAnimationFrame(processMotion);
+            const vid = $('cameraFeed');
+            if (vid.readyState < 2 || !vid.videoWidth) return;
+            const r = zoneSourceRect(vid);
+            if (!r) { prevFrame = null; return; }
+            const cvs = $('analysisCanvas');
+            if (cvs.width !== AW) { cvs.width = AW; cvs.height = AH; }
+            const ctx = cvs.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(vid, r.sx, r.sy, r.sw, r.sh, 0, 0, AW, AH);
+            const d = ctx.getImageData(0, 0, AW, AH).data, n = AW * AH, lum = new Uint8Array(n);
+            for (let i = 0, j = 0; j < n; i += 4, j++) lum[j] = (d[i] * 77 + d[i + 1] * 150 + d[i + 2] * 29) >> 8;
+
+            const now = performance.now(), thr = motionThreshold();
+            const warming = now < camReadyAt;
+            $('camWarm').style.display = warming ? 'flex' : 'none';
+            if (prevFrame && !warming) {
+                let changed = 0;
+                for (let j = 0; j < n; j++) if (Math.abs(lum[j] - prevFrame[j]) > PIX_T) changed++;
+                const frac = changed / n;
+                updateMeter(frac, thr);
+                if (frac >= thr) onMotion(now);
+            } else updateMeter(0, thr);
+            prevFrame = lum;
         }
 
+        function updateMeter(frac, thr) {
+            const bar = $('meterBar');
+            bar.style.width = Math.min(100, (frac / (thr * 2)) * 100) + '%';
+            bar.classList.toggle('hot', frac >= thr);
+        }
+
+        function onMotion(now) {
+            const z = $('calibZone'); z.classList.add('detected');
+            clearTimeout(flashTimer); flashTimer = setTimeout(() => z.classList.remove('detected'), 200);
+            if (now - lastTrigger < 150) return;   // anti-rebote
+            if (appState === 'armed') { lastTrigger = now; triggerStart(); }
+            else if (appState === 'running') { if (triggerLap()) lastTrigger = now; }
+        }
+
+        function applyZoneSettings() {
+            const s = appData.settings, z = $('calibZone');
+            z.style.left = s.zoneX + '%'; z.style.top = s.zoneY + '%';
+            z.style.width = s.zoneSize + '%'; z.style.height = s.zoneSize + '%';
+            $('sensRange').value = s.sens; $('zoneSizeRange').value = s.zoneSize;
+        }
+        function resetDetection(delay) { prevFrame = null; camReadyAt = Math.max(camReadyAt, performance.now() + (delay || 500)); }
+        function onCamBoxTap(e) {
+            const b = $('camBox').getBoundingClientRect();
+            appData.settings.zoneX = Math.round(Math.min(95, Math.max(5, (e.clientX - b.left) / b.width * 100)));
+            appData.settings.zoneY = Math.round(Math.min(95, Math.max(5, (e.clientY - b.top) / b.height * 100)));
+            applyZoneSettings(); resetDetection(500); saveDB();
+        }
+        function onSensChange(v) { appData.settings.sens = parseInt(v) || 60; saveDB(); }
+        function onZoneSizeChange(v) { appData.settings.zoneSize = parseInt(v) || 30; applyZoneSettings(); resetDetection(400); saveDB(); }
+
         // ----------------------------------------------------
-        // 3. MOTOR DEL CRONÓMETRO
+        // 5. MOTOR DEL CRONÓMETRO
         // ----------------------------------------------------
-        let mode = 'idle'; let appState = 'stopped'; let lastPass = 0; let pauseTime = 0; let chronoInt = null;
-        let lapsData = []; let targetLaps = 0; let absRecord = Infinity; let sesRecord = Infinity;
+        // appState: 'stopped' | 'armed' (esperando primer paso) | 'running' | 'paused' | 'finished'
+        let mode = 'idle', appState = 'stopped', lastPass = 0, pauseTime = 0, chronoInt = null;
+        let lapsData = [], targetLaps = 0, absRecord = Infinity, sesRecord = Infinity;
+        let raceInProgress = false;
+
+        const S = () => mode === 'race' ? 'R' : 'T';
+        function setPanel(cls) { $('chronoPanel' + S()).className = 'big-chrono-panel ' + cls; }
+        function setLapLbl(t) { $('chronoLap' + S()).textContent = t; }
+        function setTime(t) { $('chronoTime' + S()).textContent = t; }
+        function setActionBtn(txt, cls) { const b = $('btnAction' + S()); b.textContent = txt; b.className = 'btn-action' + (cls ? ' ' + cls : ''); }
+        function setPauseBtn(show) { const b = $('btnPause' + S()); b.style.display = show ? 'block' : 'none'; b.textContent = '⏸'; }
+        function resetChronoUI() {
+            setLapLbl('L0'); setTime('00.000s');
+            $('chronoTime' + S()).style.color = ''; $('chronoLap' + S()).style.color = '';
+            setPanel('color-gray'); setPauseBtn(false);
+        }
+
+        function historicBest(trackId) {
+            let b = Infinity;
+            appData.regTrain.forEach(r => { if (r.track === trackId) r.laps.forEach(l => { if (l < b) b = l; }); });
+            appData.regRace.forEach(r => { if (r.track === trackId) r.pilots.forEach(p => p.laps.forEach(l => { if (l < b) b = l; })); });
+            return b;
+        }
+        function currentTrackId() { return mode === 'race' ? raceConfig.track : currentSelections.T.track; }
+        function minLapMs(trackId) {
+            const t = findById('tracks', trackId); const v = parseFloat(t && t.tiempoMinimo);
+            return (Number.isFinite(v) && v > 0 ? v : 5) * 1000;
+        }
 
         function triggerStart() {
             appState = 'running'; lastPass = performance.now();
-            if (mode === 'train') {
-                document.getElementById('btnTrainStart').innerText = "⏹ DETENER"; document.getElementById('btnTrainStart').className = "btn-action stop";
-                document.getElementById('btnTrainPause').style.display = 'block'; document.getElementById('chronoLapT').innerText = "L1";
-            } else {
-                document.getElementById('btnRaceAction').innerText = "⏹ DETENER"; document.getElementById('btnRaceAction').className = "btn-action stop";
-                document.getElementById('btnRacePause').style.display = 'block'; document.getElementById('chronoLapR').innerText = "L1";
-            }
-            chronoInt = setInterval(updateDisplay, 33);
+            setActionBtn('⏹ DETENER', 'stop'); setPauseBtn(true); setLapLbl('L1'); setPanel('color-green');
+            playBeeps(1);
+            clearInterval(chronoInt); chronoInt = setInterval(updateDisplay, 33);
         }
 
         function triggerLap() {
-            const trackId = (mode === 'train') ? currentSelections.T.track : currentSelections.R.track;
-            const tObj = appData.tracks.find(x => x.id === trackId);
-            const minMs = (tObj ? parseFloat(tObj.tiempoMinimo) : 5) * 1000;
-            const now = performance.now(); const lapMs = now - lastPass;
-            
-            if (lapMs >= minMs) {
-                lastPass = now; lapsData.unshift(lapMs);
-                let colClass = 'color-green'; let beepCount = 1;
-                
-                if (lapMs < absRecord) { colClass = 'color-red'; beepCount = 3; absRecord = lapMs; sesRecord = lapMs; }
-                else if (lapMs < sesRecord) { colClass = 'color-yellow'; beepCount = 2; sesRecord = lapMs; }
-                
-                if (mode === 'train') { document.getElementById('chronoPanelT').className = 'big-chrono-panel ' + colClass; document.getElementById('chronoLapT').innerText = 'L' + (lapsData.length + 1); renderTrainLaps(); }
-                else { document.getElementById('chronoPanelR').className = 'big-chrono-panel ' + colClass; document.getElementById('chronoLapR').innerText = 'L' + (lapsData.length + 1); }
-                playBeeps(beepCount);
-                if (targetLaps > 0 && lapsData.length >= targetLaps) executeEnd();
-            }
+            const now = performance.now(), lapMs = now - lastPass;
+            if (lapMs < minLapMs(currentTrackId())) return false;
+            lastPass = now; lapsData.unshift(lapMs);
+
+            // Rojo = récord histórico del circuito · Amarillo = mejor vuelta de la sesión · Verde = vuelta normal
+            let cls = 'color-green', beeps = 1;
+            if (Number.isFinite(absRecord) && lapMs < absRecord) { cls = 'color-red'; beeps = 3; }
+            else if (Number.isFinite(sesRecord) && lapMs < sesRecord) { cls = 'color-yellow'; beeps = 2; }
+            absRecord = Math.min(absRecord, lapMs); sesRecord = Math.min(sesRecord, lapMs);
+
+            setPanel(cls); setLapLbl('L' + (lapsData.length + 1)); playBeeps(beeps);
+            renderLiveLaps();
+            if (targetLaps > 0 && lapsData.length >= targetLaps) executeEnd();
+            return true;
         }
 
         function updateDisplay() {
             if (appState !== 'running') return;
-            const ms = performance.now() - lastPass;
-            const str = `${String(Math.floor(ms / 1000)).padStart(2, '0')}.${String(Math.floor(ms % 1000)).padStart(3, '0')}s`;
-            if (mode === 'train') document.getElementById('chronoTimeT').innerText = str; else document.getElementById('chronoTimeR').innerText = str;
+            setTime(fmtClock(performance.now() - lastPass));
+        }
+
+        function renderLiveLaps() {
+            const best = lapsData.length ? Math.min(...lapsData) : Infinity;
+            $('lapsContainer' + S()).innerHTML = lapsData.length ? lapsData.map((ms, i) =>
+                `<div class="lap-row"><span>Vuelta ${lapsData.length - i}</span><span style="color:${ms === best ? 'var(--yellow)' : 'var(--primary)'}; font-family:monospace;">${fmtS(ms)}</span></div>`).join('') : EMPTY_LAPS;
         }
 
         function executeEnd() {
-            clearInterval(chronoInt); appState = 'stopped';
+            clearInterval(chronoInt); chronoInt = null;
+            setPauseBtn(false);
+            if (mode === 'train' && !lapsData.length) {
+                resetTrainUI(); toast('Sesión sin vueltas: no hay nada que guardar.');
+                return;
+            }
+            appState = 'finished';
+            setTime('FIN'); setLapLbl('L' + lapsData.length);
+            $('chronoTime' + S()).style.color = 'var(--accent)'; $('chronoLap' + S()).style.color = 'var(--accent)';
             if (mode === 'train') {
-                document.getElementById('chronoTimeT').innerText = "XX.XXXs"; document.getElementById('chronoTimeT').style.color = "var(--accent)"; document.getElementById('chronoLapT').style.color = "var(--accent)";
-                document.getElementById('btnTrainStart').innerText = "💾 GUARDAR"; document.getElementById('btnTrainStart').className = "btn-action"; document.getElementById('btnTrainPause').style.display = 'none';
+                setActionBtn('💾 GUARDAR SESIÓN', '');
+                $('trainStatusTxt').textContent = 'SESIÓN TERMINADA';
             } else {
-                document.getElementById('chronoTimeR').innerText = "XX.XXXs"; document.getElementById('chronoTimeR').style.color = "var(--accent)"; document.getElementById('chronoLapR').style.color = "var(--accent)";
-                document.getElementById('btnRaceAction').innerText = "✅ SIGUIENTE"; document.getElementById('btnRaceAction').className = "btn-action"; document.getElementById('btnRacePause').style.display = 'none';
+                const last = raceIdx >= raceConfig.pilots.length - 1;
+                setActionBtn(last ? '🏆 VER PODIO' : '✅ SIGUIENTE PILOTO', '');
             }
         }
 
-        function togglePauseTrain() {
-            if (appState === 'running') { appState = 'paused'; clearInterval(chronoInt); pauseTime = performance.now(); document.getElementById('btnTrainPause').innerText = "▶"; }
-            else if (appState === 'paused') { appState = 'running'; lastPass += (performance.now() - pauseTime); chronoInt = setInterval(updateDisplay, 33); document.getElementById('btnTrainPause').innerText = "⏸"; }
+        function togglePause() {
+            if (appState === 'running') {
+                appState = 'paused'; clearInterval(chronoInt); pauseTime = performance.now();
+                $('btnPause' + S()).textContent = '▶';
+            } else if (appState === 'paused') {
+                appState = 'running'; lastPass += (performance.now() - pauseTime);
+                resetDetection(300);
+                chronoInt = setInterval(updateDisplay, 33);
+                $('btnPause' + S()).textContent = '⏸';
+            }
         }
 
-        function togglePauseRace() {
-            if (appState === 'running') { appState = 'paused'; clearInterval(chronoInt); pauseTime = performance.now(); document.getElementById('btnRacePause').innerText = "▶"; }
-            else if (appState === 'paused') { appState = 'running'; lastPass += (performance.now() - pauseTime); chronoInt = setInterval(updateDisplay, 33); document.getElementById('btnRacePause').innerText = "⏸"; }
-        }
+        function executeStopSession() { closeModal('modalConfirmStop'); if (sessionLive()) executeEnd(); }
 
         // ----------------------------------------------------
-        // 4. ENTRENAMIENTO Y CARRERA
+        // 6. ENTRENAMIENTO
         // ----------------------------------------------------
-        function handleTrainStart() {
-            initAudio(); const btnTxt = document.getElementById('btnTrainStart').innerText;
-            if (appState === 'stopped' && btnTxt.includes("GUARDAR")) { document.getElementById('modalSaveTrain').classList.add('active'); return; }
-            if (appState !== 'stopped') { document.getElementById('modalConfirmStop').classList.add('active'); return; }
-            document.getElementById('modalTrainSetup').classList.add('active');
+        function handleTrainAction() {
+            initAudio();
+            if (raceInProgress) { toast('Hay una carrera en curso. Termínala o cancélala primero.'); return; }
+            if (mode === 'train' && appState === 'finished') {
+                const best = Math.min(...lapsData);
+                $('saveTrainSummary').textContent = `${lapsData.length} vueltas · mejor ${fmtS(best)} · media ${fmtS(sum(lapsData) / lapsData.length)}`;
+                $('trainSessionName').value = '';
+                openModal('modalSaveTrain'); return;
+            }
+            if (mode === 'train' && sessionLive()) { openModal('modalConfirmStop'); return; }
+            const { pilot, car, track } = currentSelections.T;
+            if (!findById('pilots', pilot) || !findById('cars', car) || !findById('tracks', track)) { alert('Selecciona piloto, coche y circuito antes de empezar.'); return; }
+            openModal('modalTrainSetup');
         }
-        function confirmTrainSetup() { startTrain(parseInt(document.getElementById('trainLapsInput').value) || 0); }
-        
-        function startTrain(laps) {
-            closeModal('modalTrainSetup'); mode = 'train'; appState = 'armed'; targetLaps = laps; lapsData = [];
-            const btn = document.getElementById('btnTrainStart'); btn.innerText = "ESPERANDO..."; btn.className = "btn-action stop";
-            document.getElementById('chronoLapT').innerText = "L0"; document.getElementById('chronoTimeT').innerText = "00.000s";
-            document.getElementById('chronoTimeT').style.color = ""; document.getElementById('chronoLapT').style.color = ""; document.getElementById('chronoPanelT').className = "big-chrono-panel color-gray";
-            document.getElementById('lapsContainerT').innerHTML = '';
-            
-            absRecord = Infinity;
-            appData.regTrain.forEach(reg => { if (reg.track === currentSelections.T.track) reg.laps.forEach(lap => { if (lap < absRecord) absRecord = lap; }); });
-            sesRecord = Infinity;
-            if (!cameraActive) toggleCamera();
+        function confirmTrainSetup() { startTrain(parseInt($('trainLapsInput').value) || 0); }
+
+        async function startTrain(laps) {
+            closeModal('modalTrainSetup');
+            mode = 'train'; appState = 'armed'; targetLaps = Math.max(0, laps | 0); lapsData = [];
+            resetChronoUI(); setActionBtn('⏳ ESPERANDO PASO… (TOCA PARA CANCELAR)', 'stop');
+            $('lapsContainerT').innerHTML = EMPTY_LAPS;
+            $('trainStatusTxt').textContent = targetLaps ? `OBJETIVO: ${targetLaps} VUELTAS` : 'VUELTAS ILIMITADAS';
+            absRecord = historicBest(currentSelections.T.track); sesRecord = Infinity;
+            lastTrigger = 0; resetDetection(800);
+            if (!cameraActive) {
+                const ok = await startCamera();
+                if (!ok) { resetTrainUI(); return; }
+            }
+            updateCameraUI();
         }
-        
-        function renderTrainLaps() {
-            document.getElementById('lapsContainerT').innerHTML = lapsData.map((ms, i) => `<div class="lap-row"><span>Vuelta ${lapsData.length - i}</span><span style="color:var(--primary); font-family:monospace;">${(ms/1000).toFixed(3)}s</span></div>`).join('');
-        }
-        
-        function executeStopSession() { closeModal('modalConfirmStop'); executeEnd(); }
+
         function saveTrain() {
-            appData.regTrain.unshift({ id: genId(), name: document.getElementById('trainSessionName').value.trim() || 'Test Libre', date: new Date().toISOString(), track: currentSelections.T.track, pilot: currentSelections.T.pilot, car: currentSelections.T.car, laps: [...lapsData] });
-            saveDB(); discardTrain();
+            appData.regTrain.unshift({
+                id: genId(), name: $('trainSessionName').value.trim() || 'Test Libre', date: new Date().toISOString(),
+                track: currentSelections.T.track, pilot: currentSelections.T.pilot, car: currentSelections.T.car,
+                targetLaps, laps: [...lapsData]
+            });
+            if (saveDB()) toast('Entrenamiento guardado ✔');
+            closeModal('modalSaveTrain'); resetTrainUI();
         }
-        function discardTrain() {
-            closeModal('modalSaveTrain'); appState = 'stopped'; lapsData = [];
-            const btn = document.getElementById('btnTrainStart'); btn.innerText = "▶ COMENZAR ENTRENAMIENTO"; btn.className = "btn-action";
-            document.getElementById('chronoLapT').innerText = "L0"; document.getElementById('chronoTimeT').innerText = "00.000s";
-            document.getElementById('chronoTimeT').style.color = ""; document.getElementById('chronoLapT').style.color = ""; document.getElementById('chronoPanelT').className = "big-chrono-panel color-gray";
-            document.getElementById('lapsContainerT').innerHTML = '';
+        function discardTrain() { closeModal('modalSaveTrain'); resetTrainUI(); }
+        function resetTrainUI() {
+            clearInterval(chronoInt); chronoInt = null;
+            mode = 'train'; appState = 'stopped'; lapsData = [];
+            resetChronoUI(); setActionBtn('▶ COMENZAR ENTRENAMIENTO', '');
+            $('lapsContainerT').innerHTML = EMPTY_LAPS;
+            $('trainStatusTxt').textContent = 'LISTO PARA ENTRENAR';
+            mode = 'idle'; updateCameraUI();
         }
 
-        let raceConfig = { track: '', laps: 10, pilots: [] }; let raceIdx = 0;
+        // ----------------------------------------------------
+        // 7. CARRERA
+        // ----------------------------------------------------
+        let raceConfig = { track: '', laps: 10, pilots: [] }, raceIdx = 0;
+
+        // Clasificación: primero quien más vueltas completa, después el menor tiempo total
+        function raceStandings(pilots, target) {
+            return pilots.map(p => {
+                const laps = p.laps || [];
+                return { ...p, n: laps.length, totalMs: sum(laps), bestMs: laps.length ? Math.min(...laps) : Infinity, complete: target > 0 && laps.length >= target };
+            }).sort((a, b) => (b.n - a.n) || (a.totalMs - b.totalMs));
+        }
+
         function addPilotToRace() {
-            const pId = currentSelections.RAdd.pilot; const cId = currentSelections.RAdd.car;
-            const pilot = appData.pilots.find(x => x.id === pId); const car = appData.cars.find(x => x.id === cId);
-            if (pilot && car) { raceConfig.pilots.push({ pilot, car, laps: [] }); renderRacePilotsAdd(); }
+            const pilot = findById('pilots', currentSelections.RAdd.pilot), car = findById('cars', currentSelections.RAdd.car);
+            if (!pilot || !car) { alert('Elige piloto y coche.'); return; }
+            if (raceConfig.pilots.some(x => x.pilot.id === pilot.id && x.car.id === car.id)) { toast('Ese piloto con ese coche ya está en la lista.'); return; }
+            // copia ligera, sin foto, para no llenar la memoria al guardar la carrera
+            raceConfig.pilots.push({
+                pilot: { id: pilot.id, nombre: pilot.nombre, apellidos: pilot.apellidos, alias: pilot.alias },
+                car: { id: car.id, marca: car.marca, modelo: car.modelo, alias: car.alias },
+                laps: []
+            });
+            renderRacePilotsAdd();
         }
+        function removeRacePilot(i) { raceConfig.pilots.splice(i, 1); renderRacePilotsAdd(); }
         function renderRacePilotsAdd() {
-            document.getElementById('racePilotsList').innerHTML = raceConfig.pilots.map((item, index) => `<div class="card" style="padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;"><span>👤 ${item.pilot.alias || item.pilot.nombre} | 🏎️ ${item.car.alias || item.car.modelo}</span><button onclick="raceConfig.pilots.splice(${index},1); renderRacePilotsAdd()" style="background:transparent; border:none; color:var(--accent); cursor:pointer; font-size:16px;">❌</button></div>`).join('');
+            $('racePilotsList').innerHTML = raceConfig.pilots.map((item, index) =>
+                `<div class="card" style="padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;"><span>${index + 1}. 👤 ${esc(pilotName(item.pilot))} | 🏎️ ${esc(carName(item.car))}</span><button data-i="${index}" onclick="removeRacePilot(+this.dataset.i)" style="background:transparent; border:none; color:var(--accent); cursor:pointer; font-size:16px;">❌</button></div>`).join('')
+                || '<div class="empty-msg">Sin participantes todavía.</div>';
         }
-        function startRaceMode() {
-            if (!raceConfig.pilots.length) return alert('Añade al menos un participante.');
-            raceConfig.track = currentSelections.R.track; raceConfig.laps = parseInt(document.getElementById('raceLapsInput').value) || 10;
-            document.getElementById('raceSetupView').style.display = 'none'; document.getElementById('raceRunView').style.display = 'block';
-            raceIdx = 0; absRecord = Infinity; initAudio(); loadRaceTurn(); if (!cameraActive) toggleCamera();
+
+        async function startRaceMode() {
+            if (mode === 'train' && appState !== 'stopped') { toast('Termina primero el entrenamiento en curso.'); return; }
+            if (!raceConfig.pilots.length) { alert('Añade al menos un participante.'); return; }
+            if (!findById('tracks', currentSelections.R.track)) { alert('Selecciona un circuito.'); return; }
+            raceConfig.track = currentSelections.R.track;
+            raceConfig.laps = Math.max(1, parseInt($('raceLapsInput').value) || 10);
+            raceConfig.pilots.forEach(p => p.laps = []);
+            raceInProgress = true; raceIdx = 0; absRecord = historicBest(raceConfig.track);
+            $('raceSetupView').style.display = 'none'; $('raceRunView').style.display = 'block';
+            initAudio(); loadRaceTurn();
+            if (!cameraActive) await startCamera();
+            updateCameraUI();
         }
+
         function loadRaceTurn() {
             mode = 'race'; appState = 'stopped'; lapsData = []; targetLaps = raceConfig.laps; sesRecord = Infinity;
-            const turnData = raceConfig.pilots[raceIdx];
-            document.getElementById('raceRunTitle').innerText = turnData.pilot.alias || turnData.pilot.nombre;
-            document.getElementById('raceRunSub').innerText = `${turnData.car.alias || turnData.car.modelo} - Vueltas: ${targetLaps}`;
-            const btn = document.getElementById('btnRaceAction'); btn.innerText = "▶ INICIAR TURNO"; btn.className = "btn-action";
-            document.getElementById('chronoLapR').innerText = "L0"; document.getElementById('chronoTimeR').innerText = "00.000s";
-            document.getElementById('chronoTimeR').style.color = ""; document.getElementById('chronoLapR').style.color = ""; document.getElementById('chronoPanelR').className = "big-chrono-panel color-gray";
+            const t = raceConfig.pilots[raceIdx], n = raceConfig.pilots.length;
+            $('raceProgressTxt').textContent = `TURNO ${raceIdx + 1}/${n}`;
+            $('raceRunTitle').textContent = pilotName(t.pilot);
+            $('raceRunSub').textContent = `${carName(t.car)} · ${trackName(findById('tracks', raceConfig.track))} · ${targetLaps} vueltas`;
+            resetChronoUI(); setActionBtn('▶ INICIAR TURNO', '');
+            $('lapsContainerR').innerHTML = '';
         }
-        function handleRaceTurnAction() {
-            const txt = document.getElementById('btnRaceAction').innerText;
-            if (txt.includes("INICIAR")) { initAudio(); appState = 'armed'; const btnAct = document.getElementById('btnRaceAction'); btnAct.innerText = "ESPERANDO..."; btnAct.className = "btn-action stop"; }
-            else if (txt.includes("DETENER")) document.getElementById('modalConfirmStop').classList.add('active');
-            else if (txt.includes("SIGUIENTE")) { raceConfig.pilots[raceIdx].laps = [...lapsData]; raceIdx++; if (raceIdx < raceConfig.pilots.length) loadRaceTurn(); else showRacePodium(); }
+
+        async function handleRaceTurnAction() {
+            initAudio();
+            if (appState === 'stopped') {
+                appState = 'armed'; lastTrigger = 0; resetDetection(800);
+                setActionBtn('⏳ ESPERANDO PASO…', 'stop');
+                if (!cameraActive) { const ok = await startCamera(); if (!ok) { appState = 'stopped'; setActionBtn('▶ INICIAR TURNO', ''); } }
+                updateCameraUI();
+            } else if (sessionLive()) {
+                openModal('modalConfirmStop');
+            } else if (appState === 'finished') {
+                raceConfig.pilots[raceIdx].laps = [...lapsData];
+                raceIdx++;
+                if (raceIdx < raceConfig.pilots.length) loadRaceTurn(); else showRacePodium();
+            }
         }
+
+        function cancelRace() {
+            if (!confirm('¿Cancelar la carrera? Se perderán los tiempos de esta carrera.')) return;
+            clearInterval(chronoInt); chronoInt = null;
+            appState = 'stopped'; mode = 'idle'; raceInProgress = false;
+            raceConfig.pilots.forEach(p => p.laps = []);
+            $('raceRunView').style.display = 'none'; $('raceSetupView').style.display = 'block';
+            updateCameraUI();
+        }
+
         function showRacePodium() {
-            document.getElementById('raceRunView').style.display = 'none'; document.getElementById('raceSetupView').style.display = 'block';
-            let results = raceConfig.pilots.map(p => ({ ...p, totalMs: p.laps.reduce((acc, val) => acc + val, 0), bestMs: p.laps.length ? Math.min(...p.laps) : Infinity })).sort((a, b) => a.totalMs - b.totalMs);
-            document.getElementById('racePodiumList').innerHTML = results.map((r, i) => `<div class="card" style="margin-bottom:8px; ${i===0?'border-color:var(--yellow);':''}"><div style="font-weight:bold; color:${i===0?'var(--yellow)':'white'}; font-size:15px;">${i + 1}º ${r.pilot.alias || r.pilot.nombre}</div><div style="font-size:12px; color:var(--text-muted); margin-top:5px;">Total: <span style="color:white;">${(r.totalMs/1000).toFixed(3)}s</span> | Mejor: <span style="color:var(--cyan);">${r.bestMs!==Infinity?(r.bestMs/1000).toFixed(3)+'s':'--'}</span></div></div>`).join('');
-            document.getElementById('modalRacePodium').classList.add('active');
+            appState = 'stopped'; mode = 'idle'; raceInProgress = false;
+            $('raceRunView').style.display = 'none'; $('raceSetupView').style.display = 'block';
+            const medals = ['🥇', '🥈', '🥉'];
+            const results = raceStandings(raceConfig.pilots, raceConfig.laps);
+            $('racePodiumList').innerHTML = results.map((r, i) => `<div class="card" style="margin-bottom:8px; ${i === 0 ? 'border-color:var(--yellow);' : ''}">
+                <div style="font-weight:bold; color:${i === 0 ? 'var(--yellow)' : 'white'}; font-size:15px;">${medals[i] || (i + 1) + 'º'} ${esc(pilotName(r.pilot))} <span class="muted" style="font-size:12px;">· ${esc(carName(r.car))}</span></div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">Vueltas: <span style="color:${r.complete ? 'white' : 'var(--accent)'};">${r.n}/${raceConfig.laps}</span> | Total: <span style="color:white;">${fmtS(r.n ? r.totalMs : Infinity)}</span> | Mejor: <span style="color:var(--cyan);">${fmtS(r.bestMs)}</span></div>
+                ${r.complete ? '' : '<div style="font-size:11px; color:var(--accent); margin-top:3px;">No completó la carrera</div>'}</div>`).join('');
+            $('raceSessionName').value = 'Gran Premio';
+            openModal('modalRacePodium');
+            updateCameraUI();
         }
+
         function saveRace() {
-            appData.regRace.unshift({ id: genId(), name: document.getElementById('raceSessionName').value.trim() || 'Gran Premio', date: new Date().toISOString(), track: raceConfig.track, lapsTarget: raceConfig.laps, pilots: JSON.parse(JSON.stringify(raceConfig.pilots)) });
-            saveDB(); discardRace();
+            appData.regRace.unshift({
+                id: genId(), name: $('raceSessionName').value.trim() || 'Gran Premio', date: new Date().toISOString(),
+                track: raceConfig.track, lapsTarget: raceConfig.laps, pilots: JSON.parse(JSON.stringify(raceConfig.pilots))
+            });
+            const ok = saveDB();
+            closeModal('modalRacePodium'); raceConfig.pilots = []; renderRacePilotsAdd();
+            if (ok) toast('Carrera guardada ✔');
+            switchMainTab('registers'); switchRegTab('race');
         }
-        function discardRace() { closeModal('modalRacePodium'); raceConfig.pilots = []; renderRacePilotsAdd(); switchMainTab('registers', document.querySelectorAll('.nav-btn')[2]); switchRegTab('race', document.querySelectorAll('.tab-btn')[1]); }
+        function discardRace() {
+            if (!confirm('¿Descartar los resultados de esta carrera?')) return;
+            closeModal('modalRacePodium'); raceConfig.pilots.forEach(p => p.laps = []); renderRacePilotsAdd();
+        }
 
         // ----------------------------------------------------
-        // 5. INTERFAZ Y NAVEGACIÓN
+        // 8. SELECTORES
         // ----------------------------------------------------
         let activeSelector = { type: '', context: '' };
+        const selKey = type => type === 'pilots' ? 'pilot' : type === 'cars' ? 'car' : 'track';
+
         function openSelectorModal(type, context) {
+            if (sessionLive() || (context === 'R' && raceInProgress)) { toast('No puedes cambiar la selección con una sesión en marcha.'); return; }
             activeSelector = { type, context };
-            document.getElementById('selectorTitle').innerText = "Selecciona " + (type === 'pilots' ? "Piloto" : type === 'cars' ? "Coche" : "Circuito");
-            document.getElementById('selectorList').innerHTML = appData[type].map(item => {
-                let dName = (type === 'pilots' || type === 'tracks') ? (item.alias || item.nombre) : (item.alias || item.modelo);
-                return `<div class="selector-item" onclick="selectItem('${item.id}')"><img src="${getPhoto(item.photo, type, dName)}"><div style="font-weight:bold; font-size:14px;">${dName}</div></div>`;
-            }).join('') || '<p style="text-align:center; color:gray; padding:20px;">No hay elementos creados aún.</p>';
-            document.getElementById('modalSelector').classList.add('active');
+            $('selectorTitle').textContent = 'Selecciona ' + (type === 'pilots' ? 'Piloto' : type === 'cars' ? 'Coche' : 'Circuito');
+            $('selectorList').innerHTML = appData[type].map(item => {
+                const dName = nameOf(type, item);
+                return `<div class="selector-item" data-id="${esc(item.id)}" onclick="selectItem(this.dataset.id)"><img src="${getPhoto(item.photo, type, dName)}" alt=""><div style="font-weight:bold; font-size:14px;">${esc(dName)}</div></div>`;
+            }).join('') || '<p style="text-align:center; color:gray; padding:20px;">No hay elementos creados aún. Créalos en la pestaña Datos.</p>';
+            openModal('modalSelector');
         }
         function selectItem(id) {
             const { type, context } = activeSelector;
-            currentSelections[context][type.slice(0, -1)] = id;
-            updateSelectionUI(); closeModal('modalSelector');
+            currentSelections[context][selKey(type)] = id;
+            persistSelections(); updateSelectionUI(); closeModal('modalSelector');
+        }
+        function persistSelections() { appData.settings.sel = JSON.parse(JSON.stringify(currentSelections)); saveDB(); }
+
+        function ensureSelections() {
+            const first = type => appData[type][0] ? appData[type][0].id : '';
+            const fix = (ctx, type) => { const k = selKey(type); if (!findById(type, currentSelections[ctx][k])) currentSelections[ctx][k] = first(type); };
+            fix('T', 'pilots'); fix('T', 'cars'); fix('T', 'tracks'); fix('R', 'tracks'); fix('RAdd', 'pilots'); fix('RAdd', 'cars');
+            updateSelectionUI();
+        }
+
+        function setSel(imgId, txtId, type, item) {
+            const name = item ? nameOf(type, item) : '--';
+            if (txtId) $(txtId).textContent = name;
+            if (imgId) $(imgId).src = getPhoto(item ? item.photo : '', type, item ? name : '?');
         }
         function updateSelectionUI() {
-            const pT = appData.pilots.find(x => x.id === currentSelections.T.pilot); if (pT) { document.getElementById('txtSelPilotT').innerText = pT.alias || pT.nombre; document.getElementById('imgSelPilotT').src = getPhoto(pT.photo, 'pilots', pT.alias||pT.nombre); }
-            const cT = appData.cars.find(x => x.id === currentSelections.T.car); if (cT) { document.getElementById('txtSelCarT').innerText = cT.alias || cT.modelo; document.getElementById('imgSelCarT').src = getPhoto(cT.photo, 'cars', cT.alias||cT.modelo); }
-            const tT = appData.tracks.find(x => x.id === currentSelections.T.track); if (tT) { document.getElementById('txtSelTrackT').innerText = tT.alias || tT.nombre; document.getElementById('imgSelTrackT').src = getPhoto(tT.photo, 'tracks', tT.alias||tT.nombre); document.getElementById('minLapTxtT').innerText = tT.tiempoMinimo + 's'; }
-            const tR = appData.tracks.find(x => x.id === currentSelections.R.track); if (tR) { document.getElementById('txtSelTrackR').innerText = tR.alias || tR.nombre; document.getElementById('imgSelTrackR').src = getPhoto(tR.photo, 'tracks', tR.alias||tR.nombre); }
-            const pA = appData.pilots.find(x => x.id === currentSelections.RAdd.pilot); if (pA) document.getElementById('txtSelPilotRAdd').innerText = pA.alias || pA.nombre;
-            const cA = appData.cars.find(x => x.id === currentSelections.RAdd.car); if (cA) document.getElementById('txtSelCarRAdd').innerText = cA.alias || cA.modelo;
+            setSel('imgSelPilotT', 'txtSelPilotT', 'pilots', findById('pilots', currentSelections.T.pilot));
+            setSel('imgSelCarT', 'txtSelCarT', 'cars', findById('cars', currentSelections.T.car));
+            const tT = findById('tracks', currentSelections.T.track);
+            setSel('imgSelTrackT', 'txtSelTrackT', 'tracks', tT);
+            $('minLapTxtT').textContent = tT ? (minLapMs(tT.id) / 1000) + 's' : '--';
+            setSel('imgSelTrackR', 'txtSelTrackR', 'tracks', findById('tracks', currentSelections.R.track));
+            const pA = findById('pilots', currentSelections.RAdd.pilot), cA = findById('cars', currentSelections.RAdd.car);
+            $('txtSelPilotRAdd').textContent = pA ? '👤 ' + pilotName(pA) : 'Piloto';
+            $('txtSelCarRAdd').textContent = cA ? '🏎️ ' + carName(cA) : 'Coche';
         }
 
         // ----------------------------------------------------
-        // 6. REGISTROS Y ESTADÍSTICAS
+        // 9. REGISTROS
         // ----------------------------------------------------
-        function switchRegTab(type, btnEl) {
-            document.querySelectorAll('#screen-registers .tab-btn').forEach(b => b.classList.remove('active')); btnEl.classList.add('active');
-            document.getElementById('listRegTrain').style.display = (type === 'train') ? 'block' : 'none'; document.getElementById('listRegRace').style.display = (type === 'race') ? 'block' : 'none';
+        let regTab = 'train';
+        function switchRegTab(type) {
+            regTab = type;
+            document.querySelectorAll('#screen-registers .tab-btn').forEach(b => b.classList.toggle('active', b.dataset.reg === type));
+            $('listRegTrain').style.display = type === 'train' ? 'block' : 'none';
+            $('listRegRace').style.display = type === 'race' ? 'block' : 'none';
             renderRegisters();
         }
+        const fmtDate = (iso, withTime) => { const d = new Date(iso); return isNaN(d) ? '--' : d.toLocaleDateString('es-ES', withTime ? { day: '2-digit', month: 'short', year: '2-digit', hour: '2-digit', minute: '2-digit' } : { day: '2-digit', month: 'short', year: '2-digit' }); };
+
         function renderRegisters() {
             const trains = [...appData.regTrain].sort((a, b) => new Date(b.date) - new Date(a.date));
             const races = [...appData.regRace].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            document.getElementById('listRegTrain').innerHTML = trains.map(r => {
-                const tr = appData.tracks.find(x => x.id === r.track); const pi = appData.pilots.find(x => x.id === r.pilot); const ca = appData.cars.find(x => x.id === r.car);
+
+            $('listRegTrain').innerHTML = trains.map(r => {
+                const tr = findById('tracks', r.track), pi = findById('pilots', r.pilot), ca = findById('cars', r.car);
+                const best = r.laps.length ? Math.min(...r.laps) : Infinity, avg = r.laps.length ? sum(r.laps) / r.laps.length : Infinity;
                 return `<div class="reg-card" onclick="this.classList.toggle('expanded')">
-                    <div class="flex-between"><span style="font-weight:bold; color:var(--primary);">${r.name}</span><span style="font-size:11px; color:gray;">${new Date(r.date).toLocaleDateString('es-ES',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span></div>
-                    <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">🗺️ ${tr?tr.alias||tr.nombre:'--'} | 👤 ${pi?pi.alias||pi.nombre:'--'} | 🏎️ ${ca?ca.alias||ca.modelo:'--'}</div>
-                    <div style="font-size:13px; color:var(--cyan); margin-top:5px; font-weight:bold;">Mejor: ${r.laps.length?(Math.min(...r.laps)/1000).toFixed(3)+'s':'--'}</div>
-                    <div class="reg-details"><div class="reg-laps-list">${r.laps.map((l,i)=>`<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span>Vuelta ${r.laps.length-i}</span><span style="font-family:monospace; color:var(--primary);">${(l/1000).toFixed(3)}s</span></div>`).join('')}</div><button onclick="event.stopPropagation(); deleteReg('train','${r.id}')" style="margin-top:12px; background:rgba(255,42,85,0.2); color:var(--accent); border:1px solid rgba(255,42,85,0.4); padding:10px; border-radius:10px; width:100%; font-weight:bold; cursor:pointer;">Borrar Registro</button></div></div>`;
+                    <div class="flex-between"><span style="font-weight:bold; color:var(--primary);">${esc(r.name)}</span><span style="font-size:11px; color:gray;">${fmtDate(r.date, true)}</span></div>
+                    <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">🗺️ ${esc(trackName(tr))} | 👤 ${esc(pilotName(pi))} | 🏎️ ${esc(carName(ca))}</div>
+                    <div style="font-size:13px; margin-top:5px; font-weight:bold;"><span style="color:var(--cyan);">Mejor: ${fmtS(best)}</span> <span class="muted" style="font-size:12px;">· Media ${fmtS(avg)} · ${r.laps.length} vueltas</span></div>
+                    <div class="reg-details" onclick="event.stopPropagation()"><div class="reg-laps-list">${r.laps.map((l, i) => `<div class="reg-row"><span>Vuelta ${r.laps.length - i}</span><span style="font-family:monospace; color:${l === best ? 'var(--yellow)' : 'var(--primary)'};">${fmtS(l)}</span></div>`).join('')}</div>
+                    <button class="btn-danger" data-id="${esc(r.id)}" onclick="deleteReg('train', this.dataset.id)">Borrar Registro</button></div></div>`;
             }).join('') || '<p style="text-align:center; color:gray;">Sin entrenamientos.</p>';
 
-            document.getElementById('listRegRace').innerHTML = races.map(r => {
-                const tr = appData.tracks.find(x => x.id === r.track);
-                let pSort = [...r.pilots].map(p => ({...p, totalMs: p.laps.reduce((acc, val) => acc + val, 0)})).sort((a, b) => a.totalMs - b.totalMs);
+            $('listRegRace').innerHTML = races.map(r => {
+                const tr = findById('tracks', r.track);
+                const st = raceStandings(r.pilots, r.lapsTarget);
+                const win = st[0];
                 return `<div class="reg-card" onclick="this.classList.toggle('expanded')">
-                    <div class="flex-between"><span style="font-weight:bold; color:var(--yellow);">${r.name}</span><span style="font-size:11px; color:gray;">${new Date(r.date).toLocaleDateString('es-ES',{day:'2-digit',month:'short'})}</span></div>
-                    <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">🗺️ ${tr?tr.alias||tr.nombre:'--'} • ${r.lapsTarget} vueltas</div>
-                    <div class="reg-details" style="display:block;">${pSort.map((p,i)=>`<div style="font-size:12px; display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="${i===0?'color:var(--yellow); font-weight:bold;':''}">${i+1}º ${p.pilot.alias||p.pilot.nombre}</span><span style="font-family:monospace; color:var(--cyan);">${(p.totalMs/1000).toFixed(3)}s</span></div>`).join('')}<button onclick="event.stopPropagation(); deleteReg('race','${r.id}')" style="margin-top:12px; background:rgba(255,42,85,0.2); color:var(--accent); border:1px solid rgba(255,42,85,0.4); padding:10px; border-radius:10px; width:100%; font-weight:bold; cursor:pointer;">Borrar Carrera</button></div></div>`;
+                    <div class="flex-between"><span style="font-weight:bold; color:var(--yellow);">${esc(r.name)}</span><span style="font-size:11px; color:gray;">${fmtDate(r.date, true)}</span></div>
+                    <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">🗺️ ${esc(trackName(tr))} • ${r.lapsTarget} vueltas • ${r.pilots.length} pilotos</div>
+                    ${win ? `<div style="font-size:13px; margin-top:5px; font-weight:bold;">🥇 ${esc(pilotName(win.pilot))} <span class="muted" style="font-size:12px;">· ${fmtS(win.n ? win.totalMs : Infinity)}</span></div>` : ''}
+                    <div class="reg-details" onclick="event.stopPropagation()">${st.map((p, i) => `<div class="reg-row"><span style="${i === 0 ? 'color:var(--yellow); font-weight:bold;' : ''}">${i + 1}º ${esc(pilotName(p.pilot))} <span class="muted">(${esc(carName(p.car))})</span></span><span style="font-family:monospace; color:var(--cyan); text-align:right;">${p.n}/${r.lapsTarget} · ${fmtS(p.n ? p.totalMs : Infinity)}<br><span class="muted">mejor ${fmtS(p.bestMs)}</span></span></div>`).join('')}
+                    <button class="btn-danger" data-id="${esc(r.id)}" onclick="deleteReg('race', this.dataset.id)">Borrar Carrera</button></div></div>`;
             }).join('') || '<p style="text-align:center; color:gray;">Sin carreras.</p>';
         }
-        function deleteReg(type, id) { if (confirm('¿Eliminar permanentemente este registro?')) { if (type === 'train') appData.regTrain = appData.regTrain.filter(x => x.id !== id); else appData.regRace = appData.regRace.filter(x => x.id !== id); saveDB(); renderRegisters(); } }
+        function deleteReg(type, id) {
+            if (!confirm('¿Eliminar permanentemente este registro?')) return;
+            if (type === 'train') appData.regTrain = appData.regTrain.filter(x => x.id !== id);
+            else appData.regRace = appData.regRace.filter(x => x.id !== id);
+            saveDB(); renderRegisters();
+        }
 
-        let curStat = ''; let compCars = [];
+        // ----------------------------------------------------
+        // 10. ESTADÍSTICAS
+        // ----------------------------------------------------
+        let curStat = '', compCars = [];
+        const NO_DATA = '<p style="text-align:center; color:gray; padding:20px;">Sin datos.</p>';
+
         function openStat(type) {
-            curStat = type; document.getElementById('statsMainView').style.display = 'none'; document.getElementById('statsSubView').style.display = 'block';
-            const bar = document.getElementById('statFilterBar');
-            const trSel = `<select id="stTrack" class="modal-input" style="flex:1; margin:0;" onchange="renderStatData()">${appData.tracks.map(t => `<option value="${t.id}">${t.alias||t.nombre}</option>`).join('')}</select>`;
-            const piSel = `<select id="stPilot" class="modal-input" style="flex:1; margin:0;" onchange="renderStatData()">${appData.pilots.map(p => `<option value="${p.id}">${p.alias||p.nombre}</option>`).join('')}</select>`;
-            
-            if (type === 'trackTimes') { document.getElementById('statSubTitle').innerText = '⏱️ Tiempos (Entrenos)'; bar.innerHTML = trSel; }
-            else if (type === 'pilotTimes') { document.getElementById('statSubTitle').innerText = '👤 Tiempos Piloto'; bar.innerHTML = piSel + trSel; }
-            else if (type === 'trackUsage') { document.getElementById('statSubTitle').innerText = '🗺️ Uso y Km'; bar.innerHTML = ''; }
-            else if (type === 'pilotRank') { document.getElementById('statSubTitle').innerText = '🏆 Ranking Pilotos'; bar.innerHTML = trSel; }
-            else if (type === 'compare') { document.getElementById('statSubTitle').innerText = '⚖️ Comparador Coches'; bar.innerHTML = trSel + `<div style="display:flex; gap:5px; width:100%; margin-top:5px;"><select id="stCarAdd" class="modal-input" style="flex:1; margin:0;">${appData.cars.map(c => `<option value="${c.id}">${c.alias||c.modelo}</option>`).join('')}</select><button onclick="addCompCar()" style="background:var(--primary); color:black; border:none; border-radius:10px; padding:10px 15px; font-weight:bold; cursor:pointer;">Añadir</button></div>`; }
+            curStat = type; compCars = [];
+            $('statsMainView').style.display = 'none'; $('statsSubView').style.display = 'block';
+            const bar = $('statFilterBar');
+            const trSel = `<select id="stTrack" class="modal-input" style="flex:1; min-width:120px; margin:0;" onchange="renderStatData()">${appData.tracks.map(t => `<option value="${esc(t.id)}">${esc(trackName(t))}</option>`).join('')}</select>`;
+            const piSel = `<select id="stPilot" class="modal-input" style="flex:1; min-width:120px; margin:0;" onchange="renderStatData()">${appData.pilots.map(p => `<option value="${esc(p.id)}">${esc(pilotName(p))}</option>`).join('')}</select>`;
+            bar.style.display = 'flex';
+            if (type === 'trackTimes') { $('statSubTitle').textContent = '⏱️ Tiempos (Entrenos)'; bar.innerHTML = trSel; }
+            else if (type === 'pilotTimes') { $('statSubTitle').textContent = '👤 Tiempos Piloto'; bar.innerHTML = piSel + trSel; }
+            else if (type === 'trackUsage') { $('statSubTitle').textContent = '🗺️ Uso y Km'; bar.innerHTML = ''; bar.style.display = 'none'; }
+            else if (type === 'pilotRank') { $('statSubTitle').textContent = '🏆 Ranking Pilotos'; bar.innerHTML = trSel; }
+            else if (type === 'compare') {
+                $('statSubTitle').textContent = '⚖️ Comparador Coches';
+                bar.innerHTML = trSel + `<div style="display:flex; gap:5px; width:100%;"><select id="stCarAdd" class="modal-input" style="flex:1; margin:0;">${appData.cars.map(c => `<option value="${esc(c.id)}">${esc(carName(c))}</option>`).join('')}</select><button onclick="addCompCar()" style="background:var(--primary); color:black; border:none; border-radius:10px; padding:10px 15px; font-weight:bold; cursor:pointer;">Añadir</button></div>`;
+            }
+            if (currentSelections.T.track && $('stTrack') && findById('tracks', currentSelections.T.track)) $('stTrack').value = currentSelections.T.track;
+            if (currentSelections.T.pilot && $('stPilot') && findById('pilots', currentSelections.T.pilot)) $('stPilot').value = currentSelections.T.pilot;
             renderStatData();
         }
-        function closeStat() { document.getElementById('statsMainView').style.display = 'block'; document.getElementById('statsSubView').style.display = 'none'; compCars = []; }
-        function addCompCar() { const val = document.getElementById('stCarAdd').value; if (!compCars.includes(val)) { compCars.push(val); renderStatData(); } }
-        
+        function closeStat() { $('statsMainView').style.display = 'block'; $('statsSubView').style.display = 'none'; compCars = []; }
+        function addCompCar() { const val = $('stCarAdd').value; if (val && !compCars.includes(val)) { compCars.push(val); renderStatData(); } }
+        function removeCompCar(id) { compCars = compCars.filter(x => x !== id); renderStatData(); }
+
+        function trackKm(trackId, laps) {
+            const t = findById('tracks', trackId); const m = parseFloat(t && String(t.distancia).replace(',', '.'));
+            return Number.isFinite(m) ? laps * m / 1000 : 0;
+        }
+
         function renderStatData() {
-            const cont = document.getElementById('statSubContent'); const trk = document.getElementById('stTrack'); const tid = trk ? trk.value : null;
-            
+            const cont = $('statSubContent'), trk = $('stTrack'), tid = trk ? trk.value : null;
+            const rowCard = (i, name, val, extra) => `<div class="card" style="margin-bottom:8px; ${i === 0 ? 'border-color:var(--yellow);' : ''}"><div class="flex-between"><span style="color:${i === 0 ? 'var(--yellow)' : 'white'}; font-weight:bold;">${i + 1}º ${esc(name)}</span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">${val}</span></div>${extra ? `<div style="font-size:12px; color:gray; margin-top:4px;">${extra}</div>` : ''}</div>`;
+
             if (curStat === 'trackTimes' || curStat === 'pilotTimes') {
-                const plt = document.getElementById('stPilot'); const pid = (curStat === 'pilotTimes' && plt) ? plt.value : null;
-                let cStats = {};
+                const plt = $('stPilot'), pid = (curStat === 'pilotTimes' && plt) ? plt.value : null;
+                const cStats = {};
                 appData.regTrain.forEach(r => {
-                    if (r.track !== tid || (pid && r.pilot !== pid)) return;
-                    const cO = appData.cars.find(x => x.id === r.car);
-                    if (!cStats[r.car]) cStats[r.car] = { best: Infinity, name: cO ? (cO.alias||cO.modelo) : 'Desc.' };
-                    r.laps.forEach(l => { if (l < cStats[r.car].best) cStats[r.car].best = l; });
+                    if (r.track !== tid || (pid && r.pilot !== pid) || !r.laps.length) return;
+                    if (!cStats[r.car]) cStats[r.car] = { best: Infinity, laps: 0, name: carName(findById('cars', r.car)) };
+                    cStats[r.car].best = Math.min(cStats[r.car].best, ...r.laps); cStats[r.car].laps += r.laps.length;
                 });
-                cont.innerHTML = Object.values(cStats).sort((a,b)=>a.best-b.best).map((c,i) => `<div class="card" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; ${i===0?'border-color:var(--yellow);':''}"><span style="color:${i===0?'var(--yellow)':'white'}; font-weight:bold;">${i+1}º ${c.name}</span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">${(c.best/1000).toFixed(3)}s</span></div>`).join('') || '<p style="text-align:center; color:gray; padding:20px;">Sin datos.</p>';
+                cont.innerHTML = Object.values(cStats).sort((a, b) => a.best - b.best).map((c, i) => rowCard(i, c.name, fmtS(c.best), `${c.laps} vueltas registradas`)).join('') || NO_DATA;
             } else if (curStat === 'pilotRank') {
-                let pStats = {};
+                const pStats = {};
                 appData.regTrain.forEach(r => {
-                    if (r.track !== tid) return;
-                    const pO = appData.pilots.find(x => x.id === r.pilot);
-                    if (!pStats[r.pilot]) pStats[r.pilot] = { best: Infinity, name: pO ? (pO.alias||pO.nombre) : 'Desc.', carName: '' };
-                    r.laps.forEach(l => { if (l < pStats[r.pilot].best) { pStats[r.pilot].best = l; const cO = appData.cars.find(x => x.id === r.car); pStats[r.pilot].carName = cO ? (cO.alias||cO.modelo) : '--'; } });
+                    if (r.track !== tid || !r.laps.length) return;
+                    if (!pStats[r.pilot]) pStats[r.pilot] = { best: Infinity, name: pilotName(findById('pilots', r.pilot)), carName: '--' };
+                    const b = Math.min(...r.laps);
+                    if (b < pStats[r.pilot].best) { pStats[r.pilot].best = b; pStats[r.pilot].carName = carName(findById('cars', r.car)); }
                 });
-                cont.innerHTML = Object.values(pStats).sort((a,b)=>a.best-b.best).map((p,i) => `<div class="card" style="margin-bottom:8px; ${i===0?'border-color:var(--yellow);':''}"><div class="flex-between"><span style="color:${i===0?'var(--yellow)':'white'}; font-weight:bold; font-size:15px;">${i+1}º ${p.name}</span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">${(p.best/1000).toFixed(3)}s</span></div><div style="font-size:12px; color:gray; margin-top:4px;">Logrado con: ${p.carName}</div></div>`).join('') || '<p style="text-align:center; color:gray; padding:20px;">Sin datos.</p>';
+                cont.innerHTML = Object.values(pStats).sort((a, b) => a.best - b.best).map((p, i) => rowCard(i, p.name, fmtS(p.best), 'Logrado con: ' + esc(p.carName))).join('') || NO_DATA;
             } else if (curStat === 'compare') {
-                if (!compCars.length) return cont.innerHTML = '<p style="text-align:center; color:gray; padding:20px;">Añade vehículos arriba.</p>';
-                let stats = {}; compCars.forEach(cId => { const cO = appData.cars.find(x => x.id === cId); stats[cId] = { best: Infinity, laps: 0, name: cO ? (cO.alias||cO.modelo) : 'Desc.' }; });
-                appData.regTrain.forEach(r => { if (r.track !== tid || !stats[r.car]) return; r.laps.forEach(l => { if (l < stats[r.car].best) stats[r.car].best = l; }); stats[r.car].laps += r.laps.length; });
-                cont.innerHTML = Object.values(stats).map(c => `<div class="card" style="margin-bottom:10px; border-left:4px solid var(--primary);"><div style="font-weight:bold; color:white; font-size:15px;">🏎️ ${c.name}</div><div class="flex-between" style="font-size:12px; margin-top:8px;"><span style="color:gray;">Vueltas: <span style="color:white; font-weight:bold;">${c.laps}</span></span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">Mejor: ${c.best!==Infinity?(c.best/1000).toFixed(3)+'s':'--'}</span></div></div>`).join('');
+                if (!compCars.length) { cont.innerHTML = '<p style="text-align:center; color:gray; padding:20px;">Añade vehículos arriba.</p>'; return; }
+                const stats = {};
+                compCars.forEach(cId => { stats[cId] = { id: cId, best: Infinity, laps: 0, total: 0, name: carName(findById('cars', cId)) }; });
+                appData.regTrain.forEach(r => {
+                    if (r.track !== tid || !stats[r.car] || !r.laps.length) return;
+                    stats[r.car].best = Math.min(stats[r.car].best, ...r.laps); stats[r.car].laps += r.laps.length; stats[r.car].total += sum(r.laps);
+                });
+                cont.innerHTML = Object.values(stats).sort((a, b) => a.best - b.best).map(c => `<div class="card" style="margin-bottom:10px; border-left:4px solid var(--primary);"><div class="flex-between"><div style="font-weight:bold; color:white; font-size:15px;">🏎️ ${esc(c.name)}</div><button data-id="${esc(c.id)}" onclick="removeCompCar(this.dataset.id)" style="background:none; border:none; color:var(--accent); cursor:pointer;">✕</button></div><div class="flex-between" style="font-size:12px; margin-top:8px;"><span style="color:gray;">Vueltas: <span style="color:white; font-weight:bold;">${c.laps}</span> · Media: <span style="color:white;">${fmtS(c.laps ? c.total / c.laps : Infinity)}</span></span><span style="color:var(--cyan); font-family:monospace; font-weight:bold;">Mejor: ${fmtS(c.best)}</span></div></div>`).join('');
             } else if (curStat === 'trackUsage') {
-                cont.innerHTML = appData.tracks.map(t => {
-                    let carC = {}; let tot = 0;
-                    appData.regTrain.forEach(r => { if (r.track !== t.id) return; tot += r.laps.length; if (!carC[r.car]) carC[r.car] = 0; carC[r.car] += r.laps.length; });
-                    let bestC = null; let maxL = -1; Object.entries(carC).forEach(([id, c]) => { if (c > maxL) { maxL = c; bestC = id; } });
-                    const cO = appData.cars.find(x => x.id === bestC); const bestName = cO ? (cO.alias||cO.modelo) : 'Ninguno';
-                    return `<div class="card" style="margin-bottom:12px;"><div style="font-weight:bold; color:var(--accent); font-size:16px;">🗺️ ${t.alias||t.nombre}</div><div style="font-size:12px; color:gray; margin-top:6px;">Vueltas Históricas: <span style="color:white; font-weight:bold;">${tot}</span></div><div style="font-size:12px; color:gray; margin-top:4px;">Vehículo Estrella: <span style="color:var(--cyan); font-weight:bold;">${bestName}</span></div></div>`;
+                const carKm = {}, carLaps = {};
+                const addLaps = (trackId, carId, n) => {
+                    if (!n) return; carLaps[carId] = (carLaps[carId] || 0) + n; carKm[carId] = (carKm[carId] || 0) + trackKm(trackId, n);
+                };
+                const perTrack = appData.tracks.map(t => {
+                    const carC = {}; let tot = 0;
+                    const count = (carId, n) => { tot += n; carC[carId] = (carC[carId] || 0) + n; };
+                    appData.regTrain.forEach(r => { if (r.track === t.id) count(r.car, r.laps.length); });
+                    appData.regRace.forEach(r => { if (r.track === t.id) r.pilots.forEach(p => count(p.car && p.car.id, p.laps.length)); });
+                    Object.entries(carC).forEach(([cid, n]) => addLaps(t.id, cid, n));
+                    let bestC = null, maxL = 0; Object.entries(carC).forEach(([id, c]) => { if (c > maxL) { maxL = c; bestC = id; } });
+                    return `<div class="card" style="margin-bottom:12px;"><div style="font-weight:bold; color:var(--accent); font-size:16px;">🗺️ ${esc(trackName(t))}</div>
+                        <div style="font-size:12px; color:gray; margin-top:6px;">Vueltas históricas: <span style="color:white; font-weight:bold;">${tot}</span> · Distancia: <span style="color:white;">${esc(t.distancia || '--')} m/vuelta</span></div>
+                        <div style="font-size:12px; color:gray; margin-top:4px;">Kilómetros recorridos: <span style="color:var(--primary); font-weight:bold;">${trackKm(t.id, tot).toFixed(2)} km</span></div>
+                        <div style="font-size:12px; color:gray; margin-top:4px;">Vehículo estrella: <span style="color:var(--cyan); font-weight:bold;">${bestC ? esc(carName(findById('cars', bestC))) : 'Ninguno'}</span></div></div>`;
                 }).join('');
+                const carsHtml = appData.cars.filter(c => carLaps[c.id]).sort((a, b) => carKm[b.id] - carKm[a.id]).map(c =>
+                    `<div class="reg-row"><span>🏎️ ${esc(carName(c))}</span><span style="font-family:monospace;"><span style="color:var(--primary);">${carKm[c.id].toFixed(2)} km</span> <span class="muted">· ${carLaps[c.id]} v.</span></span></div>`).join('');
+                cont.innerHTML = (perTrack || NO_DATA) + `<div class="card"><div style="font-weight:bold; color:var(--cyan); margin-bottom:6px;">Kilometraje por coche</div>${carsHtml || '<div class="empty-msg">Sin vueltas registradas.</div>'}</div>`;
             }
         }
 
         // ----------------------------------------------------
-        // 7. GESTIÓN COMPLETA BASE DE DATOS Y CÁMARA DIRECTA
+        // 11. NAVEGACIÓN
         // ----------------------------------------------------
-        function switchMainTab(tabName, btnEl) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + tabName).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btnEl.classList.add('active');
-            const camBtn = document.getElementById('camToggleBtn');
-            if (tabName === 'train' || tabName === 'race') { camBtn.style.display = 'block'; } 
-            else { camBtn.style.display = 'none'; if (cameraActive) toggleCamera(); }
-            if (tabName === 'registers') renderRegisters(); if (tabName === 'data') closeSubDataView(); if (tabName === 'stats') closeStat();
+        function switchMainTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $('screen-' + tabName).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+            // La cámara solo se apaga al salir si NO hay una sesión en marcha
+            if (tabName !== 'train' && tabName !== 'race' && cameraActive && !sessionLive()) stopCamera();
+            if (sessionLive() && tabName !== 'train' && tabName !== 'race') toast('La sesión sigue en marcha: la cámara continúa detectando.');
+            if (tabName === 'registers') renderRegisters();
+            if (tabName === 'data') { closeSubDataView(); updateStorageInfo(); }
+            if (tabName === 'stats') closeStat();
+            updateCameraUI();
         }
 
-        let dbType = ''; let editItemId = null; let currentPhotoBase64 = '';
-        
+        // ----------------------------------------------------
+        // 12. BASE DE DATOS: PILOTOS, COCHES, CIRCUITOS
+        // ----------------------------------------------------
+        let dbType = '', editItemId = null, currentPhotoBase64 = '';
+
         function openSubDataView(type) {
-            dbType = type; document.getElementById('dataMainView').style.display = 'none'; document.getElementById('dataSubView').style.display = 'block';
-            document.getElementById('subViewTitle').innerText = type === 'pilots' ? 'PILOTOS' : type === 'cars' ? 'COCHES' : 'CIRCUITOS';
+            dbType = type; $('dataMainView').style.display = 'none'; $('dataSubView').style.display = 'block';
+            $('subViewTitle').textContent = type === 'pilots' ? 'PILOTOS' : type === 'cars' ? 'COCHES' : 'CIRCUITOS';
             renderSubDataList();
         }
         function closeSubDataView() {
-            document.getElementById('dataMainView').style.display = 'block'; document.getElementById('dataSubView').style.display = 'none';
-            if (!currentSelections.T.pilot && appData.pilots.length) { currentSelections.T.pilot = appData.pilots[0].id; currentSelections.RAdd.pilot = appData.pilots[0].id; }
-            if (!currentSelections.T.car && appData.cars.length) { currentSelections.T.car = appData.cars[0].id; currentSelections.RAdd.car = appData.cars[0].id; }
-            if (!currentSelections.T.track && appData.tracks.length) { currentSelections.T.track = appData.tracks[0].id; currentSelections.R.track = appData.tracks[0].id; }
-            updateSelectionUI();
+            $('dataMainView').style.display = 'block'; $('dataSubView').style.display = 'none';
+            ensureSelections();
         }
         function renderSubDataList() {
-            document.getElementById('subViewList').innerHTML = appData[dbType].map(item => {
-                let dName = (dbType === 'pilots' || dbType === 'tracks') ? (item.alias||item.nombre) : (item.alias||item.modelo);
+            $('subViewList').innerHTML = appData[dbType].map(item => {
+                const dName = nameOf(dbType, item);
+                const sub = dbType === 'pilots' ? [item.nombre, item.apellidos].filter(Boolean).join(' ') : dbType === 'cars' ? [item.marca, item.modelo].filter(Boolean).join(' ') : [item.lugar, item.distancia ? item.distancia + ' m' : ''].filter(Boolean).join(' · ');
                 return `<div class="card" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <div style="display:flex; align-items:center; gap:12px;"><img src="${getPhoto(item.photo, dbType, dName)}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; background:#222;"><span style="font-weight:bold; font-size:14px;">${dName}</span></div>
-                    <div style="display:flex; gap:10px;"><button onclick="openFormModal('${item.id}')" style="background:none; border:none; color:var(--cyan); font-size:18px; cursor:pointer;">✏️</button><button onclick="deleteDataEntity('${item.id}')" style="background:none; border:none; color:var(--accent); font-size:18px; cursor:pointer;">🗑️</button></div></div>`;
+                    <div style="display:flex; align-items:center; gap:12px; min-width:0;"><img src="${getPhoto(item.photo, dbType, dName)}" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover; background:#222; flex-shrink:0;"><div style="min-width:0;"><div style="font-weight:bold; font-size:14px;">${esc(dName)}</div><div class="muted" style="font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(sub)}</div></div></div>
+                    <div style="display:flex; gap:10px; flex-shrink:0;"><button data-id="${esc(item.id)}" onclick="openFormModal(this.dataset.id)" style="background:none; border:none; color:var(--cyan); font-size:18px; cursor:pointer;">✏️</button><button data-id="${esc(item.id)}" onclick="deleteDataEntity(this.dataset.id)" style="background:none; border:none; color:var(--accent); font-size:18px; cursor:pointer;">🗑️</button></div></div>`;
             }).join('') || '<p style="text-align:center; color:gray;">Lista vacía.</p>';
         }
-        
-        // FOTO DIRECTA CON CÁMARA (capture="environment") y compresión segura
-        function handlePhotoUploadEvent(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            document.getElementById('btnSaveForm').disabled = true;
-            document.getElementById('btnSaveForm').innerText = "Cargando...";
 
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 300; // Un poco de mejor calidad sin romper memoria
-                    let w = img.width; let h = img.height;
-                    
-                    if (w > h) { if (w > MAX_SIZE) { h *= MAX_SIZE / w; w = MAX_SIZE; } } 
-                    else { if (h > MAX_SIZE) { w *= MAX_SIZE / h; h = MAX_SIZE; } }
-                    
-                    canvas.width = w; canvas.height = h;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
-                    
-                    // Comprimir drásticamente
-                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                    
-                    const prev = document.getElementById('photoPreview');
-                    prev.src = currentPhotoBase64; prev.style.display = 'block';
-                    
-                    document.getElementById('btnSaveForm').disabled = false;
-                    document.getElementById('btnSaveForm').innerText = "Guardar";
-                    e.target.value = '';
-                };
-                img.src = ev.target.result;
-            };
-            reader.readAsDataURL(file);
+        // --- FOTOS: cámara o galería, recorte cuadrado y compresión ---
+        function setSaveBtnLoading(loading) {
+            const b = $('btnSaveForm'); b.disabled = loading; b.textContent = loading ? 'Cargando foto…' : 'Guardar';
         }
+        function refreshPhotoPreview() {
+            const name = (($('f_ali') && $('f_ali').value) || ($('f_nom') && $('f_nom').value) || ($('f_mod') && $('f_mod').value) || '').trim();
+            $('photoPreview').src = getPhoto(currentPhotoBase64, dbType, name);
+            $('btnRemovePhoto').style.display = currentPhotoBase64 ? 'block' : 'none';
+        }
+        function handlePhotoFile(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            setSaveBtnLoading(true);
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                try {
+                    const SIZE = 320;
+                    const side = Math.min(img.naturalWidth, img.naturalHeight);
+                    const sx = (img.naturalWidth - side) / 2, sy = (img.naturalHeight - side) / 2;
+                    const out = Math.min(SIZE, side);
+                    const canvas = document.createElement('canvas'); canvas.width = out; canvas.height = out;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#222'; ctx.fillRect(0, 0, out, out);
+                    ctx.drawImage(img, sx, sy, side, side, 0, 0, out, out);
+                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                    refreshPhotoPreview();
+                } catch (e) {
+                    alert('No se pudo procesar la foto: ' + e.message);
+                }
+                URL.revokeObjectURL(url); setSaveBtnLoading(false); input.value = '';
+            };
+            img.onerror = () => {
+                URL.revokeObjectURL(url); setSaveBtnLoading(false); input.value = '';
+                alert('No se pudo leer esa imagen. Si es un archivo HEIC (iPhone), prueba con una captura de pantalla o configura la cámara en "Más compatible" (JPG).');
+            };
+            img.src = url;
+        }
+        function removePhoto() { currentPhotoBase64 = ''; refreshPhotoPreview(); }
 
-        function openFormModal(idToEdit = null) {
+        function openFormModal(idToEdit) {
             if (typeof idToEdit !== 'string') idToEdit = null;
-            editItemId = idToEdit; currentPhotoBase64 = '';
-            
-            let obj = idToEdit ? appData[dbType].find(x => x.id === idToEdit) : {};
-            if (obj && obj.photo) currentPhotoBase64 = obj.photo;
-            
-            document.getElementById('formTitle').innerText = (idToEdit ? "Editar " : "Crear ") + (dbType === 'pilots' ? "Piloto" : dbType === 'cars' ? "Coche" : "Circuito");
-            
-            // ATENCIÓN AQUÍ: capture="environment" obliga a abrir la cámara directamente en móviles
-            let html = `<div class="photo-upload-box" onclick="document.getElementById('fileUpload').click()">
-                            <img id="photoPreview" class="photo-preview" src="${currentPhotoBase64||''}" style="${currentPhotoBase64?'display:block;':'display:none;'}">
-                            <span style="font-size:12px; color:var(--cyan); font-weight:bold;">📸 Tomar Foto</span>
-                        </div>
-                        <input type="file" id="fileUpload" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUploadEvent(event)">`;
+            editItemId = idToEdit;
+            const obj = (idToEdit && findById(dbType, idToEdit)) || {};
+            currentPhotoBase64 = obj.photo || '';
+            const v = k => esc(obj[k] == null ? '' : obj[k]);
+
+            $('formTitle').textContent = (idToEdit ? 'Editar ' : 'Crear ') + (dbType === 'pilots' ? 'Piloto' : dbType === 'cars' ? 'Coche' : 'Circuito');
+
+            let html = `<div class="photo-box">
+                    <img id="photoPreview" class="photo-preview" alt="">
+                    <div class="photo-btns">
+                        <label class="photo-btn">📸 Hacer foto<input type="file" class="file-hidden" accept="image/*" capture="environment" onchange="handlePhotoFile(this)"></label>
+                        <label class="photo-btn secondary">🖼️ Elegir de la galería<input type="file" class="file-hidden" accept="image/*" onchange="handlePhotoFile(this)"></label>
+                        <button type="button" id="btnRemovePhoto" class="photo-btn remove" onclick="removePhoto()">Quitar foto</button>
+                    </div>
+                </div>`;
 
             if (dbType === 'pilots') {
-                html += `<label class="modal-label">Nombre</label><input type="text" id="f_nom" class="modal-input" value="${obj.nombre||''}">
-                         <label class="modal-label">Apellidos</label><input type="text" id="f_ape" class="modal-input" value="${obj.apellidos||''}">
-                         <label class="modal-label">Alias (Nombre en carrera)</label><input type="text" id="f_ali" class="modal-input" value="${obj.alias||''}">`;
+                html += `<label class="modal-label">Nombre *</label><input type="text" id="f_nom" class="modal-input" value="${v('nombre')}" oninput="refreshPhotoPreview()">
+                         <label class="modal-label">Apellidos</label><input type="text" id="f_ape" class="modal-input" value="${v('apellidos')}">
+                         <label class="modal-label">Alias (nombre en carrera)</label><input type="text" id="f_ali" class="modal-input" value="${v('alias')}" oninput="refreshPhotoPreview()">`;
             } else if (dbType === 'cars') {
-                html += `<label class="modal-label">Marca</label><input type="text" id="f_mar" class="modal-input" value="${obj.marca||''}">
-                         <label class="modal-label">Modelo</label><input type="text" id="f_mod" class="modal-input" value="${obj.modelo||''}">
-                         <label class="modal-label">Alias</label><input type="text" id="f_ali" class="modal-input" value="${obj.alias||''}">
-                         <label class="modal-label">Categoría</label><input type="text" id="f_cat" class="modal-input" value="${obj.categoria||''}">
-                         <label class="modal-label">Motor</label><input type="text" id="f_mot" class="modal-input" value="${obj.motor||''}">
-                         <label class="modal-label">Tipo de Chasis</label><input type="text" id="f_cha" class="modal-input" value="${obj.chasis||''}">
-                         <label class="modal-label">Escobillas</label><input type="text" id="f_esc" class="modal-input" value="${obj.escobillas||''}">
-                         <label class="modal-label">Llantas Delanteras</label><input type="text" id="f_lld" class="modal-input" value="${obj.llantaDelantera||''}">
-                         <label class="modal-label">Llantas Traseras</label><input type="text" id="f_llt" class="modal-input" value="${obj.llantaTrasera||''}">
-                         <label class="modal-label">Neumáticos Delanteros</label><input type="text" id="f_ned" class="modal-input" value="${obj.neumaticoDelantero||''}">
-                         <label class="modal-label">Neumáticos Traseros</label><input type="text" id="f_net" class="modal-input" value="${obj.neumaticoTrasero||''}">`;
+                html += `<label class="modal-label">Marca</label><input type="text" id="f_mar" class="modal-input" value="${v('marca')}">
+                         <label class="modal-label">Modelo *</label><input type="text" id="f_mod" class="modal-input" value="${v('modelo')}" oninput="refreshPhotoPreview()">
+                         <label class="modal-label">Alias</label><input type="text" id="f_ali" class="modal-input" value="${v('alias')}" oninput="refreshPhotoPreview()">
+                         <label class="modal-label">Categoría</label><input type="text" id="f_cat" class="modal-input" value="${v('categoria')}">
+                         <label class="modal-label">Motor</label><input type="text" id="f_mot" class="modal-input" value="${v('motor')}">
+                         <label class="modal-label">Tipo de Chasis</label><input type="text" id="f_cha" class="modal-input" value="${v('chasis')}">
+                         <label class="modal-label">Escobillas</label><input type="text" id="f_esc" class="modal-input" value="${v('escobillas')}">
+                         <label class="modal-label">Llantas Delanteras</label><input type="text" id="f_lld" class="modal-input" value="${v('llantaDelantera')}">
+                         <label class="modal-label">Llantas Traseras</label><input type="text" id="f_llt" class="modal-input" value="${v('llantaTrasera')}">
+                         <label class="modal-label">Neumáticos Delanteros</label><input type="text" id="f_ned" class="modal-input" value="${v('neumaticoDelantero')}">
+                         <label class="modal-label">Neumáticos Traseros</label><input type="text" id="f_net" class="modal-input" value="${v('neumaticoTrasero')}">`;
             } else if (dbType === 'tracks') {
-                html += `<label class="modal-label">Nombre oficial</label><input type="text" id="f_nom" class="modal-input" value="${obj.nombre||''}">
-                         <label class="modal-label">Alias</label><input type="text" id="f_ali" class="modal-input" value="${obj.alias||''}">
-                         <label class="modal-label">Lugar</label><input type="text" id="f_lug" class="modal-input" value="${obj.lugar||''}">
-                         <label class="modal-label">Distancia (metros)</label><input type="number" id="f_dis" class="modal-input" value="${obj.distancia||''}">
-                         <label class="modal-label">Tiempo Mínimo (Segundos)</label><input type="number" id="f_min" class="modal-input" value="${obj.tiempoMinimo||'5.0'}" step="0.5">`;
+                html += `<label class="modal-label">Nombre oficial *</label><input type="text" id="f_nom" class="modal-input" value="${v('nombre')}" oninput="refreshPhotoPreview()">
+                         <label class="modal-label">Alias</label><input type="text" id="f_ali" class="modal-input" value="${v('alias')}" oninput="refreshPhotoPreview()">
+                         <label class="modal-label">Lugar</label><input type="text" id="f_lug" class="modal-input" value="${v('lugar')}">
+                         <label class="modal-label">Distancia por vuelta (metros)</label><input type="number" id="f_dis" class="modal-input" value="${v('distancia')}" step="0.1" min="0" inputmode="decimal">
+                         <label class="modal-label">Tiempo mínimo por vuelta (segundos)</label><input type="number" id="f_min" class="modal-input" value="${esc(obj.tiempoMinimo || '5.0')}" step="0.1" min="0.5" inputmode="decimal">`;
             }
-            
-            document.getElementById('formFields').innerHTML = html;
-            document.getElementById('btnSaveForm').disabled = false;
-            document.getElementById('btnSaveForm').innerText = "Guardar";
-            document.getElementById('modalForm').classList.add('active');
+
+            $('formFields').innerHTML = html;
+            refreshPhotoPreview();
+            setSaveBtnLoading(false);
+            openModal('modalForm');
         }
 
         function saveFormData() {
-            let obj = editItemId ? appData[dbType].find(x => x.id === editItemId) : { id: genId() };
-            if (!obj) { obj = { id: genId() }; editItemId = null; }
-            obj.photo = currentPhotoBase64;
-            
+            const val = id => ($(id) ? $(id).value.trim() : '');
+            const data = { photo: currentPhotoBase64 };
             if (dbType === 'pilots') {
-                obj.nombre = document.getElementById('f_nom').value.trim(); obj.apellidos = document.getElementById('f_ape').value.trim(); obj.alias = document.getElementById('f_ali').value.trim();
-                if (!obj.nombre) return alert("El nombre es obligatorio");
+                Object.assign(data, { nombre: val('f_nom'), apellidos: val('f_ape'), alias: val('f_ali') });
+                if (!data.nombre) { alert('El nombre es obligatorio'); return; }
             } else if (dbType === 'cars') {
-                obj.marca = document.getElementById('f_mar').value.trim(); obj.modelo = document.getElementById('f_mod').value.trim(); obj.alias = document.getElementById('f_ali').value.trim(); obj.categoria = document.getElementById('f_cat').value.trim(); obj.motor = document.getElementById('f_mot').value.trim();
-                obj.chasis = document.getElementById('f_cha').value.trim(); obj.escobillas = document.getElementById('f_esc').value.trim(); obj.llantaDelantera = document.getElementById('f_lld').value.trim(); obj.llantaTrasera = document.getElementById('f_llt').value.trim(); obj.neumaticoDelantero = document.getElementById('f_ned').value.trim(); obj.neumaticoTrasero = document.getElementById('f_net').value.trim();
-                if (!obj.modelo) return alert("El modelo es obligatorio");
+                Object.assign(data, { marca: val('f_mar'), modelo: val('f_mod'), alias: val('f_ali'), categoria: val('f_cat'), motor: val('f_mot'), chasis: val('f_cha'), escobillas: val('f_esc'), llantaDelantera: val('f_lld'), llantaTrasera: val('f_llt'), neumaticoDelantero: val('f_ned'), neumaticoTrasero: val('f_net') });
+                if (!data.modelo) { alert('El modelo es obligatorio'); return; }
             } else if (dbType === 'tracks') {
-                obj.nombre = document.getElementById('f_nom').value.trim(); obj.alias = document.getElementById('f_ali').value.trim(); obj.lugar = document.getElementById('f_lug').value.trim(); obj.distancia = document.getElementById('f_dis').value.trim();
-                const minTime = parseFloat(document.getElementById('f_min').value); obj.tiempoMinimo = isNaN(minTime) ? "5.0" : minTime.toString();
-                if (!obj.nombre) return alert("El nombre es obligatorio");
+                const dist = parseFloat(val('f_dis').replace(',', '.')), minT = parseFloat(val('f_min').replace(',', '.'));
+                Object.assign(data, { nombre: val('f_nom'), alias: val('f_ali'), lugar: val('f_lug'), distancia: Number.isFinite(dist) ? String(dist) : '', tiempoMinimo: Number.isFinite(minT) && minT > 0 ? String(minT) : '5.0' });
+                if (!data.nombre) { alert('El nombre es obligatorio'); return; }
             }
-            
-            if (!editItemId) appData[dbType].push(obj);
-            saveDB(); closeModal('modalForm'); renderSubDataList();
-        }
-        
-        function deleteDataEntity(id) {
-            if (confirm('¿Eliminar este elemento? Los registros antiguos mostrarán datos vacíos.')) {
-                appData[dbType] = appData[dbType].filter(x => x.id !== id); saveDB(); renderSubDataList();
-            }
-        }
-        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+            const existing = editItemId && findById(dbType, editItemId);
+            if (existing) Object.assign(existing, data);
+            else appData[dbType].push({ id: genId(), ...data });
 
-        window.onload = () => { 
-            if (appData.pilots.length) { currentSelections.T.pilot = appData.pilots[0].id; currentSelections.RAdd.pilot = appData.pilots[0].id; }
-            if (appData.cars.length) { currentSelections.T.car = appData.cars[0].id; currentSelections.RAdd.car = appData.cars[0].id; }
-            if (appData.tracks.length) { currentSelections.T.track = appData.tracks[0].id; currentSelections.R.track = appData.tracks[0].id; }
-            updateSelectionUI(); 
-            document.getElementById('camToggleBtn').style.display = 'block';
-        };
+            if (saveDB()) { closeModal('modalForm'); renderSubDataList(); ensureSelections(); toast('Guardado ✔'); }
+        }
+
+        function deleteDataEntity(id) {
+            if (!confirm('¿Eliminar este elemento? Los registros antiguos se conservan, pero mostrarán "--" en su lugar.')) return;
+            appData[dbType] = appData[dbType].filter(x => x.id !== id);
+            if (!raceInProgress) {
+                const key = dbType === 'pilots' ? 'pilot' : dbType === 'cars' ? 'car' : null;
+                if (key) { raceConfig.pilots = raceConfig.pilots.filter(p => p[key].id !== id); renderRacePilotsAdd(); }
+            }
+            ensureSelections(); persistSelections(); renderSubDataList();
+        }
+
+        function updateStorageInfo() {
+            try {
+                const bytes = (localStorage.getItem(STORAGE_KEY) || '').length * 2;
+                $('storageInfo').textContent = `Datos guardados en este dispositivo: ${(bytes / 1024 / 1024).toFixed(2)} MB (el navegador suele permitir unos 5 MB).`;
+            } catch (e) {}
+        }
+
+        // ----------------------------------------------------
+        // 13. EXPORTAR A EXCEL (.xlsx real, sin librerías externas)
+        // ----------------------------------------------------
+        const XLSXWriter = (() => {
+            const enc = new TextEncoder();
+            const crcTable = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[n] = c >>> 0; } return t; })();
+            const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = crcTable[(c ^ b[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+
+            function zip(files) {
+                const now = new Date();
+                const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+                const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+                const chunks = [], central = []; let offset = 0;
+                files.forEach(f => {
+                    const name = enc.encode(f.name), data = enc.encode(f.data), crc = crc32(data);
+                    const lh = new DataView(new ArrayBuffer(30));
+                    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+                    lh.setUint16(10, dosTime, true); lh.setUint16(12, dosDate, true); lh.setUint32(14, crc, true);
+                    lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+                    chunks.push(new Uint8Array(lh.buffer), name, data);
+                    const ch = new DataView(new ArrayBuffer(46));
+                    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+                    ch.setUint16(12, dosTime, true); ch.setUint16(14, dosDate, true); ch.setUint32(16, crc, true);
+                    ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true);
+                    ch.setUint16(30, 0, true); ch.setUint16(32, 0, true); ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true); ch.setUint32(42, offset, true);
+                    central.push(new Uint8Array(ch.buffer), name);
+                    offset += 30 + name.length + data.length;
+                });
+                const cdSize = central.reduce((a, c) => a + c.length, 0);
+                const end = new DataView(new ArrayBuffer(22));
+                end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+                end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+                const all = [...chunks, ...central, new Uint8Array(end.buffer)];
+                const out = new Uint8Array(all.reduce((a, c) => a + c.length, 0)); let p = 0;
+                all.forEach(c => { out.set(c, p); p += c.length; });
+                return out;
+            }
+
+            const xmlEsc = s => String(s).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            const col = i => { let s = ''; i++; while (i > 0) { const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; };
+            const NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+
+            // Celda: string | number | null | {v, t:'sec'|'date'}
+            function cellXml(c, ref, header) {
+                if (c == null || c === '' || (typeof c === 'number' && !Number.isFinite(c))) return '';
+                if (header) return `<c r="${ref}" t="inlineStr" s="1"><is><t xml:space="preserve">${xmlEsc(c)}</t></is></c>`;
+                if (typeof c === 'number') return `<c r="${ref}"><v>${c}</v></c>`;
+                if (typeof c === 'object') {
+                    if (!Number.isFinite(c.v)) return '';
+                    return `<c r="${ref}" s="${c.t === 'date' ? 3 : 2}"><v>${c.v}</v></c>`;
+                }
+                return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(c)}</t></is></c>`;
+            }
+            function sheetXml(sh) {
+                const rows = sh.rows.map((r, ri) => `<row r="${ri + 1}">${r.map((c, ci) => cellXml(c, col(ci) + (ri + 1), ri === 0)).join('')}</row>`).join('');
+                const cols = sh.widths ? `<cols>${sh.widths.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join('')}</cols>` : '';
+                return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="${NS}"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>${cols}<sheetData>${rows}</sheetData></worksheet>`;
+            }
+            function build(sheets) {
+                const head = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+                const files = [
+                    { name: '[Content_Types].xml', data: `${head}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((s, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>` },
+                    { name: '_rels/.rels', data: `${head}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>` },
+                    { name: 'xl/workbook.xml', data: `${head}<workbook xmlns="${NS}" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s, i) => `<sheet name="${xmlEsc(s.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('')}</sheets></workbook>` },
+                    { name: 'xl/_rels/workbook.xml.rels', data: `${head}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((s, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>` },
+                    { name: 'xl/styles.xml', data: `${head}<styleSheet xmlns="${NS}"><numFmts count="2"><numFmt numFmtId="164" formatCode="0.000"/><numFmt numFmtId="165" formatCode="dd/mm/yyyy hh:mm"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9E1F2"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="165" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>` }
+                ];
+                sheets.forEach((s, i) => files.push({ name: `xl/worksheets/sheet${i + 1}.xml`, data: sheetXml(s) }));
+                return zip(files);
+            }
+            return { build };
+        })();
+
+        const xSec = ms => ({ v: Number.isFinite(ms) ? Math.round(ms) / 1000 : NaN, t: 'sec' });
+        const xDate = iso => { const d = new Date(iso); return { v: isNaN(d) ? NaN : (d.getTime() - d.getTimezoneOffset() * 60000) / 86400000 + 25569, t: 'date' }; };
+
+        function buildWorkbookSheets() {
+            const sorted = (arr) => [...arr].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const tName = id => trackName(findById('tracks', id));
+
+            const train = [['Fecha', 'Sesión', 'Circuito', 'Piloto', 'Coche', 'Vueltas', 'Mejor (s)', 'Media (s)', 'Total (s)', 'Km']];
+            const trainLaps = [['Fecha', 'Sesión', 'Circuito', 'Piloto', 'Coche', 'Vuelta', 'Tiempo (s)']];
+            sorted(appData.regTrain).forEach(r => {
+                const p = pilotName(findById('pilots', r.pilot)), c = carName(findById('cars', r.car)), t = tName(r.track);
+                const n = r.laps.length;
+                train.push([xDate(r.date), r.name, t, p, c, n, xSec(n ? Math.min(...r.laps) : NaN), xSec(n ? sum(r.laps) / n : NaN), xSec(n ? sum(r.laps) : NaN), Math.round(trackKm(r.track, n) * 1000) / 1000]);
+                [...r.laps].reverse().forEach((l, i) => trainLaps.push([xDate(r.date), r.name, t, p, c, i + 1, xSec(l)]));
+            });
+
+            const races = [['Fecha', 'Carrera', 'Circuito', 'Vueltas objetivo', 'Posición', 'Piloto', 'Coche', 'Vueltas hechas', 'Total (s)', 'Mejor (s)', 'Estado']];
+            const raceLaps = [['Fecha', 'Carrera', 'Circuito', 'Piloto', 'Coche', 'Vuelta', 'Tiempo (s)']];
+            sorted(appData.regRace).forEach(r => {
+                const t = tName(r.track);
+                raceStandings(r.pilots, r.lapsTarget).forEach((p, i) => {
+                    races.push([xDate(r.date), r.name, t, r.lapsTarget, i + 1, pilotName(p.pilot), carName(p.car), p.n, xSec(p.n ? p.totalMs : NaN), xSec(p.bestMs), p.complete ? 'Terminó' : 'No terminó']);
+                    [...p.laps].reverse().forEach((l, j) => raceLaps.push([xDate(r.date), r.name, t, pilotName(p.pilot), carName(p.car), j + 1, xSec(l)]));
+                });
+            });
+
+            const pilots = [['Nombre', 'Apellidos', 'Alias'], ...appData.pilots.map(p => [p.nombre, p.apellidos, p.alias])];
+            const cars = [['Marca', 'Modelo', 'Alias', 'Categoría', 'Motor', 'Chasis', 'Escobillas', 'Llanta del.', 'Llanta tras.', 'Neumático del.', 'Neumático tras.'],
+                ...appData.cars.map(c => [c.marca, c.modelo, c.alias, c.categoria, c.motor, c.chasis, c.escobillas, c.llantaDelantera, c.llantaTrasera, c.neumaticoDelantero, c.neumaticoTrasero])];
+            const num = s => { const n = parseFloat(String(s == null ? '' : s).replace(',', '.')); return Number.isFinite(n) ? n : (s || ''); };
+            const tracks = [['Nombre', 'Alias', 'Lugar', 'Distancia (m)', 'Tiempo mínimo (s)'], ...appData.tracks.map(t => [t.nombre, t.alias, t.lugar, num(t.distancia), num(t.tiempoMinimo)])];
+
+            return [
+                { name: 'Entrenamientos', rows: train, widths: [17, 22, 16, 14, 18, 9, 11, 11, 11, 9] },
+                { name: 'Vueltas entreno', rows: trainLaps, widths: [17, 22, 16, 14, 18, 8, 11] },
+                { name: 'Carreras', rows: races, widths: [17, 22, 16, 10, 9, 14, 18, 10, 11, 11, 12] },
+                { name: 'Vueltas carrera', rows: raceLaps, widths: [17, 22, 16, 14, 18, 8, 11] },
+                { name: 'Pilotos', rows: pilots, widths: [16, 22, 14] },
+                { name: 'Coches', rows: cars, widths: [14, 18, 16, 10, 14, 14, 12, 11, 11, 18, 22] },
+                { name: 'Circuitos', rows: tracks, widths: [20, 14, 16, 13, 16] }
+            ];
+        }
+
+        let lastExport = null;
+        function exportExcel() {
+            try {
+                const bytes = XLSXWriter.build(buildWorkbookSheets());
+                const d = new Date(), pad = n => String(n).padStart(2, '0');
+                const name = `CronoSlot_${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.xlsx`;
+                const mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                lastExport = { blob: new Blob([bytes], { type: mime }), name, mime };
+                $('exportInfo').textContent = `${name} · ${appData.regTrain.length} entrenamientos y ${appData.regRace.length} carreras.`;
+                let canShare = false;
+                try { canShare = !!(navigator.canShare && navigator.canShare({ files: [new File([lastExport.blob], name, { type: mime })] })); } catch (e) {}
+                $('btnShareExport').style.display = canShare ? 'block' : 'none';
+                openModal('modalExport');
+            } catch (e) {
+                alert('No se pudo generar el Excel: ' + e.message);
+            }
+        }
+        function downloadExport() {
+            if (!lastExport) return;
+            const url = URL.createObjectURL(lastExport.blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = lastExport.name; a.style.display = 'none';
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 60000);   // no revocar al instante: rompe la descarga en móviles
+            toast('Descarga iniciada: ' + lastExport.name);
+        }
+        async function shareExport() {
+            if (!lastExport) return;
+            try {
+                await navigator.share({ files: [new File([lastExport.blob], lastExport.name, { type: lastExport.mime })], title: 'CronoSlot - Exportación' });
+            } catch (e) {
+                if (e && e.name !== 'AbortError') alert('No se pudo compartir: ' + e.message + '. Usa "Descargar archivo".');
+            }
+        }
+
+        // ----------------------------------------------------
+        // 14. ARRANQUE
+        // ----------------------------------------------------
+        window.addEventListener('load', () => {
+            ensureSelections();
+            applyZoneSettings();
+            renderRacePilotsAdd();
+            $('lapsContainerT').innerHTML = EMPTY_LAPS;
+            switchMainTab('train');
+            if (migratedFrom) { saveDB(); toast('Datos recuperados de la versión anterior ✔'); }
+        });
     </script>
 </body>
 </html>
